@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roomio.carret.managerAccount">
+	
+	<!-- 가맹점 이름,코드 얻어오기 -->
+	<select id="getFranchiseList" resultType="hashMap">
+		<![CDATA[
+			select franchise_id,franchise_code,franchise_name 
+			from franchise
+		]]>
+	</select>
+	
+	<!-- 역할 그룹 얻어오기 -->
+	<select id="getRoleGroupsList" resultType="hashMap">
+		<![CDATA[
+			select r.role_group_id,r.role_group_name,f.franchise_id
+			from role_groups r
+			left join franchise f
+			on r.franchise_code = f.franchise_code
+		]]>
+	</select>
+	
+	<!-- 관리자 추가 권한 얻어오기 -->
+	<select id="getAdditionalRole" resultType="hashMap">
+		<![CDATA[
+			select addtional_role_id,additional_role_name
+			from additional_role
+		]]>
+	</select>
+	
+	<!-- 관리자 아이디 중복체크 -->
+	<select id="idExistCheck" parameterType="string" resultType="string">
+		<![CDATA[
+			select id
+			from franchise_manager
+			where id = #{id}
+		]]>
+	</select>
+	
+	<!-- 관리자 아이디 등록  -->
+	<insert id="managerRegister" parameterType="com.roomio.carret.bean.ManagerRegisterBean">
+		insert into franchise_manager(franchise_id,role_group_id,status,id,pw,name,email,phone,access_date,regdate) 
+		values(${franchiseId},${roleGroupId},${status},#{managerId},#{managerPw},#{managerName},#{managerEmail},#{managerPhone},now(),now())
+		
+		<selectKey resultType="int" keyProperty="franchiseId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+		
+	</insert>
+	
+	<!-- 관리자 추가 역할(권한) 부여 -->
+	<insert id="addAdditionalRole" parameterType="hashMap">
+	
+		insert into manager_and_additional_role(franchise_manager_id,addtional_role_id) values(${managerId},${additionalRoleId})
+		
+	</insert>
+	
+	<!-- 관리자 계정 조건검색 sql -->
+	<sql id="managerSearch">
+		<choose>
+			<when test="searchOption.equals('all')">
+ 				<![CDATA[
+	 				where f.franchise_name LIKE CONCAT('%',#{keyWord},'%')
+	 				or m.id LIKE CONCAT('%',#{keyWord},'%') 
+	 				or m.name LIKE CONCAT('%',#{keyWord},'%') 
+	 				or m.email LIKE CONCAT('%',#{keyWord},'%')
+	 			]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+ 					where ${searchOption} LIKE CONCAT('%',#{keyWord},'%')
+ 				]]>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 관리자 리스트 전체글 갯수 -->
+	<select id="getManagerCnt" parameterType="hashMap" resultType="int">
+		<![CDATA[
+			select count(*)
+			from franchise f 
+			inner join franchise_manager m 
+			on f.franchise_id = m.franchise_id 
+		]]>
+		<include refid="managerSearch"/>
+	</select>
+	
+	<!-- 관리자 리스트 뽑아가기 -->
+	<select id="getManagerList" parameterType="hashMap" resultType="hashMap">
+		<![CDATA[
+			select f.franchise_name,m.franchise_manager_id,m.franchise_id,m.role_group_id,m.status,m.id,m.name,m.email,m.access_date
+			from franchise f 
+			inner join franchise_manager m 
+			on f.franchise_id = m.franchise_id 
+		]]>
+		<include refid="managerSearch"/>
+	</select>
+	
+	<!-- 관리자 수정에 필요한 정보 select -->
+	<select id="getUpdateManagerInfo" parameterType="int" resultType="hashMap">
+		<![CDATA[
+			select franchise_manager_id,franchise_id,role_group_id,id,name,email,phone 
+			from franchise_manager 
+			where franchise_manager_id = ${franchiseManagerId}
+		]]>
+	</select>
+	
+	<!-- 관리자 계정 수정  -->
+	<update id="updateManagerInfo" parameterType="com.roomio.carret.bean.ManagerRegisterBean">
+		<![CDATA[
+			update franchise_manager 
+			set franchise_id = ${franchiseId}, role_group_id = ${roleGroupId}, id=#{managerId} , pw=#{managerPw}, name=#{managerName}, email=#{managerEmail}, phone=#{managerPhone} 
+			where franchise_manager_id = #{franchiseManagerId}
+		]]>
+	</update>
+	
+	<!-- 관리자 삭제 -->
+	<delete id="deleteManager" parameterType="int">
+	
+		<![CDATA[
+			delete from franchise_manager
+			where franchise_manager_id = ${franchiseManagerId}
+		]]>
+		
+	</delete>
+	
+	<delete id="deleteManagerAddtionalRole" parameterType="int">
+		<![CDATA[
+			delete from manager_and_additional_role 
+			where franchise_manager_id = #{franchiseManagerId}
+		]]>
+	</delete>
+	
+	<!-- 관리자 접속 내역 관리  -->
+	<select id="getManagerAccessList" resultType="hashMap" parameterType="hashMap">
+		<![CDATA[
+			select f.franchise_name,m.franchise_manager_id,m.id,date(access_date) as access_date
+			from franchise_manager m
+			inner join franchise f
+			on m.franchise_id = f.franchise_id 
+			where date_format(access_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+		]]>
+		
+		<if test="keyWord != null and !keyWord.equals('')">
+			and f.franchise_name LIKE CONCAT('%',#{keyWord},'%')
+		</if>
+		
+	</select>
+	
+	<!-- 관리자 접속 내역 관리 전체 글 갯수 -->
+	<select id="getManagerAccessCnt" resultType="int" parameterType="hashMap">
+	
+	<![CDATA[
+		select count(*)
+		from franchise f 
+		inner join franchise_manager m 
+		on f.franchise_id = m.franchise_id
+		where date_format(access_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+	]]>
+	
+	<if test="keyWord != null and !keyWord.equals('')">
+		and f.franchise_name LIKE CONCAT('%',#{keyWord},'%')
+	</if>
+		
+	</select>
+
+
+</mapper>

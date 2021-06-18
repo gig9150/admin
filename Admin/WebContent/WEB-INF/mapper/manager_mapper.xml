@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roomio.carret.manager">
+
+	<!-- 매니저 로그인  -->
+	<select id="checkManagerMember" parameterType="hashMap" resultType="String">
+	
+		<![CDATA[
+			select name
+			from manager_member
+			where id = #{id} 
+			and pw = #{pw}
+		]]>
+		
+	</select>
+	
+	<!-- 요구 상세 꺼내오기 -->
+	<select id="getRoleDetailList" resultType="HashMap">
+		
+		<![CDATA[
+			select role_detail_id,name
+			from role_detail
+		]]>
+		
+	</select>
+	
+	<!-- 역할 그룹 추가 -->
+	<insert id="addRoleGroups" parameterType="hashMap">
+		<![CDATA[
+			insert into role_groups(role_group_name,role_group_info,franchise_code,registrar) 
+			values(#{roleGroupName},#{roleGroupInfo},#{franchiseCode},#{registrar})
+		]]>
+		
+		<selectKey resultType="int" keyProperty="roleGroupId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert>
+	
+	<!-- 역할 그룹 디테일 추가  -->
+	<insert id="addRoleGroupsDetail" parameterType="hashMap">
+
+	    <![CDATA[
+			insert into role_group_and_detail(role_group_id,role_detail_id)
+			values(${roleGroupId},${roleDetailId})
+		]]>
+
+	</insert>
+	
+	<!-- 그룹 조건검색 sql -->
+	<sql id="roleGroupsSearch">
+		<choose>
+			<when test="searchOption.equals('all')">
+ 				<![CDATA[
+	 				where role_group_name LIKE CONCAT('%',#{keyWord},'%')
+	 				or franchise_code LIKE CONCAT('%',#{keyWord},'%')
+	 			]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+ 					where ${searchOption} LIKE CONCAT('%',#{keyWord},'%')
+ 				]]>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 역할 그룹 리스트 전체글 갯수 -->
+	<select id="getRoleGroupsCnt" parameterType="com.roomio.carret.bean.SearchBean" resultType="int">
+		<![CDATA[
+			select count(*)
+			from role_groups 
+		]]>
+		<include refid="roleGroupsSearch"/>
+	</select>
+	
+	<!-- 역할 그룹 리스트 -->
+	<select id="getRoleGroupsList" parameterType="com.roomio.carret.bean.SearchBean" resultType="hashMap">
+		<![CDATA[
+			select role_group_id,role_group_name,role_group_info,regdate,registrar,franchise_code 
+			from role_groups 
+		]]>
+		<include refid="roleGroupsSearch"/>
+	</select>
+	
+	<!-- 역할 그룹 수정 위한 select -->
+	<select id="updateGetRoleGroup" parameterType="int" resultType="hashMap">
+	
+		<![CDATA[
+			select role_group_name,role_group_info,franchise_code
+			from role_groups 
+			where role_group_id = ${roleGroupId}
+		]]>
+		
+	</select>
+	
+	<select id="getRoleGroupDetail" parameterType="int" resultType="string">
+		<![CDATA[
+			select role_detail_id
+			from role_group_and_detail
+			where role_group_id = ${roleGroupId}
+		]]>
+	</select>
+	
+	<!--역할 그룹 수정  -->
+	<update id="updateRoleGroups" parameterType="hashMap">
+		<![CDATA[
+			update role_groups
+			set role_group_name = #{roleGroupName}, role_group_info = #{roleGroupInfo}, 
+			franchise_code = #{franchiseCode}, registrar = #{register}
+			where role_group_id = ${roleGroupId}
+		]]>
+	</update>
+
+	<!-- 역할 그룹 삭제 -->
+	<delete id="deleteRoleGroups" parameterType="int">
+		<![CDATA[
+			delete from role_groups 
+			where role_group_id = #{roleGroupId}
+		]]>
+	</delete>
+	
+	<delete id="deleteRoleGroupsDetail" parameterType="int">
+		<![CDATA[
+			delete from role_group_and_detail 
+			where role_group_id = #{roleGroupId}
+		]]>
+	</delete>
+	
+	<!-- 가맹사 전체 글 갯수 -->
+	<select id="getFranchiseCnt" parameterType="string" resultType="int">
+		
+		<![CDATA[
+			select count(*)
+			from franchise f
+			inner join franchise_manager m 
+			on f.franchise_id = m.franchise_id 
+			where m.status = 1
+		]]>
+		
+		<if test="keyWord != null and !keyWord.equals('')">
+			and f.franchise_name LIKE CONCAT('%',#{keyWord},'%')
+		</if>
+	</select>
+	
+	<!-- 가맹사 리스트 데이터 매핑  -->
+	<resultMap type="com.roomio.carret.bean.FranchiseRegisterBean" id="franchiseListMap">
+		<result javaType="java.lang.Integer" column="franchise_id" property="franchiseId"/>
+		<result javaType="java.lang.String" column="service_name" property="serviceName"/>
+		<result javaType="java.lang.String" column="main_domain" property="mainDomain"/>
+		<result javaType="java.lang.String" column="regdate" property="regdate"/>
+		<result javaType="java.lang.String" column="franchise_name" property="franchiseName"/>
+		<result javaType="java.lang.String" column="service_status" property="serviceStatus"/>
+		<result javaType="java.lang.String" column="logo_file" property="logoFile"/>
+		<result javaType="java.lang.String" column="point_color" property="pointColor"/>
+		<result javaType="java.lang.String" column="representative_name" property="representativeName"/>
+		<result javaType="java.lang.String" column="business_number" property="businessNumber"/>
+		<result javaType="java.lang.String" column="address" property="address"/>
+		<result javaType="java.lang.String" column="phone_number" property="phone_number"/>
+		<result javaType="java.lang.String" column="fax" property="fax"/>
+		<result javaType="java.lang.String" column="responsibility_name" property="responsibilityName"/>
+		<result javaType="java.lang.String" column="responsibility_depa" property="responsibilityDepa"/>
+		<result javaType="java.lang.String" column="responsibility_position" property="responsibilityPosition"/>
+		<result javaType="java.lang.String" column="responsibility_number" property="responsibilityNumber"/>
+		<result javaType="java.lang.String" column="responsibility_phone" property="responsibilityPhone"/>
+		<result javaType="java.lang.String" column="responsibility_email" property="responsibilityEmail"/>
+		<result javaType="java.lang.String" column="memo" property="memo"/>
+		<result javaType="java.lang.String" column="id" property="id"/>
+		<collection property="subDomainList" ofType="java.lang.String" javaType="list">
+			<result column="additional_domain"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 가맹사 리스트  -->
+	<select id="getFranchiseList" parameterType="string" resultMap="franchiseListMap">
+	
+		<![CDATA[
+		
+			select f.franchise_id,f.service_name,f.main_domain,date_format(f.regdate,'%Y-%m-%d') as regdate,f.franchise_name,f.service_status,f.logo_file,f.point_color,
+			f.representative_name,f.business_number,f.address,f.phone_number,f.fax,f.responsibility_name,f.responsibility_depa,f.responsibility_position,f.responsibility_number,
+			f.responsibility_phone,f.responsibility_email,memo,d.additional_domain
+			from franchise f
+			left join franchise_domain d
+			on f.franchise_id = d.franchise_id
+			LEFT join franchise_manager m
+			ON f.franchise_id = m.franchise_id
+			
+		]]>
+		
+		<if test="keyWord != null and !keyWord.equals('')">
+			and f.franchise_name LIKE CONCAT('%',#{keyWord},'%')
+		</if>
+		
+	</select>
+	
+	<!-- 가맹사 등록 -->
+	<insert id="addFranchise" parameterType="com.roomio.carret.bean.FranchiseRegisterBean">
+		
+		insert into franchise(franchise_code,franchise_name,service_name,service_status,logo_file,point_color,representative_name,business_number,address,phone_number,fax,
+		responsibility_name,responsibility_depa,responsibility_position,responsibility_number,responsibility_phone,responsibility_email,memo,main_domain,regdate) 
+		values(#{franchiseCode},#{franchiseName},#{serviceName},#{serviceStatus},#{logoFile},#{pointColor},#{representativeName},#{businessNumber},#{address},#{phone_number},#{fax},
+		#{responsibilityName},#{responsibilityDepa},#{responsibilityPosition},#{responsibilityNumber},#{responsibilityPhone},#{responsibilityEmail},#{memo},#{mainDomain},now())
+		
+		<selectKey resultType="int" keyProperty="franchiseId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert>
+	
+	<!-- 가맹사 관리자 등록(가맹사 등록될때 자동 생성) -->
+	<insert id="addFranchiseManager" parameterType="hashMap">
+	
+		insert into franchise_manager(franchise_id,status,id,pw,access_date,regdate) 
+		values(${franchiseId},1,#{id},#{pw},now(),now())
+
+	</insert>
+	
+	<!-- 가맹사 추가 도메인 등록  -->
+	<insert id="addFranchiseDomain" parameterType="hashMap">
+	
+		insert into franchise_domain(franchise_id,additional_domain) 
+		values(${franchiseId},#{additionalDomain})
+		
+	</insert>
+	
+	<!-- 현재 파일 정보 얻어오기 -->
+	<select id="getNowLogoFile" parameterType="int" resultType="string">
+		select logo_file 
+		from franchise 
+		where franchise_id = ${franchiseId}
+	</select>
+	
+	<!-- 가맹사 업데이트  -->
+	<update id="updateFranchise" parameterType="com.roomio.carret.bean.FranchiseRegisterBean">
+		
+		update franchise 
+		set service_name = #{serviceName}, main_domain = #{mainDomain}, 
+		<if test="logoFile != null and !logoFile.toString().equals('')">
+			logo_file = #{logoFile}, 
+		</if>
+		point_color = #{pointColor}, franchise_name = #{franchiseName},
+		representative_name = #{representativeName},business_number = #{businessNumber},address = #{address}, phone_number = #{phone_number},fax = #{fax}, 
+		responsibility_name = #{responsibilityName}, responsibility_depa = #{responsibilityDepa}, responsibility_position = #{responsibilityPosition},
+		responsibility_number = #{responsibilityNumber}, responsibility_phone = #{responsibilityPhone},responsibility_email = #{responsibilityEmail}, memo = #{memo}
+		where franchise_id = ${franchiseId}
+		
+	</update>
+	
+	<!-- 가맹사 관리자 업데이트 -->
+	<update id="updateFranchiseManager" parameterType="hashMap">
+	
+		update franchise_manager 
+		set 
+		<if test="id != null and !id.equals('')">
+			id = #{id}, 
+		</if>
+		
+		<if test="pw != null and !pw.equals('')">
+			pw = ${pw}
+		</if>  
+		where franchise_id = #{franchiseId}
+		
+	</update>
+	
+	<!-- 가맹사 도메인 업데이트(삭제 후 입력) -->
+	<delete id="deleteFranchiseDomain" parameterType="int">
+	
+		delete from franchise_domain
+		where franchise_id = ${franchiseId}
+		
+	</delete>
+	
+</mapper>

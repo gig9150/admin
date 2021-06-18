@@ -1,0 +1,235 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roomio.carret.shop">
+	
+	<!-- 가맹점 정보 -->
+	<select id="getFranchiseName" resultType="hashMap">
+	
+		select franchise_id,franchise_name	
+		from franchise
+		
+	</select>
+	
+	<!-- 지역 정보 -->
+	<select id="getAreaList" resultType="hashMap">
+		
+		select id,area_name,view_num
+		from area
+		order by view_num asc
+		
+	</select> 
+	
+	<!-- 지역 세부정보  -->
+	<select id="getAreaSigunguDefault" resultType="hashMap">
+		select id,area_code,sigungu_name,state
+		from area_sigungu
+		where area_code = 9
+	</select>
+	
+	<select id="getAreaSigunguList" resultType="hashMap" parameterType="int">
+		
+		select id,area_code,sigungu_name,state
+		from area_sigungu
+		where area_code = ${areaCode}
+		
+	</select>
+	
+	<!-- 가게리스트 -->
+	<sql id="shopSearch">
+		<if test=' dateSelect != null and dateData != null and !dateData.equals("") and dateSelect.equals("1") '> and date_format(s.approve_date,"%Y-%m-%d") = #{dateData}</if>
+		<if test=' dateSelect != null and dateData != null and !dateData.equals("") and dateSelect.equals("2") '> and date_format(s.regdate,"%Y-%m-%d") = #{dateData}</if>
+		<if test=' dateSelect != null and dateData != null and !dateData.equals("") and dateSelect.equals("3") '> and date_format(s.with_date,"%Y-%m-%d") = #{dateData}</if>
+		<if test=' franchiseId != null and franchiseId != ""'> and f.franchise_id = ${franchiseId}</if>
+		<if test=' areaId != null and areaId != "" '> and a.id = ${areaId}</if>
+		<if test=' sector != null and !sector.equals("")'> and s.sector LIKE CONCAT('%',#{sector},'%')</if>
+		<if test=' shopName != null and !shopName.equals("")'> and s.shop_name LIKE CONCAT('%',#{shopName},'%')</if>
+		<if test=' keyword != null and !keyword.equals("")'> and k.keyword LIKE CONCAT('%',#{keyword},'%')</if>
+		<if test=' status != null and status.equals("2") '> and s.activity_status = 1</if>
+		<if test=' status != null and status.equals("3") '> and s.activity_status = 2</if>
+		<if test=' status != null and status.equals("4") '> and s.activity_status = 3</if>
+		<if test=' panalty != null and panalty != "" and panalty == 2 '> and p.panalty_name = 1</if>
+		<if test=' panalty != null and panalty != "" and panalty == 3 '> and p.panalty_name = 2</if>
+		<if test=' panalty != null and panalty != "" and panalty == 4 '> and p.panalty_name = 3</if>
+	</sql>
+	
+	<select id="getShopCnt" resultType = "int" parameterType="com.roomio.carret.bean.ShopSearchBean">
+	
+		<![CDATA[	
+			 SELECT DISTINCT count(*)
+	         from shop s
+	         left join franchise f 
+	         on s.franchise_id = f.franchise_id 
+	         left join member m 
+	         on s.member_id = m.member_id
+	         left join area_sigungu a
+	         on s.id = a.id
+	         left join shop_keyword k
+	         on k.shop_idx = s.shop_idx
+			 LEFT JOIN shop_panalty p
+			 ON s.shop_idx = p.shop_idx 
+	         where s.status = 1 
+	         AND p.regdate = (SELECT MAX(regdate) FROM shop_panalty p1 WHERE p1.shop_idx = s.shop_idx)
+		]]>
+		
+		<include refid="shopSearch"/>
+		
+	</select>
+	
+
+	
+	<select id="getShopList" resultType = "hashMap" parameterType="com.roomio.carret.bean.ShopSearchBean">
+	
+		<![CDATA[
+			 SELECT DISTINCT s.shop_idx,s.approve_date,f.franchise_name,s.main_image,s.shop_code,s.shop_name,m.name,
+	         a.sigungu_name,date_format(s.regdate,"%Y-%m-%d") as regdate,s.activity_status,p.panalty_name,p.register
+	         from shop s
+	         left join franchise f 
+	         on s.franchise_id = f.franchise_id 
+	         left join member m 
+	         on s.member_id = m.member_id
+	         left join area_sigungu a
+	         on s.id = a.id
+	         left join shop_keyword k
+	         on k.shop_idx = s.shop_idx
+			 LEFT JOIN shop_panalty p
+			 ON s.shop_idx = p.shop_idx 
+	         where s.status = 1 
+	         AND p.regdate = (SELECT MAX(regdate) FROM shop_panalty p1 WHERE p1.shop_idx = s.shop_idx)
+	    ]]>
+		
+		<include refid="shopSearch"/>
+		
+		<![CDATA[
+		
+			ORDER BY s.approve_date DESC
+			
+		]]>
+		
+	</select>
+	
+	
+	<!-- 기게 신청 심사 정보  -->
+	
+	<sql id="shopApplySearch">
+			<if test=' dateData != null and !dateData.equals("")'>and date_format(s.regdate,"%Y-%m-%d") = #{dateData}</if>
+			<if test=' franchiseId != null and franchiseId != "" '>and f.franchise_id = ${franchiseId}</if>
+			<if test=' areaId != null and areaId != "" and areaId != 0 '>and s.id = ${areaId}</if>
+			<if test=' nickName != null and !nickName.equals("")'>and m.name LIKE CONCAT('%',#{nickName},'%')</if>
+			<if test=' representative != null and !representative.equals("")'>and s.representative LIKE CONCAT('%',#{representative},'%')</if>
+			<if test=' shopName != null and !shopName.equals("")'>and s.shop_name LIKE CONCAT('%',#{shopName},'%')</if>
+			<if test=' number != null and !number.equals("")'>and s.buisness_num LIKE CONCAT('%',#{number},'%')</if>
+			<if test=' status == 2 '>and s.status = 2</if>
+			<if test=' status == 3 '>and s.status = 3</if>
+			<if test=' status == 4 '>and s.status = 4</if>
+	</sql>
+	
+	
+	<select id="getShopApplyCnt" resultType = "int" parameterType="com.roomio.carret.bean.ShopApplySearchBean">
+	
+		<![CDATA[
+			
+			select count(*)
+			from shop s
+			left join franchise f 
+			on s.franchise_id = f.franchise_id 
+			left join member m
+			on s.member_id = m.member_id
+			left join area_sigungu a 
+			on s.id = a.id 
+			where s.status != 1
+			 
+		]]>
+		
+		<include refid="shopApplySearch"/>
+		
+	</select>
+	
+
+	
+	<select id="getShopApplyList" resultType = "hashMap" parameterType="com.roomio.carret.bean.ShopApplySearchBean">
+	
+		<![CDATA[
+		
+			 select s.shop_idx,date_format(s.regdate,"%Y-%m-%d") as regdate,f.franchise_name,m.name,s.shop_name,a.sigungu_name,s.representative,
+			 s.buisness_num,s.status
+			 from shop s
+			 left join franchise f 
+			 on s.franchise_id = f.franchise_id 
+			 left join member m
+			 on s.member_id = m.member_id
+			 left join area_sigungu a 
+			 on a.id = s.id 
+			 where s.status != 1
+
+		]]>
+		
+		<include refid="shopApplySearch"/>
+		
+		<![CDATA[
+		
+			ORDER BY regdate DESC
+			
+		]]>
+		
+	</select>
+	
+	<resultMap type="hashMap" id="getApplyInfoMap">
+		<result column="area_name" property="area_name"/>
+		<result column="sigungu_name" property="sigungu_name"/>
+		<result column="regdate" property="regdate"/>
+		<result column="member_name" property="member_name"/>
+		<result column="date_of_birth" property="date_of_birth"/>
+		<result column="phone" property="phone"/>
+		<result column="representative" property="representative"/>
+		<result column="buisness_num" property="buisness_num"/>
+		<result column="shop_name" property="shop_name"/>
+		<result column="sector" property="sector"/>
+		<collection property="keywordList" ofType="java.lang.String" javaType="list">
+			<result column="keyword"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getApplyInfo" parameterType="int" resultMap="getApplyInfoMap">
+	
+		select a.area_name,asi.sigungu_name,date_format(s.regdate,"%Y-%m-%d") as regdate,
+		s.member_name,s.date_of_birth,s.phone,s.representative,
+		s.buisness_num,s.shop_name,s.sector,k.keyword
+		from shop s 
+		left join area_sigungu as asi
+		on s.id = asi.id
+		left join area a 
+		on a.id = asi.area_code
+		left join shop_keyword k
+		on s.shop_idx = k.shop_idx
+		where s.shop_idx = ${shopIdx}
+		
+	</select>
+	
+	<!-- 가게 신청 정보 업데이트 -->
+	
+	<update id="updateShopApplyInfo" parameterType="hashMap">
+		update shop 
+		<set>
+	      <if test='responsibilityMemo != null and !responsibilityMemo.equals("") '>responsibility_memo = #{responsibilityMemo},</if>
+	      <if test='shopCode != null and !shopCode.equals("") '>shop_code=#{shopCode},</if>
+	      <if test='returnReason != null and !returnReason.equals("") and no != null '>return_reason=#{returnReason},</if>
+	      <if test='ok != null'>status = 1</if>
+	      <if test='no != null'>status = 3</if>
+	      <if test='keep != null'>status = 4</if>
+	    </set>
+		where shop_idx = ${shopIdx}
+	</update>
+	
+	<!-- 클릭시 첨부이미지 정보 가져오기 -->
+	
+	<select id="getAttachedImg" parameterType="int" resultType="string">
+	
+		select image_name
+		from shop_image
+		where shop_idx = ${shopIdx}
+		
+	</select>
+	
+	
+</mapper>
