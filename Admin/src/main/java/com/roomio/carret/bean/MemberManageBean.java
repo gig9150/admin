@@ -7,7 +7,8 @@ public class MemberManageBean {
 	private int franchiseId;
 	private int areaId;
 	private String nickName;
-	private int panalty;
+	private int penalty;
+	private int baseArea;
 	
 	public String getDateData() {
 		return dateData;
@@ -39,12 +40,20 @@ public class MemberManageBean {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	public int getPanalty() {
-		return panalty;
+	public int getPenalty() {
+		return penalty;
 	}
-	public void setPanalty(int panalty) {
-		this.panalty = panalty;
+	public void setPenalty(int penalty) {
+		this.penalty = penalty;
 	}
+	public int getBaseArea() {
+		return baseArea;
+	}
+	public void setBaseArea(int baseArea) {
+		this.baseArea = baseArea;
+	}
+	
+	
 	
 	
 }

@@ -17,6 +17,7 @@
     <!-- Custom fonts for this template -->
     <link href="${root}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
+    
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
@@ -54,7 +55,7 @@
                     <h1 class="h3 mb-2 text-gray-800"> 가게관리 > 가게 신청 심사 </h1>
                     
                     <br><hr><br>
-                    <form action="${root}/manager/manage_member" method="get">
+                    <form action="${root}/member/manage_member" method="get">
 
 	                    <!-- DataTales Example -->
 	                    <div class="card shadow mb-4">
@@ -72,13 +73,14 @@
 	                        				가입일
 	                        			</th>
 	                        			<td>
-	                        				<input type="date" style="width:50%;display:inline-block;" class="form-control" name="dateData">
+	                        				<input type="date" style="width:50%;display:inline-block;" class="form-control" name="dateData" value="${memberManageBean.dateData}">
 	                        			</td>
 	                        			<th scope="row">탈퇴상태</th>
 	                        			<td>
 	                        				<select class="form-control" name="status">
-	                        					<option value="1">정상</option>
-	                        					<option value="2">탈퇴</option>
+	                        					<option value="0" <c:if test="${memberManageBean.status eq 0}">selected</c:if>>전체</option>
+	                        					<option value="1" <c:if test="${memberManageBean.status eq 1}">selected</c:if>>정상</option>
+	                        					<option value="2" <c:if test="${memberManageBean.status eq 2}">selected</c:if>>탈퇴</option>
 	                        				</select>
 	                        			</td>
 	                        		</tr>
@@ -88,7 +90,7 @@
 	                        			<td>
 	                        				<select class="form-control" name="franchiseId">
 	                        					<c:forEach items="${franchiseNameList}" var="obj">
-		                        					<option value="${obj.franchise_id}">${obj.franchise_name}</option>
+		                        					<option value="${obj.franchise_id}" <c:if test="${memberManageBean.franchiseId eq obj.franchise_id}">selected</c:if>>${obj.franchise_name}</option>
 	                        					</c:forEach>
 	                        				</select>
 	                        			</td>
@@ -96,15 +98,15 @@
 	                        			<td>
 	                        				<select class="form-control" style="width:40%;display:inline-block;margin-right:10px;" id="areaSelect" name="baseArea">
 	                        					<c:forEach items="${areaList}" var="obj">
-	                        						<option value="${obj.id}" <c:if test="${baseArea eq obj.id}">selected</c:if>>${obj.area_name}</option>
+	                        						<option value="${obj.id}" <c:if test="${memberManageBean.baseArea eq obj.id}">selected</c:if>>${obj.area_name}</option>
 	                        					</c:forEach>
 	                        				</select>
 		
 	                        				<select name="areaId" class="form-control" style="width:40%;display:inline-block;" id="areaDetailSelect">
-	                        					<option value="00">지역전체</option>
-	                        					<option value="0">전체</option>
+	                        					<option value="999" <c:if test="${memberManageBean.areaId eq 999}">selected</c:if>>지역전체</option>
+	                        					<option value="0" <c:if test="${memberManageBean.areaId eq 0}">selected</c:if>>전체</option>
 	                        					<c:forEach items="${areaSigunguDefaultList}" var="obj">
-	                        						<option value="${obj.id}">${obj.sigungu_name}</option>
+	                        						<option value="${obj.id}" <c:if test="${memberManageBean.areaId eq obj.id}">selected</c:if>>${obj.sigungu_name}</option>
 	                        					</c:forEach>
 	                        				</select>
 	                        			</td>
@@ -113,14 +115,15 @@
 	                        		<tr>
 	                        			<th scope="row">닉네임</th>
 	                        			<td>
-	                        				<input type="text" class="form-control" name="nickName">
+	                        				<input type="text" class="form-control" name="nickName" value="${memberManageBean.nickName}">
 	                        			</td>
 	                        			<th scope="row">패널티상태</th>
 	                        			<td>
-	                        				<select class="form-control" name="panalty">
-	                        					<option value="1">경고</option>
-	                        					<option value="2">이용정지</option>
-	                        					<option value="3">차단</option>
+	                        				<select class="form-control" name="penalty">
+	                        					<option value="0" <c:if test="${memberManageBean.penalty eq 0}">selected</c:if>>전체</option>
+	                        					<option value="1" <c:if test="${memberManageBean.penalty eq 1}">selected</c:if>>경고</option>
+	                        					<option value="2" <c:if test="${memberManageBean.penalty eq 2}">selected</c:if>>이용정지</option>
+	                        					<option value="3" <c:if test="${memberManageBean.penalty eq 3}">selected</c:if>>차단</option>
 	                        				</select>
 	                        			</td>
 	                        		</tr>
@@ -157,18 +160,41 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                               		<tr>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               			<td></td>
-                               		</tr>                                	
+                                	<c:forEach items="${memberList}" var="obj">
+	                               		<tr>
+	                               			<td>${obj.member_id}</td>
+	                               			<td>${obj.regdate}</td>
+	                               			<td><img src="${root}/upload/${obj.profile_image}"/></td>
+	                               			<td>${obj.franchise_name}</td>
+	                               			<td>${obj.member_code }</td>
+	                               			<td>${obj.name }</td>
+	                               			<td>${obj.sigungu_name}</td>
+	                               			<td>
+	                               				<c:choose>
+	                               					<c:when test="${obj.panalty_name eq 1}">
+	                               						경고
+	                               					</c:when>
+	                               					<c:when test="${obj.panalty_name eq 2 }">
+	                               						정지
+	                               					</c:when>
+	                               					<c:otherwise>
+	                               						차단
+	                               					</c:otherwise>
+	                               				</c:choose>
+	                               			</td>
+	                               			<td>
+	                               				<c:choose>
+	                               					<c:when test="${obj.withdrawal eq 1}">
+	                               						정상
+	                               					</c:when>
+	                               					<c:otherwise>
+	                               						탈퇴
+	                               					</c:otherwise>
+	                               				</c:choose>
+	                               			</td>
+	                               			<td><a href="javascript:void(0)">수정</a></td>
+	                               		</tr>
+                                	</c:forEach>
                                 </tbody>
                               </table>
                               <br>
@@ -183,7 +209,9 @@
 				          			</c:when>
 				          			<c:otherwise>
 				          				<li class="page-item">
-				          				<a class="page-link" href="${root}/shop/apply?page=${pageBean.prevPage}" aria-label="Previous">
+				          				<a class="page-link" href="${root}/member/manage_member?page=${pageBean.prevPage}&dateData=${memberManageBean.dateData}&
+				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
+				          					penalty=${memberManageBean.penalty}" aria-label="Previous">
 										        <span aria-hidden="true">&laquo;</span>
 										        <span class="sr-only">Previous</span>
 									      	</a></li>
@@ -192,10 +220,14 @@
 				          		<c:forEach var="idx" begin="${pageBean.min}" end="${pageBean.max}">
 				          			<c:choose>
 				          				<c:when test="${idx == pageBean.page}">
-				          					<li class="page-item active"><a class="page-link" href="${root}/shop/apply?page=${idx}">${idx}</a></li>
+				          					<li class="page-item active"><a class="page-link" href="${root}/member/manage_member?page=${idx}&dateData=${memberManageBean.dateData}&
+				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
+				          					penalty=${memberManageBean.penalty}">${idx}</a></li>
 				          				</c:when>
 				          				<c:otherwise>
-				          					<li class="page-item"><a class="page-link" href="${root}/shop/apply?page=${idx}">${idx}</a></li>
+				          					<li class="page-item"><a class="page-link" href="${root}/member/manage_member?page=${idx}&dateData=${memberManageBean.dateData}&
+				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
+				          					penalty=${memberManageBean.penalty}">${idx}</a></li>
 				          				</c:otherwise>
 				          			</c:choose>	
 				          		</c:forEach>
@@ -210,7 +242,9 @@
 				          			</c:when>
 				          			<c:otherwise>
 				          				<li class="page-item">
-										      <a class="page-link" href="${root}/shop/apply?page=${pageBean.nextPage}" aria-label="Next">
+										      <a class="page-link" href="${root}/member/manage_member?page=${pageBean.nextPage}&dateData=${memberManageBean.dateData}&
+				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
+				          					penalty=${memberManageBean.penalty}" aria-label="Next">
 										        <span aria-hidden="true">&raquo;</span>
 										        <span class="sr-only">Next</span>
 										      </a>
@@ -262,7 +296,36 @@
    
     
     <script>
-		
+		$(function(){
+			
+			// 지역선택 하면 상세 지역 정보 얻어오기
+			$('#areaSelect').on('change',function(){
+				
+				$('#areaDetailSelect').empty();
+				
+				const areaCode = $('#areaSelect option:selected').val();
+				
+				$.ajax({
+					url:'${root}/shop/getAreaDetail/'+areaCode,
+					type:'get',
+					success:function(data){
+						
+							$('#areaDetailSelect').append('<option value= 999 <c:if test="${memberManageBean.areaId eq 999}">selected</c:if>>지역전체</option>');
+							$('#areaDetailSelect').append('<option value= 0 <c:if test="${memberManageBean.areaId eq 0}">selected</c:if>>전체</option>');
+							
+						$.each(data,function(index,value){
+							
+							$('#areaDetailSelect').append('<option value='+value.id+'<c:if test="${memberManageBean.areaId eq obj.id}">selected</c:if>>'+value.sigungu_name+'</option>');
+						
+						});
+						
+					}
+					
+				});
+				
+			});
+			
+		});
 	</script>
    
 </body>

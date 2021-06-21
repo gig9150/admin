@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import com.roomio.carret.bean.FranchiseRegisterBean;
 import com.roomio.carret.bean.RoleGroupsBean;
 import com.roomio.carret.bean.SearchBean;
-import com.roomio.carret.mapper.ManagerMapper;
 
 @Repository
 public class ManagerDao {

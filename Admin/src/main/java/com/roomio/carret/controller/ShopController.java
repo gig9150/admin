@@ -29,6 +29,7 @@ public class ShopController {
 	
 	Logger logger = LoggerFactory.getLogger(ShopController.class);
 	
+	
 	@GetMapping("/list")
 	public String goShopList(Model model,
 			@RequestParam(value="page",defaultValue = "1")int page,

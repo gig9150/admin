@@ -3,97 +3,59 @@
 					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.roomio.carret.member">
 
-<!-- 	<sql> -->
+	<sql id="memberSearch">
 	
-<!-- 		<where> -->
-<!-- 			<if test='dateData != null and dataData.equals("")'></if> -->
-<!-- 			<if test='data'></if> -->
-<!-- 			<if></if> -->
-<!-- 		</where> -->
-		
-<!-- 	</sql> -->
-	
-<!-- 	<select id="getMemberList" parameterType="com.roomio.carret.bean.MemberManageBean" resultType="hashMap"> -->
-<!-- 		select  -->
-<!-- 	</select> -->
-	
-<!-- 	<select id="getMemberListCnt" parameterType="com.roomio.carret.bean.MemberManageBean" resultType="int"> -->
-<!-- 		select count(*)  -->
-		
-<!-- 	</select> -->
-	
-	<!-- 가게리스트 -->
-	<sql id="shopSearch">
-		<if test=' dateSelect != null and dateData != null and !dateData.equals("") and dateSelect.equals("1") '> and date_format(s.approve_date,"%Y-%m-%d") = #{dateData}</if>
-		<if test=' dateSelect != null and dateData != null and !dateData.equals("") and dateSelect.equals("2") '> and date_format(s.regdate,"%Y-%m-%d") = #{dateData}</if>
-		<if test=' dateSelect != null and dateData != null and !dateData.equals("") and dateSelect.equals("3") '> and date_format(s.with_date,"%Y-%m-%d") = #{dateData}</if>
-		<if test=' franchiseId != null and franchiseId != ""'> and f.franchise_id = ${franchiseId}</if>
-		<if test=' areaId != null and areaId != "" '> and a.id = ${areaId}</if>
-		<if test=' sector != null and !sector.equals("")'> and s.sector LIKE CONCAT('%',#{sector},'%')</if>
-		<if test=' shopName != null and !shopName.equals("")'> and s.shop_name LIKE CONCAT('%',#{shopName},'%')</if>
-		<if test=' keyword != null and !keyword.equals("")'> and k.keyword LIKE CONCAT('%',#{keyword},'%')</if>
-		<if test=' status != null and status.equals("2") '> and s.activity_status = 1</if>
-		<if test=' status != null and status.equals("3") '> and s.activity_status = 2</if>
-		<if test=' status != null and status.equals("4") '> and s.activity_status = 3</if>
-		<if test=' panalty != null and panalty != "" and panalty == 2 '> and p.panalty_name = 1</if>
-		<if test=' panalty != null and panalty != "" and panalty == 3 '> and p.panalty_name = 2</if>
-		<if test=' panalty != null and panalty != "" and panalty == 4 '> and p.panalty_name = 3</if>
+			<if test='dateData != null and !dateData.equals("")'> and m.regdate = #{dateData} </if>
+			<if test='status != null and status != "" and status != 0 '> and m.withdrawal = ${status} </if>
+			<if test='franchiseId != null and franchiseId != "" '> and f.franchise_id = ${franchiseId} </if>
+			<if test='areaId == 0 '>and a.id = ${baseArea}</if>
+			<if test='areaId != null and areaId != "" and areaId != 0 and areaId != 999'> and f.area_id = ${areaId} </if>
+			<if test='nickName != null and !nickName.equals("") '> and m.name = #{nickName} </if>
+			
 	</sql>
 	
-	<select id="getShopCnt" resultType = "int" parameterType="com.roomio.carret.bean.ShopSearchBean">
-	
-		<![CDATA[	
-			 SELECT DISTINCT count(*)
-	         from shop s
-	         left join franchise f 
-	         on s.franchise_id = f.franchise_id 
-	         left join member m 
-	         on s.member_id = m.member_id
-	         left join area_sigungu a
-	         on s.id = a.id
-	         left join shop_keyword k
-	         on k.shop_idx = s.shop_idx
-			 LEFT JOIN shop_panalty p
-			 ON s.shop_idx = p.shop_idx 
-	         where s.status = 1 
-	         AND p.regdate = (SELECT MAX(regdate) FROM shop_panalty p1 WHERE p1.shop_idx = s.shop_idx)
-		]]>
+	<select id="getMemberList" parameterType="com.roomio.carret.bean.MemberManageBean" resultType="hashMap">
 		
-		<include refid="shopSearch"/>
+		select m.member_id,m.regdate,m.profile_image,f.franchise_name,m.member_code,m.name,s.sigungu_name,p.penalty_name,m.withdrawal
+		from member m 
+		inner join franchise as f 
+		on m.franchise_id = f.franchise_id 
+		left join member_penalty as p
+		on m.member_id = p.member_id
+		inner join area_sigungu as s
+		on f.area_id = s.id 
+		inner join area as a 
+		on a.id = s.area_code 
+		where p.regdate = (SELECT MAX(p1.regdate) FROM member_penalty as p1 WHERE p1.member_id = m.member_id 
+	        <if test=' penalty != null and penalty != "" and penalty == 2 '> and p.penalty_name = 1</if>
+			<if test=' penalty != null and penalty != "" and penalty == 3 '> and p.penalty_name = 2</if>
+			<if test=' penalty != null and penalty != "" and penalty == 4 '> and p.penalty_name = 3</if>
+         )
+		
+		<include refid="memberSearch"/>
+		
+	</select>
+	
+	<select id="getMemberListCnt" parameterType="com.roomio.carret.bean.MemberManageBean" resultType="int">
+
+		select count(*) 
+		from member m 
+		inner join franchise as f 
+		on m.franchise_id = f.franchise_id 
+		left join member_penalty as p
+		on m.member_id = p.member_id
+		inner join area_sigungu as s
+		on f.area_id = s.id 
+		inner join area as a 
+		on a.id = s.area_code 
+		where p.regdate = (SELECT MAX(p1.regdate) FROM member_penalty as p1 WHERE p1.member_id = m.member_id 
+	        <if test=' penalty != null and penalty != "" and penalty == 2 '> and p.penalty_name = 1</if>
+			<if test=' penalty != null and penalty != "" and penalty == 3 '> and p.penalty_name = 2</if>
+			<if test=' penalty != null and penalty != "" and penalty == 4 '> and p.penalty_name = 3</if>
+         )
+		
+		<include refid="memberSearch"/>
 		
 	</select>
 	
-
-	
-	<select id="getShopList" resultType = "hashMap" parameterType="com.roomio.carret.bean.ShopSearchBean">
-	
-		<![CDATA[
-			 SELECT DISTINCT s.shop_idx,s.approve_date,f.franchise_name,s.main_image,s.shop_code,s.shop_name,m.name,
-	         a.sigungu_name,date_format(s.regdate,"%Y-%m-%d") as regdate,s.activity_status,p.panalty_name,p.register
-	         from shop s
-	         left join franchise f 
-	         on s.franchise_id = f.franchise_id 
-	         left join member m 
-	         on s.member_id = m.member_id
-	         left join area_sigungu a
-	         on s.id = a.id
-	         left join shop_keyword k
-	         on k.shop_idx = s.shop_idx
-			 LEFT JOIN shop_panalty p
-			 ON s.shop_idx = p.shop_idx 
-	         where s.status = 1 
-	         AND p.regdate = (SELECT MAX(regdate) FROM shop_panalty p1 WHERE p1.shop_idx = s.shop_idx)
-	    ]]>
-		
-		<include refid="shopSearch"/>
-		
-		<![CDATA[
-		
-			ORDER BY s.approve_date DESC
-			
-		]]>
-		
-	</select>
-
-
 </mapper>

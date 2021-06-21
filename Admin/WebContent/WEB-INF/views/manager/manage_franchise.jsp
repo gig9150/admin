@@ -190,12 +190,10 @@
         <i class="fas fa-angle-up"></i>
     </a>
     
-    <!-- 등록 modal  -->
-    
     <!-- 수정 modal  -->
 	
-	<div class="modal fade bd-example-modal-lg-update" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg" style="margin-right: 714px !important;">
+	<div class="modal fade bd-example-modal-lg-update" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"  aria-hidden="true">
+	  <div class="modal-dialog modal-lg" style="margin-right: 714px !important;" >
 	  	<form method="post" action="${root}/manager/manage_franchise_update_pro" id="managerUpdate" enctype="multipart/form-data">
 		  <div class="modal-content" style="width:160%;">
 			<div class="modal-header">
@@ -218,27 +216,33 @@
               			<th scope="row" >
               				아이디:
               			</th>
+              			
               			<td colspan="2">
               				<input type="text" class="form-control" id="updateManagerId" name="id" onkeydown="resetIdExist()">
               			</td>
+              			
               			<td>
               				<button type="button" class="btn btn-primary" id="updateIdExistBtn" style="width:100%">아이디 중복체크</button>
               			</td>
+              			
               		</tr>
               		<tr>
               			<th scope="row">
               				비밀번호
               			</th>
+              			
               			<td>
-              				<input type="text" name="pw" class="form-control">
+              				<input type="text" name="pw" class="form-control" id="updatePw">
               			</td>
               			
               			<th scope="row">
               				비밀번호확인
               			</th>
+              			
               			<td>
-              				<input type="text" class="form-control">
+              				<input type="text" class="form-control" id="updatePw2">
               			</td>
+              			
               		</tr>
               		<tr>
               			<th scope="row">
@@ -370,19 +374,22 @@
               			<th>
               				현재 파일
               			</th>
-     					<td id="presentFile" colspan="2">
+              			
+     					<td id="presentFile">
      						
      					</td>
-     					<td>
      					
+     					<th>
+     						파일등록 및 포인트컬러 지정 
+     					</th>
+     					
+     					<td>
      						<span>포인트 컬러 :</span>
      						<input type="color" name="pointColor" style="display:inline-block;margin-bottom:30px;margin-top: 16px;" id="point_color">
      						<input type="file" name="uploadFile" id="logo_file" style="display:block;" accept="image/*">
      						
      					</td>
-     					
      				</tr>
-				
               		<tr>
               			<td colspan="4" style="text-align:center">
               				<button type="submit" class="btn btn-light">수정 하기</button>
@@ -391,100 +398,27 @@
               		</tr>
               	</tbody>
               </table>
+          	</div>
+          	</div>
           </div>
 		</form>
 	  </div>
 	</div>
+    
+    
+	
+	<!-- 등록 modal -->
 	
 	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg">
-	  	<form method="post" action="${root}/manager/manage_franchise_register_pro" id="managerRegister" enctype="multipart/form-data">
-		  <div class="modal-content">
-			<div class="modal-header">
-				가맹사 등록 및 수정
-			</div>
-			<div class="modal-body">
-				<input type="hidden" id="idExist" value="false">
-				<div class="form-group">
-					<input type="text" id="managerId" name="id" class="form-control-sm" style="width:30%;" placeholder="아이디를 입력해주세요." onkeydown="resetIdExist()">
-					<button type="button" class="btn btn-primary" id="idExistBtn" style="width:20%">아이디 중복체크</button>
-					<input type="text" name="pw" class="form-control-sm" style="width:40%;" placeholder="비밀번호를 입력해주세요.">
-				</div>
-				<div class="form-group">
-					<input type="text" name="serviceName" class="form-control-sm" style="width:45%;" placeholder="서비스 명">
-					<input type="text" name="mainDomain" class="form-control-sm" style="width:45%;" placeholder="메인 도메인">
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control-sm" style="width:60%;" id="additionalDomainInput" >
-					<button type="button" class="btn btn-secondary" id="additionalDomainBtn">추가</button>
-				</div>
-				<div class="form-group addtionalDomainGroup">
-				
-				</div>
-				
-				
-				<div class="form-group">
-					<label for="exampleFormControlFile1">로고 파일 업로드 </label>
-    				<input type="file" name="uploadFile" class="form-control-file" id="exampleFormControlFile1" accept="image/*">
-					<br>				
-					<label> 포인트 컬러 : 
-					<input type="color" name="pointColor" placeholder="point color pick"></label>
-				</div>
-				<hr><br>
-				<div class="form-group">
-					<input type="text" class="form-control-sm" name="franchiseName" style="width:30%;" placeholder="가맹사명">
-					<input type="text" class="form-control-sm" name="representativeName" style="width:30%;" placeholder="대표자명">
-					<input type="text" class="form-control-sm" name="businessNumber" style="width:30%;" placeholder="사업자번호">
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control-sm" name="address" style="width:91%" placeholder="주소">
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control-sm" name="phone_number" style="width:45%;" placeholder="전화번호">
-					<input type="text" class="form-control-sm" name="fax" style="width:45%;" placeholder="FAX">
-				</div>
-				<hr><br>
-				<div class="form-group">
-					<input type="text" class="form-control-sm" name="responsibilityName" style="width:30%;" placeholder="담당자명">
-					<input type="text" class="form-control-sm" name="responsibilityDepa" style="width:30%;" placeholder="부서">
-					<input type="text" class="form-control-sm" name="responsibilityPosition" style="width:30%;" placeholder="직책">
-				</div>
-				<div class="form-group">
-					<input type="text" class="form-control-sm" name="responsibilityNumber" style="width:45%;" placeholder="전화번호">
-					<input type="text" class="form-control-sm" name="responsibilityPhone" style="width:45%;" placeholder="휴대전화번호">
-				</div>
-				
-				<div class="form-group">
-					<input type="text" class="form-control-sm" name="responsibilityEmail" style="width:91%;" placeholder="이메일">
-				</div>
-				
-				<div class="form-group">
-					<textarea class="form-control" name="memo" id="exampleFormControlTextarea1" rows="3" placeholder="메모"></textarea>
-				</div>
-				
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	        	<button type="submit" class="btn btn-primary">저장</button>
-			</div>
-		  </div>
-		</form>
-	  </div>
-	</div>
-	
-	<!-- 수정 modal  -->
-	
-	<div class="modal fade bd-example-modal-lg-update" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-lg" style="margin-right: 714px !important;">
-	  	<form method="post" action="${root}/manager/manage_franchise_update_pro" id="managerUpdate" enctype="multipart/form-data">
+	  	<form method="post" action="${root}/manager/manage_franchise_register_pro" id="managerRegister" enctype="multipart/form-data">
 		  <div class="modal-content" style="width:160%;">
 			<div class="modal-header">
 				가맹사 등록 및 수정
 			</div>
 			<div class="modal-body">
-			<input type="hidden" id="updateIdExist" value="false">
-			<input type="hidden" name="franchiseId" id="franchise_id">
-		  <!-- DataTales Example -->
+			<input type="hidden" id="idExist" value="false">
+		 		 DataTales Example
           	<div class="card shadow mb-4">
               <table class="table table-bordered"> 
               	<colgroup>
@@ -498,40 +432,46 @@
               			<th scope="row" >
               				아이디:
               			</th>
+              			
               			<td colspan="2">
-              				<input type="text" class="form-control" id="updateManagerId" name="id" onkeydown="resetIdExist()">
+              				<input type="text" class="form-control" id="managerId" name="id" onkeydown="resetIdExist()">
               			</td>
+              			
               			<td>
-              				<button type="button" class="btn btn-primary" id="updateIdExistBtn" style="width:100%">아이디 중복체크</button>
+              				<button type="button" class="btn btn-primary" id="idExistBtn" style="width:100%">아이디 중복체크</button>
               			</td>
+              			
               		</tr>
               		<tr>
               			<th scope="row">
               				비밀번호
               			</th>
+              			
               			<td>
-              				<input type="text" name="pw" class="form-control">
+              				<input type="text" name="pw" class="form-control" id="registerPw">
               			</td>
               			
               			<th scope="row">
               				비밀번호확인
               			</th>
+              			
               			<td>
-              				<input type="text" class="form-control">
+              				<input type="text" class="form-control" id="registerPw2">
               			</td>
+              			
               		</tr>
               		<tr>
               			<th scope="row">
               				서비스 명:
               			</th>
               			<td>
-              				<input type="text" name="serviceName" id="service_name" class="form-control">
+              				<input type="text" name="serviceName" class="form-control">
               			</td>
               			<th>
               				메인 도메인 
               			</th>
               			<td>
-              				<input type="text" name="mainDomain" id="main_domain" class="form-control" >
+              				<input type="text" name="mainDomain" class="form-control" >
               			</td>
               		</tr>
               		
@@ -540,13 +480,13 @@
               				서브 도메인 
               			</th>
               			<td colspan="3">
-              				<input type="text" class="form-control" id="updateDomainInput" style="display:inline-block;width:93%;" >
-							<button type="button" class="btn btn-secondary" id="updateDomainBtn" style="display:inline-block;margin-left: 13px;
+              				<input type="text" class="form-control" id="additionalDomainInput" style="display:inline-block;width:93%;" >
+							<button type="button" class="btn btn-secondary" id="additionalDomainBtn" style="display:inline-block;margin-left: 13px;
     						margin-bottom: 4px;">추가</button>
               			</td>
               		</tr>
               		<tr>
-              			<td class="updateDomainGroup" colspan="4">
+              			<td class="additionalDomainGroup" colspan="4">
               				
               			</td>
               		</tr>
@@ -555,13 +495,13 @@
      						가맹사명
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="franchiseName" id="franchise_name">
+     						<input type="text" class="form-control" name="franchiseName">
      					</td>
      					<th>
      						대표자명
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="representativeName" id="representative_name">
+     						<input type="text" class="form-control" name="representativeName">
      					</td>
      				</tr>
      				<tr>
@@ -569,13 +509,13 @@
      						사업자번호
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="businessNumber" id="business_number">
+     						<input type="text" class="form-control" name="businessNumber">
      					</td>
      					<th>
      						주소	
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="address" id="address" >
+     						<input type="text" class="form-control" name="address">
      					</td>
      				</tr>
      				<tr>
@@ -583,13 +523,13 @@
      						전화번호
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="phone_number" id="phone_number">
+     						<input type="text" class="form-control" name="phone_number">
      					</td>
      					<th>
      						FAX
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="fax" id="fax">
+     						<input type="text" class="form-control" name="fax">
      					</td>
      				</tr>
      				<tr>
@@ -597,13 +537,13 @@
      						담당자명
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="responsibilityName" id="responsibility_name">
+     						<input type="text" class="form-control" name="responsibilityName">
      					</td>
      					<th>
      						담당자 부서
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="responsibilityDepa" id="responsibility_depa">
+     						<input type="text" class="form-control" name="responsibilityDepa">
      					</td>
      				</tr>
      				<tr>
@@ -611,13 +551,13 @@
      						 담당자 직책 
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="responsibilityPosition" id="responsibility_position">
+     						<input type="text" class="form-control" name="responsibilityPosition">
      					</td>
      					<th>
      						전화번호
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="responsibilityNumber" id="responsibility_number">
+     						<input type="text" class="form-control" name="responsibilityNumber">
      					</td>
      				</tr>
      				<tr>
@@ -625,13 +565,13 @@
      						휴대전화번호
      					</th>
      					<td>
-     						<input type="text" class="form-control" name="responsibilityPhone" id="responsibility_phone">
+     						<input type="text" class="form-control" name="responsibilityPhone">
      					</td>
      					<th>
      						이메일
      					</th>
      					<td colspan="3">
-     						<input type="text" class="form-control" name="responsibilityEmail" id="responsibility_email">
+     						<input type="text" class="form-control" name="responsibilityEmail">
      					</td>
      					
      				</tr>
@@ -643,26 +583,29 @@
      				</tr>
      				<tr>
      					<td colspan="4"> 
-     						<textarea class="form-control" name="memo" id="memo" rows="3"></textarea>
+     						<textarea class="form-control" name="memo" rows="3"></textarea>
      					</td>
      				</tr>
               		<tr>	
               			<th>
               				현재 파일
               			</th>
-     					<td id="presentFile" colspan="2">
-     						
-     					</td>
+              			
+              			<td>
+              				
+              			</td>
+              			
+     					<th>
+     						파일등록 및 포인트컬러 지정 
+     					</th>
+     					
      					<td>
-     					
      						<span>포인트 컬러 :</span>
-     						<input type="color" name="pointColor" style="display:inline-block;margin-bottom:30px;margin-top: 16px;" id="point_color">
-     						<input type="file" name="uploadFile" id="logo_file" style="display:block;" accept="image/*">
+     						<input type="color" name="pointColor" style="display:inline-block;margin-bottom:30px;margin-top: 16px;">
+     						<input type="file" name="uploadFile" style="display:block;" accept="image/*">
      						
      					</td>
-     					
      				</tr>
-				
               		<tr>
               			<td colspan="4" style="text-align:center">
               				<button type="submit" class="btn btn-light">수정 하기</button>
@@ -671,10 +614,14 @@
               		</tr>
               	</tbody>
               </table>
+         	 </div>
+         	</div>
           </div>
 		</form>
 	  </div>
 	</div>
+	
+	
 	
 	
 
@@ -779,12 +726,22 @@
 				alert('아이디 중복체크를 완료해주세요');
 				e.preventDefault();
 			}
+			
+			if($('#registerPw').val() != $('#registerPw2').val()){
+				alert('비밀번호가 서로 다릅니다.');
+				e.preventDefault();
+			}
 		});
    		
 		$('#managerUpdate').submit(function(e){
 			
 			if($('#updateIdExist').val() == 'false'){
 				alert('아이디 중복체크를 완료해주세요');
+				e.preventDefault();
+			}
+			
+			if($('#updatePw').val() != $('#updatePw2').val()){
+				alert('비밀번호가 서로 다릅니다.');
 				e.preventDefault();
 			}
 		});
@@ -829,8 +786,6 @@
    		
    			//(수정모달)추가 도메인 입력 (입력할때마다 추가)
 			$('#updateDomainBtn').on('click',function(){
-				
-				console.log('btn event connect');
 				
 				if($('#updateDomainInput').val() == null || $('#updateDomainInput').val() == ''){
 					alert('도메인을 입력해 주세요.');

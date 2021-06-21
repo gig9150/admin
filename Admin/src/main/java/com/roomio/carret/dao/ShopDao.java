@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.roomio.carret.bean.ShopApplySearchBean;
 import com.roomio.carret.bean.ShopSearchBean;
-import com.roomio.carret.mapper.ShopMapper;
 
 @Repository
 public class ShopDao {
