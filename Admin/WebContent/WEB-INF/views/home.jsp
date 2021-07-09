@@ -44,8 +44,8 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                   	
+                
+					
 
                 </div>
                 <!-- /.container-fluid -->
@@ -100,6 +100,17 @@
     
  
 
+<script>
+
+	$(function(){
+		
+		$('.two-collapse').on('click',function(){
+			$('.two-collapse-item').css('display','block');
+		});
+		
+	});
+	
+</script>
 </body>
 
 </html>

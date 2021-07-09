@@ -25,6 +25,7 @@
 
     <!-- Custom styles for this page -->
     <link href="${root}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="${root}/css/bo-style.css" rel="stylesheet">
 
 </head>
 
@@ -60,23 +61,41 @@
                             <h6 class="m-0 font-weight-bold text-primary">검색 </h6>
                         </div>
                         <form method="get" action="${root}/manager/manage_franchise">
-	                        <div class="card-body">
-	                            <div class="row">
-	                                <div class="col-sm-2">
-	                                    <span>가맹사 명</span>
-	                                </div>
-	                                <div class="col-sm-10">
-	                                    <input type="text" name="keyWord" class="form-control" aria-label="Text input with dropdown button" value="${keyWord}">
-	                                </div>
-	                            </div>
-	                            <br><br>
-	                            <div class="row text-right">
-	                                <div class="col">
-	                                    <button type="submit" class="btn btn-primary btn-lg">검  색</button>
-	                                    <button type="reset" class="btn btn-secondary btn-lg">초기화</button>
-	                                </div>
-	                            </div>
-	                        </div>
+                        	<input type="hidden" name="selectNum" value="${map.selectNum}">
+                        	<input type="hidden" name="page" value="${page}">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-sm-1">등록일</div>
+									<div class="col-sm-3 datePick">
+										<button type="button" id="date1" class="btn">오늘</button>
+										<button type="button" id="date2" class="btn">1주</button>
+										<button type="button" id="date3" class="btn">3개월</button>
+										<button type="button" id="date4" class="btn">6개월</button>	
+									</div>
+									<div class="col-sm-8">
+										<input type="date" class="form-control" style="width:30%;display:inline-block;" name="startDate" id="startDate" value="${map.startDate}">&nbsp;~&nbsp;
+										<input type="date" class="form-control" style="width:30%;display:inline-block;" name="endDate" id="endDate" value="${map.endDate}">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-1">키워드</div>
+									<div class="col-sm-3">
+										<select class="form-control" style="width:84%;" name="select">
+											<option value="1"<c:if test="${map.select eq 1}">selected</c:if>>전체</option>
+											<option value="2"<c:if test="${map.select eq 2}">selected</c:if>>가맹사명</option>
+											<option value="3"<c:if test="${map.select eq 3}">selected</c:if>>가맹사 번호</option>
+											<option value="4"<c:if test="${map.select eq 4}">selected</c:if>>서비스명</option>
+										</select>
+									</div>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" style="width:50%;" name="keyWord" value="${map.keyWord }">
+									</div>
+								</div>
+								<div class="row justify-content-center">
+									<button type="submit" class="btn btn-primary btn-lg">검  색</button> 
+		                            <button type="reset" class="btn btn-secondary btn-lg" style="margin-left:10px;">초기화</button>
+								</div>
+							</div>
 	                    </form>
                     </div>
                     
@@ -86,38 +105,46 @@
                             <h6 class="m-0 font-weight-bold text-primary">조회 결과</h6>
                         </div>
                         <div class="card-body">
-                            <table class="table">
+                        	<div class="row">
+	                        	<div class="col-sm-1">
+		                        	<span>목록 총${franchiseCnt}개</span>
+	                        	</div>
+	                        	<div class="col-sm-10">
+		                        	<select class="form-control float-right" style="width:12%;" id="selectNum" >
+		                        		<option value="10" <c:if test="${map.selectNum eq 10}">selected</c:if>>10개</option>
+		                        		<option value="30" <c:if test="${map.selectNum eq 30}">selected</c:if>>30개</option>
+		                        		<option value="50" <c:if test="${map.selectNum eq 50}">selected</c:if>>50개</option>
+		                        		<option value="100" <c:if test="${map.selectNum eq 100}">selected</c:if>>100개</option>
+		                        	</select>
+	                        	</div>
+	                        	<div class="col-sm-1">
+		                        	<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#excelConfirm" >엑셀다운</button>
+	                        	</div>
+                        	</div>
+                            <table class="table" id="franchiseListTable" style="margin-top:1rem;">
                                 <thead class="thead-dark">
                                   <tr>
                                     <th scope="col">#</th>
-                                    <th>일자</th>
+                                    <th>등록일</th>
                                     <th>가맹사명</th>
+                                    <th>가맹사 번호</th>
                                     <th>서비스명</th>
-                                    <th>가맹사 아이디</th>
-                                    <th>서비스 상태</th>
-                                    <th>메인 도메인</th>
-                                    <th>수정</th>
+                                    <th>주소</th>
+                                    <th>고객센터</th>
+                                    <th>운영여부</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                	<c:forEach items="${franchiseList}" var="obj">
+                                	<c:forEach items="${franchiseList}" var="obj" varStatus="status">
 	                               		<tr>
-		                                	<th scope="row">${obj.franchiseId}</th>
+		                                	<th scope="row"><a href="${root}/manager/franchise_update?franchiseId=${obj.franchiseId}">${status.count}</a></th>
 	                                    	<td>${obj.regdate}</td>
 	                                    	<td>${obj.franchiseName}</td>
+	                                    	<td>${obj.franchiseId}</td>
 	                                    	<td>${obj.serviceName}</td>
-	                                    	<td>${obj.id}</td>
+	                                    	<td>${obj.address}</td>
+	                                    	<td>${obj.customerService}</td>
 	                                    	<td>${obj.serviceStatus}</td>
-	                                    	<td>${obj.mainDomain}</td>
-	                                    	<td><button type="button" class="btn btn-primary updateBtn" data-toggle="modal" data-target=".bd-example-modal-lg-update" 
-	                                    	data-franchise-id="${obj.franchiseId}" data-subdomain-list = "${obj.subDomainList}" data-service-name="${obj.serviceName }" 
-	                                    	data-main-domain = "${obj.mainDomain}" data-franchise-name = "${obj.franchiseName}" data-logo-file="${obj.logoFile}" 
-	                                    	data-point-color="${obj.pointColor}" data-representative-name = "${obj.representativeName}" data-business-number="${obj.businessNumber}" 
-	                                    	data-address="${obj.address}" data-phone-number="${obj.phone_number}" data-fax="${obj.fax}" 
-	                                    	data-responsibility-name="${obj.responsibilityName}" data-responsibility-depa="${obj.responsibilityDepa}" 
-	                                    	data-responsibility-position="${obj.responsibilityPosition}" data-responsibility-number="${obj.responsibilityNumber}" 
-	                                    	data-responsibility-phone="${obj.responsibilityPhone}" data-responsibility-email="${obj.responsibilityEmail}" 
-	                                    	data-memo = "${obj.memo}" data-id="${obj.id}" >수정</button></td>
 	                          			</tr>         	                                	
                                 	</c:forEach>
                                 </tbody>
@@ -134,7 +161,7 @@
 				          			</c:when>
 				          			<c:otherwise>
 				          				<li class="page-item">
-				          				<a class="page-link" href="${root}/manager/manage_franchise?page=${pageBean.prevPage}&keyWord=${keyWord}" aria-label="Previous">
+				          				<a class="page-link" href="${root}/manager/manage_franchise?page=${pageBean.prevPage}&keyWord=${map.keyWord}&startDate=${map.startDate}&endDate=${map.endDate}&select=${map.select}&selectNum=${map.selectNum}" aria-label="Previous">
 										        <span aria-hidden="true">&laquo;</span>
 										        <span class="sr-only">Previous</span>
 									      	</a></li>
@@ -143,10 +170,10 @@
 				          		<c:forEach var="idx" begin="${pageBean.min}" end="${pageBean.max}">
 				          			<c:choose>
 				          				<c:when test="${idx == pageBean.page}">
-				          					<li class="page-item active"><a class="page-link" href="${root}/manager/manage_franchise?page=${idx}&keyWord=${keyWord}">${idx}</a></li>
+				          					<li class="page-item active"><a class="page-link" href="${root}/manager/manage_franchise?page=${idx}&keyWord=${map.keyWord}&startDate=${map.startDate}&endDate=${map.endDate}&select=${map.select}&selectNum=${map.selectNum}">${idx}</a></li>
 				          				</c:when>
 				          				<c:otherwise>
-				          					<li class="page-item"><a class="page-link" href="${root}/manager/manage_franchise?page=${idx}&keyWord=${keyWord}">${idx}</a></li>
+				          					<li class="page-item"><a class="page-link" href="${root}/manager/manage_franchise?page=${idx}&keyWord=${map.keyWord}&startDate=${map.startDate}&endDate=${map.endDate}&select=${map.select}&selectNum=${map.selectNum}">${idx}</a></li>
 				          				</c:otherwise>
 				          			</c:choose>	
 				          		</c:forEach>
@@ -161,7 +188,7 @@
 				          			</c:when>
 				          			<c:otherwise>
 				          				<li class="page-item">
-										      <a class="page-link" href="${root}/manager/manage_franchise?page=${pageBean.nextPage}&keyWord=${keyWord}" aria-label="Next">
+										      <a class="page-link" href="${root}/manager/manage_franchise?page=${pageBean.nextPage}&keyWord=${map.keyWord}&startDate=${map.startDate}&endDate=${map.endDate}&select=${map.select}&selectNum=${map.selectNum}" aria-label="Next">
 										        <span aria-hidden="true">&raquo;</span>
 										        <span class="sr-only">Next</span>
 										      </a>
@@ -171,7 +198,8 @@
 				          	</ul>
 				          </div>
 				          <br>
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" style="width:300px;position:relative;margin:-5px -150px;top:50%;left:50%;">등록</button>
+<!--                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" style="width:300px;position:relative;margin:-5px -150px;top:50%;left:50%;">등록</button> -->
+ 						  <a href="${root}/manager/franchise_register" type="button" class="btn btn-primary" style="width:300px;position:relative;margin:-5px -150px;top:50%;left:50%;">등록</a> 
                           <br>
                         </div>
                     </div>
@@ -189,435 +217,21 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-    
-    <!-- 수정 modal  -->
-	
-	<div class="modal fade bd-example-modal-lg-update" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"  aria-hidden="true">
-	  <div class="modal-dialog modal-lg" style="margin-right: 714px !important;" >
-	  	<form method="post" action="${root}/manager/manage_franchise_update_pro" id="managerUpdate" enctype="multipart/form-data">
-		  <div class="modal-content" style="width:160%;">
-			<div class="modal-header">
-				가맹사 등록 및 수정
-			</div>
-			<div class="modal-body">
-			<input type="hidden" id="updateIdExist" value="false">
-			<input type="hidden" name="franchiseId" id="franchise_id">
-		  <!-- DataTales Example -->
-          	<div class="card shadow mb-4">
-              <table class="table table-bordered"> 
-              	<colgroup>
-              		<col scope="col" style="width:10%;">
-              		<col scope="col" style="width:40%;">
-              		<col scope="col" style="width:10%;">
-              		<col scope="col" style="width:40%;">
-              	</colgroup>
-              	<tbody>
-              		<tr>
-              			<th scope="row" >
-              				아이디:
-              			</th>
-              			
-              			<td colspan="2">
-              				<input type="text" class="form-control" id="updateManagerId" name="id" onkeydown="resetIdExist()">
-              			</td>
-              			
-              			<td>
-              				<button type="button" class="btn btn-primary" id="updateIdExistBtn" style="width:100%">아이디 중복체크</button>
-              			</td>
-              			
-              		</tr>
-              		<tr>
-              			<th scope="row">
-              				비밀번호
-              			</th>
-              			
-              			<td>
-              				<input type="text" name="pw" class="form-control" id="updatePw">
-              			</td>
-              			
-              			<th scope="row">
-              				비밀번호확인
-              			</th>
-              			
-              			<td>
-              				<input type="text" class="form-control" id="updatePw2">
-              			</td>
-              			
-              		</tr>
-              		<tr>
-              			<th scope="row">
-              				서비스 명:
-              			</th>
-              			<td>
-              				<input type="text" name="serviceName" id="service_name" class="form-control">
-              			</td>
-              			<th>
-              				메인 도메인 
-              			</th>
-              			<td>
-              				<input type="text" name="mainDomain" id="main_domain" class="form-control" >
-              			</td>
-              		</tr>
-              		
-              		<tr>
-              			<th>
-              				서브 도메인 
-              			</th>
-              			<td colspan="3">
-              				<input type="text" class="form-control" id="updateDomainInput" style="display:inline-block;width:93%;" >
-							<button type="button" class="btn btn-secondary" id="updateDomainBtn" style="display:inline-block;margin-left: 13px;
-    						margin-bottom: 4px;">추가</button>
-              			</td>
-              		</tr>
-              		<tr>
-              			<td class="updateDomainGroup" colspan="4">
-              				
-              			</td>
-              		</tr>
-     				<tr>
-     					<th>
-     						가맹사명
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="franchiseName" id="franchise_name">
-     					</td>
-     					<th>
-     						대표자명
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="representativeName" id="representative_name">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						사업자번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="businessNumber" id="business_number">
-     					</td>
-     					<th>
-     						주소	
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="address" id="address" >
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						전화번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="phone_number" id="phone_number">
-     					</td>
-     					<th>
-     						FAX
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="fax" id="fax">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						담당자명
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityName" id="responsibility_name">
-     					</td>
-     					<th>
-     						담당자 부서
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityDepa" id="responsibility_depa">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						 담당자 직책 
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityPosition" id="responsibility_position">
-     					</td>
-     					<th>
-     						전화번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityNumber" id="responsibility_number">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						휴대전화번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityPhone" id="responsibility_phone">
-     					</td>
-     					<th>
-     						이메일
-     					</th>
-     					<td colspan="3">
-     						<input type="text" class="form-control" name="responsibilityEmail" id="responsibility_email">
-     					</td>
-     					
-     				</tr>
-     				
-     				<tr>
-     					<th colspan="4">
-     						관리자 메모
-     					</th>
-     				</tr>
-     				<tr>
-     					<td colspan="4"> 
-     						<textarea class="form-control" name="memo" id="memo" rows="3"></textarea>
-     					</td>
-     				</tr>
-              		<tr>	
-              			<th>
-              				현재 파일
-              			</th>
-              			
-     					<td id="presentFile">
-     						
-     					</td>
-     					
-     					<th>
-     						파일등록 및 포인트컬러 지정 
-     					</th>
-     					
-     					<td>
-     						<span>포인트 컬러 :</span>
-     						<input type="color" name="pointColor" style="display:inline-block;margin-bottom:30px;margin-top: 16px;" id="point_color">
-     						<input type="file" name="uploadFile" id="logo_file" style="display:block;" accept="image/*">
-     						
-     					</td>
-     				</tr>
-              		<tr>
-              			<td colspan="4" style="text-align:center">
-              				<button type="submit" class="btn btn-light">수정 하기</button>
-              				<button type="reset" class="btn btn-light">다시 작성</button>
-              			</td>
-              		</tr>
-              	</tbody>
-              </table>
-          	</div>
-          	</div>
-          </div>
-		</form>
-	  </div>
-	</div>
-    
-    
-	
-	<!-- 등록 modal -->
-	
-	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg" style="margin-right: 714px !important;">
-	  	<form method="post" action="${root}/manager/manage_franchise_register_pro" id="managerRegister" enctype="multipart/form-data">
-		  <div class="modal-content" style="width:160%;">
-			<div class="modal-header">
-				가맹사 등록 및 수정
-			</div>
-			<div class="modal-body">
-			<input type="hidden" id="idExist" value="false">
-		 		 DataTales Example
-          	<div class="card shadow mb-4">
-              <table class="table table-bordered"> 
-              	<colgroup>
-              		<col scope="col" style="width:10%;">
-              		<col scope="col" style="width:40%;">
-              		<col scope="col" style="width:10%;">
-              		<col scope="col" style="width:40%;">
-              	</colgroup>
-              	<tbody>
-              		<tr>
-              			<th scope="row" >
-              				아이디:
-              			</th>
-              			
-              			<td colspan="2">
-              				<input type="text" class="form-control" id="managerId" name="id" onkeydown="resetIdExist()">
-              			</td>
-              			
-              			<td>
-              				<button type="button" class="btn btn-primary" id="idExistBtn" style="width:100%">아이디 중복체크</button>
-              			</td>
-              			
-              		</tr>
-              		<tr>
-              			<th scope="row">
-              				비밀번호
-              			</th>
-              			
-              			<td>
-              				<input type="text" name="pw" class="form-control" id="registerPw">
-              			</td>
-              			
-              			<th scope="row">
-              				비밀번호확인
-              			</th>
-              			
-              			<td>
-              				<input type="text" class="form-control" id="registerPw2">
-              			</td>
-              			
-              		</tr>
-              		<tr>
-              			<th scope="row">
-              				서비스 명:
-              			</th>
-              			<td>
-              				<input type="text" name="serviceName" class="form-control">
-              			</td>
-              			<th>
-              				메인 도메인 
-              			</th>
-              			<td>
-              				<input type="text" name="mainDomain" class="form-control" >
-              			</td>
-              		</tr>
-              		
-              		<tr>
-              			<th>
-              				서브 도메인 
-              			</th>
-              			<td colspan="3">
-              				<input type="text" class="form-control" id="additionalDomainInput" style="display:inline-block;width:93%;" >
-							<button type="button" class="btn btn-secondary" id="additionalDomainBtn" style="display:inline-block;margin-left: 13px;
-    						margin-bottom: 4px;">추가</button>
-              			</td>
-              		</tr>
-              		<tr>
-              			<td class="additionalDomainGroup" colspan="4">
-              				
-              			</td>
-              		</tr>
-     				<tr>
-     					<th>
-     						가맹사명
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="franchiseName">
-     					</td>
-     					<th>
-     						대표자명
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="representativeName">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						사업자번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="businessNumber">
-     					</td>
-     					<th>
-     						주소	
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="address">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						전화번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="phone_number">
-     					</td>
-     					<th>
-     						FAX
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="fax">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						담당자명
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityName">
-     					</td>
-     					<th>
-     						담당자 부서
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityDepa">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						 담당자 직책 
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityPosition">
-     					</td>
-     					<th>
-     						전화번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityNumber">
-     					</td>
-     				</tr>
-     				<tr>
-     					<th>
-     						휴대전화번호
-     					</th>
-     					<td>
-     						<input type="text" class="form-control" name="responsibilityPhone">
-     					</td>
-     					<th>
-     						이메일
-     					</th>
-     					<td colspan="3">
-     						<input type="text" class="form-control" name="responsibilityEmail">
-     					</td>
-     					
-     				</tr>
-     				
-     				<tr>
-     					<th colspan="4">
-     						관리자 메모
-     					</th>
-     				</tr>
-     				<tr>
-     					<td colspan="4"> 
-     						<textarea class="form-control" name="memo" rows="3"></textarea>
-     					</td>
-     				</tr>
-              		<tr>	
-              			<th>
-              				현재 파일
-              			</th>
-              			
-              			<td>
-              				
-              			</td>
-              			
-     					<th>
-     						파일등록 및 포인트컬러 지정 
-     					</th>
-     					
-     					<td>
-     						<span>포인트 컬러 :</span>
-     						<input type="color" name="pointColor" style="display:inline-block;margin-bottom:30px;margin-top: 16px;">
-     						<input type="file" name="uploadFile" style="display:block;" accept="image/*">
-     						
-     					</td>
-     				</tr>
-              		<tr>
-              			<td colspan="4" style="text-align:center">
-              				<button type="submit" class="btn btn-light">수정 하기</button>
-              				<button type="reset" class="btn btn-light">다시 작성</button>
-              			</td>
-              		</tr>
-              	</tbody>
-              </table>
-         	 </div>
-         	</div>
-          </div>
-		</form>
+ 
+	<!-- 엑셀 다운로드 확인 modal -->
+	<div class="modal fade" id="excelConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      
+	      <div class="modal-body">
+	      	<span>개인정보가 포함된 파일입니다.<br>열람 사유를 입력하여 주세요.<br><br></span>
+	        <textarea rows="5" style="width:100%" id="readingReason"></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+	        <button type="button" class="btn btn-primary" id="excelDown">ok</button>
+	      </div>
+	    </div>
 	  </div>
 	</div>
 	
@@ -641,6 +255,7 @@
 
     <!-- Page level custom scripts -->
     <script src="${root}/js/demo/datatables-demo.js"></script>
+    <script src="${root}/js/bo-script.js"></script>
     
 	<script>
 		$(function(){
@@ -655,7 +270,7 @@
 				
 				const domain = $('#additionalDomainInput').val();
 				
-				$('.addtionalDomainGroup').append('<input type="text" name="additionalDomain" class="form-control-sm" style="width:30%;" value="'+ domain + '">');
+				$('.additionalDomainGroup').append('<input type="text" name="additionalDomain" readonly class="form-control" style="width:30%;display:inline-block;margin:0 10px 10px 0;" value="'+ domain + '">');
 				$('#additionalDomainInput').val('');
 				
 			});
@@ -712,12 +327,6 @@
    	   				}
    	   			});
    			});
-   		
-   		//아이디 입력창이 변경될때마다 다시 중복 체크하게끔
-   		function resetIdExist(){
-   			$('#idExist').val('false');
-   			$('#updateIdExist').val('false');
-   		}
    		
    		//아이디 중복 체크가 완료 되지않으면 넘어가지 않게끔..
    		$('#managerRegister').submit(function(e){
@@ -778,7 +387,7 @@
 	   				const subDomain = $(this).data('subdomainList');
 	   				const splitSubDomain = subDomain.trim().replace('[','').replace(']','').split(',');
 	   				for(let i = 0;i<splitSubDomain.length;i++){
-	   					$('.updateDomainGroup').append('<input type="text" name="additionalDomain" class="form-control" style="display:inline-block;width:20%;" readonly value="'+ splitSubDomain[i] + '">');	
+	   					$('.updateDomainGroup').append('<input type="text" name="additionalDomain" class="form-control" style="width:30%;display:inline-block;margin:0 10px 10px 0;" readonly value="'+ splitSubDomain[i] + '">');	
 	   				}
    				}
    				
@@ -807,8 +416,172 @@
    			   	$('#presentFile').empty();
    			   	
    			});
+   			
+   			// 날짜 자동 선택 
+   			$('.datePick button').on('click',function(){
+   				let id = $(this).attr('id');
+   				$('#endDate').val(today());
+   				console.log()
+   				if(id == 'date1'){
+   					$('#startDate').val(today());
+   					resetDateClass(1);
+   				}else if(id == 'date2'){
+   					$('#startDate').val(lastWeek());
+   					resetDateClass(2);
+   				}else if(id == 'date3'){
+   					$('#startDate').val(lastThreeMonth());
+   					resetDateClass(3);
+   				}else{
+   					$('#startDate').val(lastSixMonth());
+   					resetDateClass(4);
+   				}
+   			});
+   			
+   			//시작날짜 선택 시 종료 날짜 자동으로 오늘날짜로 input
+   			$('#startDate').on('change',function(){
+   				
+   				if($('#endDate').val() == ''){
+	   				$('#endDate').val(today());
+   				}
+
+   			});	
+   			
+   			//날짜 선택시 오늘 날짜를 넘기면...
+   			$('#endDate,#startDate').on('change',function(){
+   				$('.datePick button').removeClass('dateOn');
+   				if($(this).val() > today()){
+   					alert('해당 날짜는 불가합니다.');
+   					$(this).val(today());
+   				}
+   				
+   				if($('#startDate').val() > $('#endDate').val()){
+   					alert('시작 날짜가 더 클수 없습니다.');
+   					$('#startDate').val(today());
+   					$('#endDate').val(today());
+   				}
+   			});
+   			
+   			//가져올 목록의 갯수 정하기
+   			$('#selectNum').on('change',function(){
+   				
+   				let selectNum = $(this).val();
+   				location.href='${root}/manager/manage_franchise?keyWord=${map.keyWord}&startDate=${map.startDate}&endDate=${map.endDate}'+
+   				'&select=${map.select}&selectNum='+selectNum;
+   			});
+   			
+   			//엑셀 다운로드 
+   			$('#excelDown').on('click',function(){
+   				if($('#readingReason').val() == ''){
+   					alert('열람 사유를 입력하여 주세요.');
+   					return;
+   				}
+   				fnExcelReport('franchiseListTable','excel');
+   				
+   			});
+   			
    		
 		});
+		
+		function getDateStr(myDate){
+			
+			var currentMonth=('0'+(myDate.getMonth()+1)).slice(-2);
+			var currentDate=myDate.getDate();
+			
+			if(currentDate<10) 
+			{
+				currentDate='0'+currentDate;
+			} 
+			
+			return (myDate.getFullYear() + '-' + currentMonth + '-' + currentDate);
+		}
+
+		/* 오늘 날짜를 문자열로 반환 */
+		function today() {
+		  var d = new Date()
+		  return getDateStr(d)
+		}
+		
+		/* 오늘로부터 1주일전 날짜 반환 */
+		function lastWeek() {
+		  var d = new Date()
+		  var dayOfMonth = d.getDate()
+		  d.setDate(dayOfMonth - 7)
+		  return getDateStr(d)
+		}
+
+		/* 오늘로부터 3개월전 날짜 반환 */
+		function lastThreeMonth() {
+		  var d = new Date()
+		  var monthOfYear = d.getMonth()
+		  d.setMonth(monthOfYear - 3)
+		  return getDateStr(d)
+		}
+		
+		/* 오늘로부터 6개월전 날짜 반환 */
+		function lastSixMonth() {
+		  var d = new Date()
+		  var monthOfYear = d.getMonth()
+		  d.setMonth(monthOfYear - 6)
+		  return getDateStr(d)
+		}
+		
+		function resetDateClass(num){
+			
+			$('.datePick button').css('background','#D3D3D3');
+			if($('#date'+num).css('background','#D3D3D3')){
+				$('#date'+num).css('background','#0abab5');
+			}else{
+				$('#date'+num).css('background','#D3D3D3');
+			}
+			
+		}
+		
+		
+		//아이디 입력창이 변경될때마다 다시 중복 체크하게끔
+   		function resetIdExist(){
+   			$('#idExist').val('false');
+   			$('#updateIdExist').val('false');
+   		}
+		
+		//엑셀 다운로드
+		function fnExcelReport(id, title) {
+			var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+			tab_text = tab_text + '<head><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
+			tab_text = tab_text + '<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'
+			tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
+			tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+			tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+			tab_text = tab_text + "<table border='1px'>";
+			var exportTable = $('#' + id).clone();
+			exportTable.find('input').each(function (index, elem) { $(elem).remove(); });
+			tab_text = tab_text + exportTable.html();
+			tab_text = tab_text + '</table></body></html>';
+			var data_type = 'data:application/vnd.ms-excel';
+			var ua = window.navigator.userAgent;
+			var msie = ua.indexOf("MSIE ");
+			var fileName = title + '.xls';
+			
+			//Explorer 환경에서 다운로드
+			if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+				if (window.navigator.msSaveBlob) {
+				var blob = new Blob([tab_text], {
+				type: "application/csv;charset=utf-8;"
+				});
+				navigator.msSaveBlob(blob, fileName);
+				}
+				} else {
+				var blob2 = new Blob([tab_text], {
+				type: "application/csv;charset=utf-8;"
+				});
+				var filename = fileName;
+				var elem = window.document.createElement('a');
+				elem.href = window.URL.createObjectURL(blob2);
+				elem.download = filename;
+				document.body.appendChild(elem);
+				elem.click();
+				document.body.removeChild(elem);
+			}
+		}
 	</script>    
 </body>
 

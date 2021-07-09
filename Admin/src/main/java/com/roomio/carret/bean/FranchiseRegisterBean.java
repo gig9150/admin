@@ -29,6 +29,7 @@ public class FranchiseRegisterBean {
 	private String responsibilityEmail;
 	private String memo;
 	private String regdate;
+	private String customerService;
 	
 	//파일 업로드 객체
 	private MultipartFile uploadFile;
@@ -36,7 +37,13 @@ public class FranchiseRegisterBean {
 	//서브도메인 객체 
 	private List<String> subDomainList;
 	
-
+	
+	public String getCustomerService() {
+		return customerService;
+	}
+	public void setCustomerService(String customerService) {
+		this.customerService = customerService;
+	}
 	public String getRegdate() {
 		return regdate;
 	}

@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roomio.carret.mypage">
+	
+	
+	<!-- 단골 리스트 -->
+	<select id="getFrontBookmarkShop" parameterType="int" resultType="hashMap">
+		
+		select s.shop_idx,s.shop_name,s.address,s.sector,s.holiday,s.start_date,s.end_date,s.business_status,
+		(select count(*) from shop_review sr where s.shop_idx = sr.shop_idx) as review_count,
+		(select count(*) from member_and_shop mms where s.shop_idx = mms.shop_idx) as bookmark_count
+		from member_and_shop ms
+		inner join shop s
+		on ms.shop_idx = s.shop_idx
+		where ms.member_id = ${memberId}
+		
+	</select>
+
+	<!-- 후기 리스트 -->
+	
+	<select id="getFrontReviewShop" parameterType="int" resultType="hashMap">
+	
+		select s.shop_idx,s.shop_name,s.address,s.sector,s.holiday,s.start_date,s.end_date,s.business_status,
+		(select count(*) from shop_review sr where s.shop_idx = sr.shop_idx) as review_count,
+		(select count(*) from member_and_shop mms where s.shop_idx = mms.shop_idx) as bookmark_count
+		from shop_review r
+		inner join shop s
+		on r.shop_idx = s.shop_idx
+		where r.member_id = ${memberId}
+		
+	</select>
+	
+	<!-- 자주묻는 질문 카테고리 -->
+	<select id="getFrontFrequentQuestionCategory" resultType="String">
+		
+		select content
+		from frequent_question_category 
+		
+	</select>
+	
+	<!-- 자주묻는 질문 상세 페이지  -->
+	<select id="getFrontFrequentQuestion" resultType="HashMap" parameterType="int">
+		
+		select f.title,f.content,fc.content as category_content
+		from frequent_question f
+		inner join frequent_question_category fc
+		on f.frequent_question_category_id = fc.frequent_question_category_id
+		where f.frequent_question_id = ${frequentQuestionId}
+		
+	</select>
+	
+	<!-- 공지사항 list -->
+	<select id="getFrontNotice" resultType="HashMap">
+		
+		select notice_id,title,date_format(regdate,"%Y-%m-%d") as regdate
+		from notice
+		
+	</select>	
+	
+	<resultMap type="hashMap" id="NoticeDetailMap">
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="regdate" property="regdate"/>
+		<collection property="imageList" javaType="list" ofType="string">
+			<result column="name" property="name"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 공지사항 상세 페이지 -->
+	<select id="getFrontNoticeDetail" resultMap="NoticeDetailMap" parameterType="int">
+		
+		select n.title,n.content,date_format(n.regdate,"%Y-%m-%d") as regdate,i.name
+		from notice n
+		left join notice_image i
+		on n.notice_id = i.notice_id
+		where notice_id = ${noticeId}
+		
+	</select>
+	
+	<!-- 1:1 문의  회원정보 -->
+	<select id="getFrontQuestionMemberInfo" parameterType="int" resultType="hashMap">
+		select profile_image,name,address
+		from member
+		where member_id = ${memberId}
+	</select>
+	
+	<!-- 1:1문의 카테고리 정보 -->
+	<select id="getFrontQuestionCategory" resultType="hashMap">
+		select question_category_id,content
+		from question_category
+	</select>
+	
+	
+		
+	<!-- 1:1 문의 등록  -->
+	<insert id="addFrontMemberQuestion" parameterType="hashMap">
+	
+		insert into question(member_id,question_category_id,question_content)
+		values(${memberId},${questionCategoryId},#{questionContent})
+
+		<selectKey resultType="int" keyProperty="memberId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert>
+	
+	<!-- 1:1문의 이미지 등록 -->
+	<insert id="addFrontMemberQuestionImage" parameterType="java.util.List">
+		insert into question_image(question_id,name)
+		values
+		<foreach item="item" index="index" collection="list">
+			(${item.questionId},#{item.name})
+		</foreach>
+	</insert>
+	
+	<!-- 나의 문의 내역 확인 -->
+	<select id="getFrontMemberQuestion" parameterType="int" resultType="hashMap">
+		
+		select q.question_content,qc.content,q.answer_status,date_format(q.regdate,"%Y-%m-%d") as regdate
+		from question q
+		inner join question_category qc
+		on q.question_category_id = qc.question_category_id 
+		where q.member_id = ${memberId}
+		
+	</select>
+	
+</mapper>

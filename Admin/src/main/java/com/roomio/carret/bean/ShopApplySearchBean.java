@@ -14,9 +14,16 @@ public class ShopApplySearchBean {
 	private String shopName;
 	private String number;
 	private int status;
+	private int baseArea;
 	
 	
 	
+	public int getBaseArea() {
+		return baseArea;
+	}
+	public void setBaseArea(int baseArea) {
+		this.baseArea = baseArea;
+	}
 	public String getDateData() {
 		return dateData;
 	}

@@ -94,13 +94,13 @@
 	                        			<td>
 	                        				<select class="form-control" style="width:40%;display:inline-block;margin-right:10px;" id="areaSelect" name="baseArea">
 	                        					<c:forEach items="${areaList}" var="obj">
-	                        						<option value="${obj.id}" <c:if test="${baseArea eq obj.id}">selected</c:if>>${obj.area_name}</option>
+	                        						<option value="${obj.id}" <c:if test="${shopSearchBean.baseArea eq obj.id}">selected</c:if>>${obj.area_name}</option>
 	                        					</c:forEach>
 	                        				</select>
 		
 	                        				<select name="areaId" class="form-control" style="width:40%;display:inline-block;" id="areaDetailSelect">
-	                        					<option value = "00" <c:if test="${shopSearchBean.areaId == 00}">selected</c:if>>지역전체</option>
-	                        					<option value = "0" <c:if test="${shopSearchBean.areaId == 0}">selected</c:if>>전체</option>
+	                        					<option value = "999" <c:if test="${shopSearchBean.areaId == 999}">selected</c:if>>지역전체</option>
+	                        					<option value = "998" <c:if test="${shopSearchBean.areaId == 998}">selected</c:if>>전체</option>
 	                        					<c:forEach items="${areaSigunguDefaultList}" var="obj">
 	                        						<option value="${obj.id}" <c:if test="${shopSearchBean.areaId == obj.id}">selected</c:if>>${obj.sigungu_name}</option>
 	                        					</c:forEach>
@@ -319,14 +319,19 @@
 					type:'get',
 					success:function(data){
 						
-							$('#areaDetailSelect').append('<option value= "00" <c:if test="${shopSearchBean.areaId == 00}">selected</c:if>>지역전체</option>');
-							$('#areaDetailSelect').append('<option value= "0" <c:if test="${shopSearchBean.areaId == 0}">selected</c:if>>전체</option>');
+							$('#areaDetailSelect').append('<option value= "999" <c:if test="${shopSearchBean.areaId == 999}">selected</c:if>>지역전체</option>');
+							$('#areaDetailSelect').append('<option value= "998" <c:if test="${shopSearchBean.areaId == 998}">selected</c:if>>전체</option>');
 						
-						$.each(data,function(index,value){
-							
-							$('#areaDetailSelect').append('<option value='+value.id+'<c:if test="${shopSearchBean.areaId == obj.id}">selected</c:if>>'+value.sigungu_name+'</option>');
-						
-						});
+							$.each(data,function(index,value){
+								
+								let areaId = "${shopSearchBean.areaId}";
+								
+								if(areaId == value.id){
+									$('#areaDetailSelect').append('<option value='+value.id+' selected>'+value.sigungu_name+'</option>');
+								}else{
+									$('#areaDetailSelect').append('<option value='+value.id+'>'+value.sigungu_name+'</option>');
+								}
+							});
 					}
 				});
 			});

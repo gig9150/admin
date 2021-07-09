@@ -19,9 +19,17 @@
    		 expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
 	
+	<!-- spring-donwload bean -->
+	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	    <beans:property name="order" value="0" />
+	</beans:bean>
+	<beans:bean id="downloadView" class="com.roomio.carret.utils.DownloadView" />
+	<!-- /spring-donwload bean -->
+    
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/"/>
 		<beans:property name="suffix" value=".jsp"/>
+		<beans:property name="order" value="1"/>
 	</beans:bean>
 	
 	<resources mapping="/**" location="/resources/"/>

@@ -14,25 +14,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.roomio.carret.bean.FranchiseAddBean;
 import com.roomio.carret.bean.FranchiseRegisterBean;
+import com.roomio.carret.bean.FranchiseResponBean;
+import com.roomio.carret.bean.ManagerNoticeRegisterBean;
 import com.roomio.carret.bean.PageBean;
 import com.roomio.carret.bean.RoleGroupsBean;
 import com.roomio.carret.bean.SearchBean;
 import com.roomio.carret.service.ManagerService;
+import com.roomio.carret.service.ShopService;
 
 @Controller
-@RequestMapping("/manager")
 public class ManagerController {
 
 	@Autowired
 	private ManagerService managerService;
 	
-	@GetMapping("/login")
+	@Autowired
+	private ShopService shopService;
+	
+	@GetMapping("/manager/login")
 	public String managerLogin() {
 		return "manager_login";
 	}
 	
-	@PostMapping("/loginPro")
+	@PostMapping("/manager/loginPro")
 	public String managerLoginPro(String id,String pw,HttpSession session) {
 		HashMap<String,String> map = new HashMap<String, String>();
 		map.put("id", id);
@@ -41,7 +47,6 @@ public class ManagerController {
 		
 		if(check != null) {
 			session.setAttribute("id", id);
-			
 			return "redirect:/";
 		}else {
 			return "redirect:/manager/login";
@@ -49,14 +54,14 @@ public class ManagerController {
 		
 	}
 	
-	@GetMapping("/logout")
+	@GetMapping("/manager/logout")
 	public String managerLogout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/";
 	}
 	
 	//매니저 역할그룹 
-	@GetMapping("/manage_role")
+	@GetMapping("/manager/manage_role")
 	public String manageRole(Model model,
 			@RequestParam(value="page",defaultValue = "1")int page,
 			@RequestParam(value="searchOption", defaultValue = "all")String searchOption,
@@ -81,7 +86,7 @@ public class ManagerController {
 	
 	//매니저 역할그룹 등록
 	
-	@GetMapping("/manage_role_register")
+	@GetMapping("/manager/manage_role_register")
 	public String manageRoleRegister(Model model) {
 		List<HashMap<String,String>> roleDetailList = managerService.getRoleDetailList();
 		model.addAttribute("roleDetailList",roleDetailList);
@@ -89,7 +94,7 @@ public class ManagerController {
 	}
 	
 	
-	@PostMapping("/manage_role_register_pro")
+	@PostMapping("/manager/manage_role_register_pro")
 	public String manageRoleRegisterPro(@ModelAttribute RoleGroupsBean roleGroupsBean
 										,HttpSession session) {
 		
@@ -122,7 +127,7 @@ public class ManagerController {
 	}
 	
 	//역할 그룹 수정
-	@GetMapping("/manage_role_update")
+	@GetMapping("/manager/manage_role_update")
 	public String manageRoleUpdate(@RequestParam int roleGroupId,
 								Model model) {
 		
@@ -142,7 +147,7 @@ public class ManagerController {
 		return "manager/manage_role_update";
 	}
 	
-	@PostMapping("/manage_role_update_pro")
+	@PostMapping("/manager/manage_role_update_pro")
 	public String manageRoleUpdatePro(@ModelAttribute RoleGroupsBean groupsBean,
 									@RequestParam int roleGroupId,
 									HttpSession session) {
@@ -154,7 +159,7 @@ public class ManagerController {
 	
 	//역할 그룹 삭제 
 	
-	@GetMapping("/manage_role/delete")
+	@GetMapping("/manager/manage_role/delete")
 	public String manageRoleDelete(@RequestParam int roleGroupId,
 			@RequestParam(value="page",defaultValue = "1")int page,
 			@RequestParam(value="searchOption", defaultValue = "all") String searchOption,
@@ -173,49 +178,230 @@ public class ManagerController {
 	
 	//가맹사 관리
 	
-	@GetMapping("/manage_franchise")
+	@GetMapping("/manager/manage_franchise")
 	public String manageFranchise(@RequestParam(value="page",defaultValue = "1")int page,
-			@RequestParam(value="keyWord", defaultValue = "") String keyWord,
+			@RequestParam(required = false) String keyWord,
+			@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate,
+			@RequestParam(required = false) String select,
+			@RequestParam(defaultValue = "10")int selectNum,
 			Model model) {
 		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("select",select);
+		map.put("keyWord",keyWord);
+		map.put("startDate",startDate);
+		map.put("endDate",endDate);
+		map.put("selectNum",selectNum);
+		
+		
 		//가맹사 리스트
-		List<FranchiseRegisterBean> franchiseList = managerService.getFranchiseList(page,keyWord);
+		List<FranchiseRegisterBean> franchiseList = managerService.getFranchiseList(page,map);
 		model.addAttribute("franchiseList",franchiseList);
 		
 		//페이징 처리 
-		PageBean pageBean = managerService.getFranchiseCnt(page,keyWord);
+		PageBean pageBean = managerService.getFranchiseCnt(page,map);
 		model.addAttribute("pageBean",pageBean);
 		
-		model.addAttribute("keyWord",keyWord);
+		int franchiseCnt = managerService.getFranchiseRealCnt(page, map);
+		model.addAttribute("franchiseCnt",franchiseCnt);
+		
+		model.addAttribute("map",map);
+		model.addAttribute("page",page);
 		
 		return "manager/manage_franchise";
 	}
 	
-	@PostMapping("/manage_franchise_register_pro")
-	public String manageFranchiseRegisterPro(@ModelAttribute FranchiseRegisterBean registerBean,
-											@RequestParam(required = false) String[] additionalDomain) {
+	//가맹사 등록
+	@GetMapping("/manager/franchise_register")
+	public String franchiseRegister() {
 		
-		HashMap<Object,Object> managerMap = new HashMap<Object, Object>();
-		managerMap.put("id", registerBean.getId());
-		managerMap.put("pw", registerBean.getPw());
+		return "manager/franchise_register";
 		
-		managerService.addFranchise(registerBean, managerMap, additionalDomain);
+	}
+	
+	@PostMapping("/manager/manage_franchise_register_pro")
+	public String manageFranchiseRegisterPro(@ModelAttribute FranchiseAddBean franchiseAddBean,
+											@RequestParam(required = false)String[] responName,
+											@RequestParam(required = false)String[] responPhone,
+											@RequestParam(required = false)String[] responEmail) {
+		
+		
+		managerService.franchiseRegister(franchiseAddBean,responName,responPhone,responEmail);
 		
 		return "manager/franchise_register_success";
 	}
 	
-	@PostMapping("/manage_franchise_update_pro")
-	public String manageFranchiseUpdatePro(@ModelAttribute FranchiseRegisterBean registerBean,
-										@RequestParam(required = false) String[] additionalDomain) {
+	//가맹사 수정
+	@GetMapping("/manager/franchise_update")
+	public String franchiseUpdate(@RequestParam int franchiseId,
+								Model model) {
 		
-		HashMap<Object,Object> managerMap = new HashMap<Object, Object>();
-		managerMap.put("id", registerBean.getId());
-		managerMap.put("pw", registerBean.getPw());
+		//가맹점 정보
+		HashMap<Object,Object> franchiseMap = managerService.getFranchiseInfo(franchiseId);
+		model.addAttribute("franchiseMap",franchiseMap);
 		
-		managerService.updateFranchise(registerBean, managerMap, additionalDomain);
+		//가맹점 담당자 정보
+		List<HashMap<Object,Object>> responList = managerService.getFranchiseResponInfo(franchiseId);
+		model.addAttribute("responList",responList);
+		
+		return "manager/franchise_update";
+	}
+	
+	@PostMapping("/manager/manage_franchise_update_pro")
+	public String manageFranchiseUpdatePro(@ModelAttribute FranchiseAddBean franchiseAddBean,
+										@RequestParam(required = false)String[] responName,
+										@RequestParam(required = false)String[] responPhone,
+										@RequestParam(required = false)String[] responEmail) {
+		
+		managerService.franchiseUpdate(franchiseAddBean,responName,responPhone,responEmail);
 		
 		return "manager/franchise_update_success";
 		
 	}
+	
+	//관리자 공지관리
+	@GetMapping("/manager/manage_notice")
+	public String manageNotice(@RequestParam(value="page",defaultValue = "1")int page,
+								@RequestParam(required = false) String keyWord,
+								@RequestParam(required = false) String startDate,
+								@RequestParam(required = false) String endDate,
+								@RequestParam(required = false) String select,
+								@RequestParam(defaultValue = "10")int selectNum,
+								@RequestParam(defaultValue = "0") int franchiseId,
+								Model model) {
+		
+		//가맹점 이름 얻어오기
+		List<HashMap<Object,Object>> franchiseList = shopService.getFranchiseName();
+		model.addAttribute("franchiseList",franchiseList);
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("select",select);
+		map.put("keyWord",keyWord);
+		map.put("startDate",startDate);
+		map.put("endDate",endDate);
+		map.put("selectNum",selectNum);
+		map.put("franchiseId",franchiseId);
+		
+		//공지사항 리스트 얻어오기
+		List<HashMap<Object,Object>> noticeList = managerService.getManagerNotice(page, map);
+		model.addAttribute("noticeList",noticeList);
+		
+		//공지사항 페이지 빈 
+		PageBean pageBean = managerService.getManagerNoticeCnt(page, map);
+		model.addAttribute("pageBean",pageBean);
+		
+		//공지사항 글 갯수 
+		int noticeCnt = managerService.getManagerNoticeRealCnt(page, map);
+		model.addAttribute("noticeCnt",noticeCnt);
+		
+		model.addAttribute("map",map);
+		model.addAttribute("page",page);
+		
+		return "manager/manage_notice";
+	}
+	
+	//관리자 공지 등록
+	@PostMapping("/manager/notice_register_pro")
+	public String noticeRegisterPro(@ModelAttribute ManagerNoticeRegisterBean managerNoticeRegisterBean,
+									@RequestParam List<Integer> franchiseId) {
+		
+		
+		//나중에 매니저 번호 셋팅해주기 ★★
+		managerNoticeRegisterBean.setFranchiseManagerId(1);
+	
+		managerService.addManagerNotice(managerNoticeRegisterBean,franchiseId);
+		
+		return "manager/notice_register_pro";
+	}
+	
+	//관리자 공지 삭제
+	@RequestMapping("/manager/manager_notice_delete")
+	public String managerNoticeDelete(@RequestParam int managerNoticeId) {
+		
+		managerService.deleteManagerNotice(managerNoticeId);
+		
+		return "redirect:/manager/manage_notice";
+		
+	}
+	
+	//관리자 공지 수정
+	@RequestMapping("/manager/manager_notice_update")
+	public String managerNoticeUpdate(@ModelAttribute ManagerNoticeRegisterBean managerNoticeRegisterBean,
+									@RequestParam List<Integer> franchiseId) {
+		
+		managerService.updateManagerNotice(managerNoticeRegisterBean,franchiseId);
+		
+		return "manager/manager_notice_update_success";
+	}
+	
+	//운영자 활동 내역
+	@RequestMapping("/manager/manager_activity")
+	public String managerActivity(@RequestParam(value="page",defaultValue = "1")int page,
+								@RequestParam(required = false) String keyWord,
+								@RequestParam(required = false) String startDate,
+								@RequestParam(required = false) String endDate,
+								@RequestParam(required = false) String select,
+								@RequestParam(defaultValue = "10")int selectNum,
+								Model model) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("select",select);
+		map.put("keyWord",keyWord);
+		map.put("startDate",startDate);
+		map.put("endDate",endDate);
+		map.put("selectNum",selectNum);
+		
+		List<HashMap<Object,Object>> activityList = managerService.getManagerActivity(page, map);
+		model.addAttribute("activityList",activityList);
+		
+		PageBean pageBean  = managerService.getManagerActivityCnt(page, map);
+		model.addAttribute("pageBean",pageBean);
+		
+		int activityCnt = managerService.getManagerActivityRealCnt(page, map);
+		model.addAttribute("activityCnt",activityCnt);
+		
+		model.addAttribute("map",map);
+		model.addAttribute("page",page);
+		
+		return "manager/manager_activity";
+	}
+	
+	//운영자 접속 내역 
+	@RequestMapping("/manager/manager_access")
+	public String managerAccess(@RequestParam(value="page",defaultValue = "1")int page,
+								@RequestParam(required = false) String keyWord,
+								@RequestParam(required = false) String startDate,
+								@RequestParam(required = false) String endDate,
+								@RequestParam(required = false) String select,
+								@RequestParam(required = false) String proSelect,
+								@RequestParam(defaultValue = "10")int selectNum,
+								Model model) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("select",select);
+		map.put("proSelect",proSelect);
+		map.put("keyWord",keyWord);
+		map.put("startDate",startDate);
+		map.put("endDate",endDate);
+		map.put("selectNum",selectNum);
+		
+		List<HashMap<Object,Object>> accessList = managerService.getManagerAccess(page, map);
+		model.addAttribute("accessList",accessList);
+		
+		PageBean pageBean = managerService.getManagerAccessCnt(page, map);
+		model.addAttribute("pageBean",pageBean);
+		
+		int accessCnt = managerService.getManagerAccessRealCnt(page, map);
+		model.addAttribute("accessCnt",accessCnt);
+		
+		model.addAttribute("map",map);
+		model.addAttribute("page",page);
+		
+		return "manager/manager_access";
+	}
+	
+	
+
 	
 }

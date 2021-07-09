@@ -3,29 +3,30 @@
 					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.roomio.carret.member">
 
+	
+	<!-- 회원 리스트 얻기  -->
+	
 	<sql id="memberSearch">
 	
 			<if test='dateData != null and !dateData.equals("")'> and m.regdate = #{dateData} </if>
 			<if test='status != null and status != "" and status != 0 '> and m.withdrawal = ${status} </if>
 			<if test='franchiseId != null and franchiseId != "" '> and f.franchise_id = ${franchiseId} </if>
-			<if test='areaId == 0 '>and a.id = ${baseArea}</if>
-			<if test='areaId != null and areaId != "" and areaId != 0 and areaId != 999'> and f.area_id = ${areaId} </if>
+			<if test='areaId == 998 '>and a.id = ${baseArea}</if>
+			<if test='areaId != null and areaId != "" and areaId != 998 and areaId != 999'> and f.area_id = ${areaId} </if>
 			<if test='nickName != null and !nickName.equals("") '> and m.name = #{nickName} </if>
 			
 	</sql>
 	
 	<select id="getMemberList" parameterType="com.roomio.carret.bean.MemberManageBean" resultType="hashMap">
 		
-		select m.member_id,m.regdate,m.profile_image,f.franchise_name,m.member_code,m.name,s.sigungu_name,p.penalty_name,m.withdrawal
+		select m.member_id,m.regdate,m.profile_image,f.franchise_name,m.member_code,m.name,ad.area_name,p.penalty_name,m.withdrawal
 		from member m 
 		inner join franchise as f 
 		on m.franchise_id = f.franchise_id 
 		left join member_penalty as p
-		on m.member_id = p.member_id
-		inner join area_sigungu as s
-		on f.area_id = s.id 
-		inner join area as a 
-		on a.id = s.area_code 
+		on m.member_id = p.member_id 
+		inner join area_dong ad
+		on ad.id = m.id
 		where p.regdate = (SELECT MAX(p1.regdate) FROM member_penalty as p1 WHERE p1.member_id = m.member_id 
 	        <if test=' penalty != null and penalty != "" and penalty == 2 '> and p.penalty_name = 1</if>
 			<if test=' penalty != null and penalty != "" and penalty == 3 '> and p.penalty_name = 2</if>
@@ -43,11 +44,9 @@
 		inner join franchise as f 
 		on m.franchise_id = f.franchise_id 
 		left join member_penalty as p
-		on m.member_id = p.member_id
-		inner join area_sigungu as s
-		on f.area_id = s.id 
-		inner join area as a 
-		on a.id = s.area_code 
+		on m.member_id = p.member_id 
+		inner join area_dong ad
+		on ad.id = m.id
 		where p.regdate = (SELECT MAX(p1.regdate) FROM member_penalty as p1 WHERE p1.member_id = m.member_id 
 	        <if test=' penalty != null and penalty != "" and penalty == 2 '> and p.penalty_name = 1</if>
 			<if test=' penalty != null and penalty != "" and penalty == 3 '> and p.penalty_name = 2</if>
@@ -57,5 +56,102 @@
 		<include refid="memberSearch"/>
 		
 	</select>
+	
+	<!-- 회원 패널티 현황 리스트 -->
+	
+	<sql id="memberPenaltySearch">
+	
+			<if test='regdate != null and !regdate.equals("")'> and p.regdate = #{regdate} </if>
+			<if test='franchiseId != null and franchiseId != "" '> and f.franchise_id = ${franchiseId} </if>
+			<if test='areaId == 998 '>and a.id = ${baseArea}</if>
+			<if test='areaId != null and areaId != "" and areaId != 998 and areaId != 999'> and f.area_id = ${areaId} </if>
+			<if test='name != null and !name.equals("") '> and m.name = #{name} </if>
+			
+	</sql>
+	
+	<select id="getMemberPenaltyList" parameterType="com.roomio.carret.bean.MemberPenaltyBean" resultType="hashMap">
+		
+		select p.regdate,f.franchise_name,m.member_code,m.name,pc.penalty_name as category_penalty_name,p.penalty_name,p.penalty_date
+		from member m 
+		inner join franchise f 
+		on m.franchise_id = f.franchise_id
+		LEFT join member_penalty p
+		on m.member_id = p.member_id
+		inner join area_sigungu as s
+		on f.area_id = s.id
+		inner join area as a
+		on a.id = s.area_code
+		inner join member_penalty_category pc
+		on p.member_penalty_category_id = pc.member_penalty_category_id
+		where p.regdate = ( SELECT MAX(p1.regdate) FROM member_penalty as p1 WHERE p1.member_id = m.member_id
+	        <if test=' penalty != null and penalty != "" and penalty == 2 '> and p.penalty_name = 1</if>
+			<if test=' penalty != null and penalty != "" and penalty == 3 '> and p.penalty_name = 2</if>
+			<if test=' penalty != null and penalty != "" and penalty == 4 '> and p.penalty_name = 3</if>
+         )
+		
+		<include refid="memberPenaltySearch"/>
+		
+	</select>
+	
+	<select id="getMemberPenaltyCnt" parameterType="com.roomio.carret.bean.MemberPenaltyBean" resultType="int">
+	
+		select count(*)
+		from member m 
+		inner join franchise f 
+		on m.franchise_id = f.franchise_id
+		LEFT join member_penalty p
+		on m.member_id = p.member_id
+		inner join area_sigungu as s
+		on f.area_id = s.id
+		inner join area as a
+		on a.id = s.area_code
+		inner join member_penalty_category pc
+		on p.member_penalty_category_id = pc.member_penalty_category_id
+		where p.regdate = ( SELECT MAX(p1.regdate) FROM member_penalty as p1 WHERE p1.member_id = m.member_id
+	        <if test=' penalty != null and penalty != "" and penalty == 2 '> and p.penalty_name = 1</if>
+			<if test=' penalty != null and penalty != "" and penalty == 3 '> and p.penalty_name = 2</if>
+			<if test=' penalty != null and penalty != "" and penalty == 4 '> and p.penalty_name = 3</if>
+        )
+         
+		<include refid="memberPenaltySearch"/>
+		
+	</select>
+	
+	<insert id="addFrontMember" parameterType="com.roomio.carret.bean.MemberRegisterBean">
+		<choose>
+			<when test='profileImage != null and !profileImage.equals("")'>
+				insert into member(franchise_id,id,member_code,name,status,profile_image) 
+				values(1,${id},#{memberCode},#{name},1,#{profileImage})
+			</when>
+			<otherwise>
+				insert into member(franchise_id,id,member_code,name,status) 
+				values(1,${id},#{memberCode},#{name},1)
+			</otherwise>
+		</choose>
+	</insert>
+	
+	<!-- 닉네임 중복 검사  -->
+	<select id="frontMemberNameChk" parameterType="string" resultType="String">
+		select name 
+		from member
+		where name = #{name}
+	</select>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="frontMemberInfoUpdate" parameterType="com.roomio.carret.bean.MemberUpdateBean">
+		update member
+		<set>
+			<if test='name != null  and !name.equals("")'>
+				name = #{name},
+			</if>
+			<if test='address != null  and !address.equals("")'>
+				address = #{address},
+			</if>
+			<if test='profileImage != null and !profileImage.equals("")'>
+				profile_image = #{profileImage},
+			</if>
+		</set> 
+		where member_id = ${memberId}
+	</update>
 	
 </mapper>

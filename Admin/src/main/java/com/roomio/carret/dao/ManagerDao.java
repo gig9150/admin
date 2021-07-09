@@ -9,7 +9,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.roomio.carret.bean.FranchiseAddBean;
 import com.roomio.carret.bean.FranchiseRegisterBean;
+import com.roomio.carret.bean.FranchiseResponBean;
+import com.roomio.carret.bean.ManagerNoticeRegisterBean;
 import com.roomio.carret.bean.RoleGroupsBean;
 import com.roomio.carret.bean.SearchBean;
 
@@ -51,12 +54,12 @@ public class ManagerDao {
 		sqlSessionTemplate.delete("com.roomio.carret.manager.deleteRoleGroupsDetail",roleGroupId);
 	}
 	
-	public int getFranchiseCnt(String keyWord) {
-		return sqlSessionTemplate.selectOne("com.roomio.carret.manager.getFranchiseCnt",keyWord);
+	public int getFranchiseCnt(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.manager.getFranchiseCnt",map);
 	}
 	
-	public List<FranchiseRegisterBean> getFranchiseList(String keyWord,RowBounds rowBounds){
-		return sqlSessionTemplate.selectList("com.roomio.carret.manager.getFranchiseList",keyWord,rowBounds);
+	public List<FranchiseRegisterBean> getFranchiseList(HashMap<Object,Object> map,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.manager.getFranchiseList",map,rowBounds);
 	}
 	
 	public void addFranchise(FranchiseRegisterBean registerBean) {
@@ -99,5 +102,75 @@ public class ManagerDao {
 		sqlSessionTemplate.delete("com.roomio.carret.manager.deleteFranchiseDomain",franchiseId);
 	}
 	
+	public void franchiseRegister(FranchiseAddBean franchiseAddBean) {
+		sqlSessionTemplate.insert("com.roomio.carret.manager.franchiseRegister",franchiseAddBean);
+	}
 	
+	public void franchiseResponRegister(List<FranchiseResponBean> responList) {
+		sqlSessionTemplate.insert("com.roomio.carret.manager.franchiseResponRegister",responList);
+	}
+	
+	public HashMap<Object,Object> getFranchiseInfo(int franchiseId){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.manager.getFranchiseInfo",franchiseId);
+	}
+	
+	public List<HashMap<Object,Object>> getFranchiseResponInfo(int franchiseId){
+		return sqlSessionTemplate.selectList("com.roomio.carret.manager.getFranchiseResponInfo",franchiseId);
+	}
+	
+	public void franchiseUpdate(FranchiseAddBean franchiseAddBean) {
+		sqlSessionTemplate.update("com.roomio.carret.manager.franchiseUpdate",franchiseAddBean);
+	}
+	
+	public void franchiseResponDelete(int franchiseId) {
+		sqlSessionTemplate.delete("com.roomio.carret.manager.franchiseResponDelete",franchiseId);
+	}
+	
+	public void addManagerNotice(ManagerNoticeRegisterBean managerNoticeRegisterBean) {
+		sqlSessionTemplate.insert("com.roomio.carret.manager.addManagerNotice",managerNoticeRegisterBean);
+	}
+	
+	public void addManagerNoticeFran(List<HashMap<Object,Object>> list) {
+		sqlSessionTemplate.insert("com.roomio.carret.manager.addManagerNoticeFran",list);
+	}
+			
+	public List<HashMap<Object,Object>> getManagerNotice(HashMap<Object,Object> map,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.manager.getManagerNotice",map,rowBounds);
+	}
+	
+	public int getManagerNoticeCnt(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.manager.getManagerNoticeCnt",map);
+	}
+	
+	public void deleteManagerNotice(int managerNoticeId) {
+		sqlSessionTemplate.delete("com.roomio.carret.manager.deleteManagerNotice",managerNoticeId);
+	}
+	
+	public void deleteManagerNoticeFran(int managerNoticeId) {
+		sqlSessionTemplate.delete("com.roomio.carret.manager.deleteManagerNoticeFran",managerNoticeId);
+	}
+	
+	public List<Integer> getManagerNoticeFran(int managerNoticeId){
+		return sqlSessionTemplate.selectList("com.roomio.carret.manager.getManagerNoticeFran",managerNoticeId);
+	}
+	
+	public void updateManagerNotice(ManagerNoticeRegisterBean managerNoticeRegisterBean) {
+		sqlSessionTemplate.update("com.roomio.carret.manager.updateManagerNotice",managerNoticeRegisterBean);
+	}
+	
+	public int getMangerActivityCnt(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.manager.getMangerActivityCnt",map);
+	}
+	
+	public List<HashMap<Object,Object>> getMangerActivity(HashMap<Object,Object> map,RowBounds rowBounds) {
+		return sqlSessionTemplate.selectList("com.roomio.carret.manager.getMangerActivity",map);
+	}
+	
+	public List<HashMap<Object,Object>> getManagerAccess(HashMap<Object,Object> map,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.manager.getManagerAccess",map);
+	}
+	
+	public int getManagerAccessCnt(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.manager.getManagerAccessCnt",map);
+	}
 }

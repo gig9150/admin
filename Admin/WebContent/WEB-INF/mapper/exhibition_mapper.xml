@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roomio.carret.exhibition">
+
+	<sql id="searchCuration">
+		<where>
+			<if test='franchiseId != "" and franchiseId != 0'> f.franchise_id = ${franchiseId}</if>
+			<if test='section != null and section.equals("promotion")'>and se.exhi_section = 1</if>
+			<if test='section != null and section.equals("used")'>and se.exhi_section = 2</if>
+			<if test='section != null and section.equals("direct")'>and se.exhi_section = 3</if>
+			<if test='curationTitle != null and !curationTitle.equals("")'>and se.exhi_name = #{curationTitle}</if>
+			<if test='proStatus != null and proStatus.equals("probe")'>and se.pro_status = 1</if>
+			<if test='proStatus != null and proStatus.equals("proing")'>and se.pro_status = 2</if>
+			<if test='proStatus != null and proStatus.equals("com")'>and se.pro_status = 3</if>
+			<if test='open != null and open.equals("open")'>and se.open_status = 1</if>
+			<if test='open != null and open.equals("notOpen")'>and se.open_status = 1</if>
+		</where>
+	</sql>
+	
+	<!-- 기획전 리스트 -->
+	<select id="getCurationList" parameterType="com.roomio.carret.bean.CurationSearchBean" resultType="hashMap">
+	
+		select se.shop_exhi_id,f.franchise_name,se.exhi_section,se.exhi_name,se.event_code,se.url,se.pro_status,
+		se.open_status,date_format(se.start_date,"%Y-%m-%d"),date_format(se.end_date,"%Y=%m-%d"),date_format(se.regdate,"%Y-%m-%d") as regdate
+		from shop_exhi se
+		inner join franchise f
+		on se.franchise_id = f.franchise_id
+		
+		<include refid="searchCuration"/>
+	
+	</select>
+	
+	<!-- 기획전 글 갯수  -->
+	<select id="getCurationCnt" parameterType="com.roomio.carret.bean.CurationSearchBean" resultType="int">
+	
+		select count(*)
+		from shop_exhi se
+		inner join franchise f
+		on se.franchise_id = f.franchise_id
+		
+		<include refid="searchCuration"/>
+		
+	</select>
+	
+	<!-- url 중복 검사 -->
+	<select id="checkUrlExist" parameterType="string" resultType="string">
+		select url
+		from shop_exhi
+		where url = #{url}
+	</select> 
+	
+	<!-- 기획전 등록 -->
+	<insert id="addNewCuration" parameterType="com.roomio.carret.bean.CurationRegisterBean">
+		insert into shop_exhi(franchise_id,exhi_section,start_date,start_aclock,end_date,end_aclock,exhi_name,exhi_sub,pro_status,
+		open_status,banner_image,url,exhi_explain)
+		values(${franchiseId},${section}
+		,#{startDate},#{startAclock},#{endDate},#{endAclock},#{curationTitle},#{curationSub},${proStatus},${openStatus},
+		#{bannerImage},#{url},#{curationInfo})
+		
+		<selectKey resultType="int" keyProperty="franchiseId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert>
+	
+	<!-- 기획전 전리품 등록 -->
+	<insert id="addCurationShop" parameterType="java.util.List">
+		
+		insert into shop_and_exhi(shop_exhi_id,shop_idx)
+		values
+		<foreach item="item" separator="," collection="list">
+			(${item.shopExhiId},${item.shopIdx})
+		</foreach>
+		
+	</insert>
+	
+	<!-- 기획전 정보 얻기  -->
+	<select id="getExhibition" resultType="hashMap" parameterType="int">
+		
+		select franchise_id,exhi_section,exhi_name,exhi_sub,exhi_explain,banner_image,date_format(start_date,"%Y-%m-%d") as start_date,
+		start_aclock,date_format(end_date,"%Y-%m-%d") as end_date,end_aclock,pro_status,open_status,url
+		from shop_exhi
+		where shop_exhi_id = ${shop_exhi_id}
+		
+	</select>
+	
+	<!-- 기획전 수정  -->
+	<update id="updateCuration" parameterType="com.roomio.carret.bean.CurationRegisterBean">
+		
+		update shop_exhi
+		set franchise_id = ${franchiseId}, exhi_section = ${section}, start_date = #{startDate}, start_aclock = #{startAclock}, end_date = #{endDate},
+		end_aclock = #{endAclock}, exhi_name = #{curationTitle}, exhi_sub = #{curationSub}, pro_status = ${proStatus}, open_status = ${openStatus},
+		url = #{url}, exhi_explain = #{curationInfo}
+		<if test='bannerImage != null and bannerImage.equals("")'>
+			,banner_image = #{bannerImage}
+		</if>
+		where shop_exhi_id = ${shopExhiId}
+		
+	</update>
+	
+	<!-- 기획전 전리품 삭제 -->
+	
+	<delete id="deleteCuration" parameterType="int">
+		
+		delete from shop_and_exhi
+		where shop_exhi_id = ${shopExhiId}
+		
+	</delete>
+	
+</mapper>

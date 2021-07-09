@@ -89,13 +89,13 @@
 	                        			<td>
 	                        				<select class="form-control" style="width:40%;display:inline-block;margin-right:10px;" id="areaSelect" name="baseArea">
 	                        					<c:forEach items="${areaList}" var="obj">
-	                        						<option value="${obj.id}" <c:if test="${baseArea eq obj.id}">selected</c:if>>${obj.area_name}</option>
+	                        						<option value="${obj.id}" <c:if test="${shopApplySearchBean.baseArea eq obj.id}">selected</c:if>>${obj.area_name}</option>
 	                        					</c:forEach>
 	                        				</select>
 		
 	                        				<select name="areaId" class="form-control" style="width:40%;display:inline-block;" id="areaDetailSelect">
-	                        					<option value="00" <c:if test="${shopApplySearchBean.areaId == 00}">selected</c:if>>지역전체</option>
-	                        					<option value="0" <c:if test="${shopApplySearchBean.areaId == 0}">selected</c:if>>전체</option>
+	                        					<option value="999" <c:if test="${shopApplySearchBean.areaId == 999}">selected</c:if>>지역전체</option>
+	                        					<option value="998" <c:if test="${shopApplySearchBean.areaId == 998}">selected</c:if>>전체</option>
 	                        					<c:forEach items="${areaSigunguDefaultList}" var="obj">
 	                        						<option value="${obj.id}" <c:if test="${shopApplySearchBean.areaId == obj.id}">selected</c:if>>${obj.sigungu_name}</option>
 	                        					</c:forEach>
@@ -268,7 +268,7 @@
     <!-- 가게 신청 정보 modal -->
     
 	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg">
+	  <div class="modal-dialog modal-lg ">
 	    <div class="modal-content">
 	    	<div class="modal-header">
 		        <h5 class="modal-title">Modal title</h5>
@@ -430,7 +430,6 @@
     
 		$(function(){
 			
-			// 지역선택 하면 상세 지역 정보 얻어오기
 			$('#areaSelect').on('change',function(){
 				
 				$('#areaDetailSelect').empty();
@@ -442,19 +441,21 @@
 					type:'get',
 					success:function(data){
 						
-							$('#areaDetailSelect').append('<option value= 00>지역전체</option>');
-							$('#areaDetailSelect').append('<option value= 0>전체</option>');
-							
-						$.each(data,function(index,value){
-							
-							$('#areaDetailSelect').append('<option value='+value.id+'>'+value.sigungu_name+'</option>');
+							$('#areaDetailSelect').append('<option value= "999" <c:if test="${shopApplySearchBean.areaId == 999}">selected</c:if>>지역전체</option>');
+							$('#areaDetailSelect').append('<option value= "998" <c:if test="${shopApplySearchBean.areaId == 998}">selected</c:if>>전체</option>');
 						
-						});
-						
+							$.each(data,function(index,value){
+								
+								let areaId = "${shopApplySearchBean.areaId}";
+								
+								if(areaId == value.id){
+									$('#areaDetailSelect').append('<option value='+value.id+' selected>'+value.sigungu_name+'</option>');
+								}else{
+									$('#areaDetailSelect').append('<option value='+value.id+'>'+value.sigungu_name+'</option>');
+								}
+							});
 					}
-					
 				});
-				
 			});
 			
 			//modal에 가게 신청 정보 올리기

@@ -54,9 +54,11 @@
                                             <input type="password" class="form-control form-control-user"
                                                 id="exampleInputPassword" name="pw" placeholder="Password">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="text-align: center;">
                                         	<button type="submit" class="btn btn-primary">로그인</button>
+                                        	<a href="${root}/front/member/member_join" class="btn btn-info">프론트 페이지로 이동</a>
                                         </div>
+                                        
                                     </form>
                                     <hr>
                                 </div>
@@ -81,6 +83,21 @@
     <!-- Custom scripts for all pages-->
     <script src="${root}/js/sb-admin-2.min.js"></script>
 
+<script>
+
+//          fetch("http://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_C_ADEMD_INFO&key=F91A39FE-455B-38C9-9FC7-6779990B731B&domain=localhost:8082/Admin&attrFilter=full_nm:in:중랑구",{
+//         	headers: {
+//         		"Content-Type": "application/json"
+//             },
+//             method : 'get'
+        
+//         })
+//         .then(function(response){
+//         	return response.json();
+//         })
+//         .catch((error) => console.log("error:", error));
+        
+</script>
 </body>
 
 </html>

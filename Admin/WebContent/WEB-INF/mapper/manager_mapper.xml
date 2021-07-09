@@ -128,19 +128,33 @@
 	</delete>
 	
 	<!-- 가맹사 전체 글 갯수 -->
-	<select id="getFranchiseCnt" parameterType="string" resultType="int">
+	<select id="getFranchiseCnt" parameterType="hashMap" resultType="int">
 		
 		<![CDATA[
 			select count(*)
 			from franchise f
-			inner join franchise_manager m 
-			on f.franchise_id = m.franchise_id 
-			where m.status = 1
+			left join franchise_manager m 
+			on f.franchise_id = m.franchise_id
 		]]>
 		
-		<if test="keyWord != null and !keyWord.equals('')">
-			and f.franchise_name LIKE CONCAT('%',#{keyWord},'%')
-		</if>
+		<where>
+			<if test='select != null and select.equals("1") and keyWord != null and !keyWord.equals("")'>
+				f.franchise_name LIKE CONCAT('%',#{keyWord},'%') or
+				f.franchise_id LIKE CONCAT('%',#{keyWord},'%') or
+				f.service_name LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test='select != null and select.equals("2")'>f.franchise_name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>f.franchise_id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("4")'>f.service_name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(f.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(f.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(f.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			
+		</where>
 	</select>
 	
 	<!-- 가맹사 리스트 데이터 매핑  -->
@@ -153,32 +167,25 @@
 		<result javaType="java.lang.String" column="service_status" property="serviceStatus"/>
 		<result javaType="java.lang.String" column="logo_file" property="logoFile"/>
 		<result javaType="java.lang.String" column="point_color" property="pointColor"/>
-		<result javaType="java.lang.String" column="representative_name" property="representativeName"/>
 		<result javaType="java.lang.String" column="business_number" property="businessNumber"/>
 		<result javaType="java.lang.String" column="address" property="address"/>
 		<result javaType="java.lang.String" column="phone_number" property="phone_number"/>
 		<result javaType="java.lang.String" column="fax" property="fax"/>
-		<result javaType="java.lang.String" column="responsibility_name" property="responsibilityName"/>
-		<result javaType="java.lang.String" column="responsibility_depa" property="responsibilityDepa"/>
-		<result javaType="java.lang.String" column="responsibility_position" property="responsibilityPosition"/>
-		<result javaType="java.lang.String" column="responsibility_number" property="responsibilityNumber"/>
-		<result javaType="java.lang.String" column="responsibility_phone" property="responsibilityPhone"/>
-		<result javaType="java.lang.String" column="responsibility_email" property="responsibilityEmail"/>
 		<result javaType="java.lang.String" column="memo" property="memo"/>
 		<result javaType="java.lang.String" column="id" property="id"/>
+		<result javaType="java.lang.String" column="customer_service" property="customerService"/>
 		<collection property="subDomainList" ofType="java.lang.String" javaType="list">
 			<result column="additional_domain"/>
 		</collection>
 	</resultMap>
 	
 	<!-- 가맹사 리스트  -->
-	<select id="getFranchiseList" parameterType="string" resultMap="franchiseListMap">
+	<select id="getFranchiseList" parameterType="hashMap" resultMap="franchiseListMap">
 	
 		<![CDATA[
 		
 			select f.franchise_id,f.service_name,f.main_domain,date_format(f.regdate,'%Y-%m-%d') as regdate,f.franchise_name,f.service_status,f.logo_file,f.point_color,
-			f.representative_name,f.business_number,f.address,f.phone_number,f.fax,f.responsibility_name,f.responsibility_depa,f.responsibility_position,f.responsibility_number,
-			f.responsibility_phone,f.responsibility_email,memo,d.additional_domain
+			f.business_number,f.address,f.phone_number,f.fax,f.memo,d.additional_domain,f.customer_service
 			from franchise f
 			left join franchise_domain d
 			on f.franchise_id = d.franchise_id
@@ -187,13 +194,101 @@
 			
 		]]>
 		
-		<if test="keyWord != null and !keyWord.equals('')">
-			and f.franchise_name LIKE CONCAT('%',#{keyWord},'%')
-		</if>
+		<where>
+			<if test='select != null and select.equals("1")'>
+				f.franchise_name LIKE CONCAT('%',#{keyWord},'%') or
+				f.franchise_id LIKE CONCAT('%',#{keyWord},'%') or
+				f.service_name LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test='select != null and select.equals("2")'>f.franchise_name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>f.franchise_id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("4")'>f.service_name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(f.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(f.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(f.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+		
+		</where>
 		
 	</select>
 	
-	<!-- 가맹사 등록 -->
+	<!-- 현재 파일 정보 얻어오기 -->
+	<select id="getNowLogoFile" parameterType="int" resultType="string">
+		select logo_file 
+		from franchise 
+		where franchise_id = ${franchiseId}
+	</select>
+	
+	<!-- 가맹사 등록  -->
+	<insert id="franchiseRegister" parameterType="com.roomio.carret.bean.FranchiseAddBean">
+	
+		insert into franchise(franchise_code,franchise_name,service_name,address,customer_service,memo,service_status,point_color,logo_file,shop_service,shop_approval,
+		daily_service,daily_approval,used_service,used_approval,direct_trade_service,direct_trade_approval)
+		values(#{franchiseCode},#{franchiseName},#{serviceName},#{address},#{customerService},#{memo},#{serviceStatus},#{pointColor},#{logoFile},#{shopServiceInt},${shopApproval},
+		${dailyServiceInt},${dailyApproval},${usedServiceInt},${usedApproval},${directTradeServiceInt},${directTradeApproval})
+		
+		<selectKey resultType="int" keyProperty="franchiseId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert>
+	
+	<!-- 가맹사 담당자 등록  -->
+	<insert id="franchiseResponRegister" parameterType="list">
+		
+		insert into franchise_respon(franchise_id,respon_name,respon_phone,respon_email)
+		values
+		<foreach item="item" separator="," collection="list">
+			(${item.franchiseId},#{item.responName},#{item.responPhone},#{item.responEmail})
+		</foreach>
+	
+	</insert>
+	
+	<!-- 가맹사 정보 얻어오기 -->
+	<select id="getFranchiseInfo" parameterType="int" resultType="hashMap">
+	
+		select franchise_id,franchise_name,regdate,memo,address,customer_service,service_status,point_color,logo_file,service_name,
+		shop_service,shop_approval,daily_service,daily_approval,used_service,used_approval,direct_trade_service,direct_trade_approval
+		from franchise 
+		where franchise_id = ${franchiseId}
+		
+	</select>
+	
+	<!-- 가맹사 담당자 정보 얻어오기  -->
+	<select id="getFranchiseResponInfo" parameterType="int" resultType="hashMap">
+	
+		select respon_name,respon_phone,respon_email
+		from franchise_respon
+		where franchise_id = ${franchiseId}
+		
+	</select>
+	
+	
+	<!-- 가맹사 담당자 수정 -->
+	<update id="franchiseUpdate" parameterType="com.roomio.carret.bean.FranchiseAddBean">
+	
+		update franchise
+		set franchise_name = #{franchiseName}, memo = #{memo}, address = #{address}, customer_service = #{customerService},service_status = #{serviceStatus},
+		point_color = #{pointColor}, logo_file = #{logoFile}, service_name = #{serviceName}, shop_service = ${shopServiceInt}, shop_approval=${shopApproval},
+		daily_service = ${dailyServiceInt}, daily_approval=${dailyApproval}, used_service = ${usedServiceInt}, used_approval = ${usedApproval},
+		direct_trade_service = ${directTradeServiceInt}, direct_trade_approval=${directTradeApproval}
+		where franchise_id = ${franchiseId} 
+		
+	</update>
+	
+	<!-- 가맹사 담당자 삭제 -->
+	<delete id="franchiseResponDelete" parameterType="int">
+		
+		delete from franchise_respon
+		where franchise_id = ${franchiseId}
+		
+	</delete>
+	
+	
+	<!-- (구)가맹사 등록 -->
 	<insert id="addFranchise" parameterType="com.roomio.carret.bean.FranchiseRegisterBean">
 		
 		insert into franchise(franchise_code,franchise_name,service_name,service_status,logo_file,point_color,representative_name,business_number,address,phone_number,fax,
@@ -207,7 +302,7 @@
     	
 	</insert>
 	
-	<!-- 가맹사 관리자 등록(가맹사 등록될때 자동 생성) -->
+	<!-- (구)가맹사 관리자 등록(가맹사 등록될때 자동 생성) -->
 	<insert id="addFranchiseManager" parameterType="hashMap">
 	
 		insert into franchise_manager(franchise_id,status,id,pw,access_date,regdate) 
@@ -215,7 +310,7 @@
 
 	</insert>
 	
-	<!-- 가맹사 추가 도메인 등록  -->
+	<!-- (구)가맹사 추가 도메인 등록  -->
 	<insert id="addFranchiseDomain" parameterType="hashMap">
 	
 		insert into franchise_domain(franchise_id,additional_domain) 
@@ -223,14 +318,8 @@
 		
 	</insert>
 	
-	<!-- 현재 파일 정보 얻어오기 -->
-	<select id="getNowLogoFile" parameterType="int" resultType="string">
-		select logo_file 
-		from franchise 
-		where franchise_id = ${franchiseId}
-	</select>
 	
-	<!-- 가맹사 업데이트  -->
+	<!-- (구)가맹사 업데이트  -->
 	<update id="updateFranchise" parameterType="com.roomio.carret.bean.FranchiseRegisterBean">
 		
 		update franchise 
@@ -246,7 +335,7 @@
 		
 	</update>
 	
-	<!-- 가맹사 관리자 업데이트 -->
+	<!-- (구)가맹사 관리자 업데이트 -->
 	<update id="updateFranchiseManager" parameterType="hashMap">
 	
 		update franchise_manager 
@@ -262,7 +351,7 @@
 		
 	</update>
 	
-	<!-- 가맹사 도메인 업데이트(삭제 후 입력) -->
+	<!-- (구)가맹사 도메인 업데이트(삭제 후 입력) -->
 	<delete id="deleteFranchiseDomain" parameterType="int">
 	
 		delete from franchise_domain
@@ -270,4 +359,277 @@
 		
 	</delete>
 	
+	<!-- 가맹사 리스트 데이터 매핑  -->
+	<resultMap type="hashMap" id="noticeListMap">
+		<result column="manager_notice_id" property="managerNoticeId"/>
+		<result column="notice_title" property="noticeTitle"/>
+		<result column="notice_content" property="noticeContent"/>
+		<result column="id" property="id"/>
+		<result column="regdate" property="regdate"/>
+		<result column="ori_attach_file" property="oriAttachFile"/>
+		<result column="attach_file" property="attachFile"/>
+		<collection property="franchiseList" ofType="java.lang.String" javaType="list">
+			<result column="franchise_name"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 관리자 공지사항 리스트  -->
+	<select id="getManagerNotice" parameterType="hashMap" resultMap="noticeListMap">
+		select mn.manager_notice_id,mn.notice_title,mn.notice_content,fm.id,mn.regdate,f.franchise_name,mn.ori_attach_file,mn.attach_file
+		from manager_notice mn
+		INNER JOIN franchise_manager fm
+		on mn.franchise_manager_id = fm.franchise_manager_id
+		left join notice_and_franchise nf
+		on mn.manager_notice_id = nf.manager_notice_id
+		inner join franchise f
+		on nf.franchise_id = f.franchise_id
+		<where>
+			<if test='select != null and select.equals("1") and keyWord != null and !keyWord.equals("") '>
+				fm.id LIKE CONCAT('%',#{keyWord},'%') or
+				mn.notice_title LIKE CONCAT('%',#{keyWord},'%') or
+				mn.notice_content LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test='select != null and select.equals("2")'>fm.id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>mn.notice_title LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("4")'>
+				mn.notice_title LIKE CONCAT('%',#{keyWord},'%') or
+				mn.notice_content LIKE CONCAT('%',#{keyWord},'%') 
+			</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(mn.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(mn.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(mn.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='franchiseId != null and franchiseId != 0'>and f.franchise_id  = ${franchiseId}</if>
+		
+		</where>
+	
+	</select>
+	
+	<!-- 관리자 공지사항 글 갯수 -->
+	<select id="getManagerNoticeCnt" parameterType="hashMap" resultType="int">
+	
+		select count(*)
+		from manager_notice mn
+		INNER JOIN franchise_manager fm
+		on mn.franchise_manager_id = fm.franchise_manager_id
+		left join notice_and_franchise nf
+		on mn.manager_notice_id = nf.manager_notice_id
+		inner join franchise f
+		on nf.franchise_id = f.franchise_id 
+		<where>
+			<if test='select != null and select.equals("1")'>
+				fm.id LIKE CONCAT('%',#{keyWord},'%') or
+				mn.notice_title LIKE CONCAT('%',#{keyWord},'%') or
+				mn.notice_content LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test='select != null and select.equals("2")'>fm.id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>mn.notice_title LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("4")'>
+				mn.notice_title LIKE CONCAT('%',#{keyWord},'%') or
+				mn.notice_content LIKE CONCAT('%',#{keyWord},'%') 
+			</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(mn.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(mn.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(mn.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='franchiseId != null and franchiseId != 0'>and f.franchise_id  = ${franchiseId}</if>
+		</where>
+		
+	</select>
+	
+	<!-- 관리자 공지사항 등록  -->
+	<insert id="addManagerNotice" parameterType="com.roomio.carret.bean.ManagerNoticeRegisterBean">
+		<choose>
+			<when test='oriAttachFile != null and !oriAttachFile.equals("") and attachFile != null and !attachFile.equals("")'>
+				insert into manager_notice(franchise_manager_id,notice_title,notice_content,ori_attach_file,attach_file)
+				values(${franchiseManagerId},#{noticeTitle},#{noticeContent},#{oriAttachFile},#{attachFile})
+			</when>
+			<otherwise>
+				insert into manager_notice(franchise_manager_id,notice_title,notice_content)
+				values(${franchiseManagerId},#{noticeTitle},#{noticeContent})
+			</otherwise>
+		</choose>
+		
+		<selectKey resultType="int" keyProperty="managerNoticeId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert> 
+	
+	<!-- 관리자 공지사항 해당 가맹사 등록  -->
+	<insert id="addManagerNoticeFran" parameterType="list">
+		
+		insert into notice_and_franchise(manager_notice_id,franchise_id)
+		values
+		<foreach item="item" separator="," collection="list">
+			(${item.managerNoticeId},${item.franchiseId})
+		</foreach>
+	</insert>
+	
+	<!-- 관리자 공지사항 삭제 -->
+	<delete id="deleteManagerNotice" parameterType="int">
+	
+		delete from manager_notice
+		where manager_notice_id = ${managerNoticeId}	
+		
+	</delete>
+	
+	<!-- 관리자 공지사항 가맹점 삭제 -->
+	<delete id="deleteManagerNoticeFran" parameterType="int">
+	
+		delete from notice_and_franchise
+		where manager_notice_id = ${managerNoticeId}
+		
+	</delete>
+	
+	<!-- 관리자 공지사항 가맹점 정보 -->
+	<select id="getManagerNoticeFran" parameterType="int" resultType="int">
+		select franchise_id
+		from notice_and_franchise
+		where manager_notice_id = ${managerNoticeId}
+	</select>
+	
+	<!-- 관리자 공지사항 수정 -->
+	<update id="updateManagerNotice" parameterType="com.roomio.carret.bean.ManagerNoticeRegisterBean">
+	
+		update manager_notice
+		set notice_title = #{noticeTitle},notice_content = #{noticeContent}
+		
+		<if test='oriAttachFile != null and !oriAttachFile.equals("") and attachFile != null and !attachFile.equals("")'>
+			,ori_attach_file = #{oriAttachFile} , attach_file = #{attachFile}
+		</if>
+		
+		where manager_notice_id = ${managerNoticeId}
+		
+	</update>
+	
+	<!-- 관리자 활동 내역 글 갯수  -->
+	<select id="getMangerActivityCnt" parameterType="hashMap" resultType="int">
+	
+		select count(*) 
+		from manager_and_pro map
+		inner join franchise_manager fm
+		on map.franchise_manager_id = fm.franchise_manager_id
+		inner join pro_sub_category psc
+		on map.pro_sub_category_id = psc.pro_sub_category_id
+		inner join pro_category pc
+		on psc.pro_category_id = pc.pro_category_id
+	
+		<where>
+			<if test='select != null and select.equals("1")'>
+				psc.content LIKE CONCAT('%',#{keyWord},'%') or
+				fm.name LIKE CONCAT('%',#{keyWord},'%') or
+				fm.id LIKE CONCAT('%',#{keyWord},'%') 
+			</if>
+			<if test='select != null and select.equals("2")'>psc.content LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>fm.name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("4")'>fm.id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(map.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(map.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(map.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+		</where>
+	
+	</select>
+	
+	<!-- 관리자 활동 내역  -->
+	<select id="getMangerActivity" parameterType="hashMap" resultType="hashMap">
+		
+		select map.manager_and_pro_id,map.regdate,fm.name,fm.id,map.ip,map.url,
+		pc.content as pcContent,psc.content as pscContent,map.reason
+		from manager_and_pro map
+		inner join franchise_manager fm
+		on map.franchise_manager_id = fm.franchise_manager_id
+		inner join pro_sub_category psc
+		on map.pro_sub_category_id = psc.pro_sub_category_id
+		inner join pro_category pc
+		on psc.pro_category_id = pc.pro_category_id
+		
+		<where>
+			<if test='select != null and select.equals("1")'>
+				psc.content LIKE CONCAT('%',#{keyWord},'%') or
+				fm.name LIKE CONCAT('%',#{keyWord},'%') or
+				fm.id LIKE CONCAT('%',#{keyWord},'%') 
+			</if>
+			<if test='select != null and select.equals("2")'>psc.content LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>fm.name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("4")'>fm.id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(map.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(map.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(map.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+		</where>
+	
+	</select>
+	
+	<!-- 관리자 접속 내역 글 갯수  -->
+	<select id="getManagerAccessCnt" parameterType="hashMap" resultType="int">
+	
+		select count(*)
+		from manager_access ma
+		inner join franchise_manager fm
+		on ma.franchise_manager_id = fm.franchise_manager_id
+		
+		<where>
+			<if test='select != null and select.equals("1")'>
+				fm.name LIKE CONCAT('%',#{keyWord},'%') or
+				fm.id LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test='select != null and select.equals("2")'>fm.name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>fm.id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='proSelect != null and proSelect.equals("2")'>ma.result = 1</if>
+			<if test='proSelect != null and proSelect.equals("3")'>ma.result = 2</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(mn.access_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(mn.access_date,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(mn.access_date,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+		</where>
+		
+	</select>
+	
+	<!-- 관리자 접속 내역 리스트 -->
+	<select id="getManagerAccess" parameterType="hashMap" resultType="hashMap">
+	
+		select ma.manager_access_id, ma.access_date,fm.name,fm.id,ma.ip,ma.result,ma.detail_content
+		from manager_access ma
+		inner join franchise_manager fm
+		on ma.franchise_manager_id = fm.franchise_manager_id
+		
+		<where>
+			<if test='select != null and select.equals("1")'>
+				fm.name LIKE CONCAT('%',#{keyWord},'%') or
+				fm.id LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test='select != null and select.equals("2")'>fm.name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='select != null and select.equals("3")'>fm.id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='proSelect != null and proSelect.equals("2")'>ma.result = 1</if>
+			<if test='proSelect != null and proSelect.equals("3")'>ma.result = 2</if>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					and date_format(mn.access_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(mn.access_date,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(mn.access_date,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+		</where>
+		
+	</select>
+	
+	
+
 </mapper>

@@ -11,6 +11,8 @@ public class ShopSearchBean {
 	private String keyword;
 	private String status;
 	private int panalty;
+	private int baseArea;
+	
 	
 	public String getDateSelect() {
 		return dateSelect;
@@ -68,5 +70,10 @@ public class ShopSearchBean {
 	public void setPanalty(int panalty) {
 		this.panalty = panalty;
 	}
-	
+	public int getBaseArea() {
+		return baseArea;
+	}
+	public void setBaseArea(int baseArea) {
+		this.baseArea = baseArea;
+	}
 }

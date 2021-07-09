@@ -20,14 +20,13 @@ import com.roomio.carret.service.ManagerAccountService;
 import com.roomio.carret.service.ManagerService;
 
 @Controller
-@RequestMapping("/manager")
 public class ManagerAccountController {
 
 	@Autowired
 	private ManagerAccountService managerAccountService;
 	
 	//매니저 계정 관리
-	@GetMapping("/manage_account")
+	@GetMapping("/manager/manage_account")
 	public String manageAccount(Model model,
 			@RequestParam(value="page",defaultValue = "1")int page,
 			@RequestParam(value="searchOption", defaultValue = "all")String searchOption,
@@ -51,9 +50,9 @@ public class ManagerAccountController {
 		
 		return "manager/manage_account";
 	}
-		
+	
 	//매니저 계정 등록
-	@GetMapping("/manage_account_register")
+	@GetMapping("/manager/manage_account_register")
 	public String manageAccountRegister(Model model) {
 		
 		//가맹점 이름,코드
@@ -70,7 +69,7 @@ public class ManagerAccountController {
 	}
 	
 	//매니저 계정 등록 진행 
-	@PostMapping("/manage_account_register_pro")
+	@PostMapping("/manager/manage_account_register_pro")
 	public String manageAccountRegisterPro(@ModelAttribute ManagerRegisterBean managerRegisterBean,
 											@RequestParam(required = false) String[] roleDetail) {
 		
@@ -92,7 +91,7 @@ public class ManagerAccountController {
 	}
 	
 	//매니저 계정 수정 
-	@GetMapping("/manage_account_update")
+	@GetMapping("/manager/manage_account_update")
 	public String manageAccountUpdate(Model model,
 									@RequestParam int franchiseManagerId) {
 		
@@ -115,7 +114,7 @@ public class ManagerAccountController {
 	
 	
 	//매니저 계정 수정 진행 
-	@PostMapping("/manage_account_update_pro")
+	@PostMapping("/manager/manage_account_update_pro")
 	public String manageAccountUpdatePro(Model model,
 										@ModelAttribute ManagerRegisterBean managerRegisterBean,
 										@RequestParam(required = false) String[] roleDetail) {
@@ -128,7 +127,7 @@ public class ManagerAccountController {
 	
 	
 	//매니저 계정 삭제
-	@GetMapping("/manage_account_delete")
+	@GetMapping("/manager/manage_account_delete")
 	public String manageAccountDelete(@RequestParam int franchiseManagerId,
 			@RequestParam(value="page",defaultValue = "1")int page,
 			@RequestParam(value="searchOption", defaultValue = "all") String searchOption,
@@ -144,38 +143,5 @@ public class ManagerAccountController {
 		return "manager/manage_account_delete";
 		
 	}
-	
-	// 매니저 접속 내역 
-	@GetMapping("/manage_access")
-	public String manageAccess(@RequestParam(value="page",defaultValue = "1")int page,
-			@RequestParam(value="keyWord", defaultValue = "") String keyWord,
-			@RequestParam(value="startDate", defaultValue = "2000-01-01") String startDate,
-			@RequestParam(value="endDate", defaultValue = "2030-01-01") String endDate,
-			Model model) {
-		
-		HashMap<Object,Object> searchMap = new HashMap<Object,Object>();
-		searchMap.put("startDate",startDate);
-		searchMap.put("endDate",endDate);
-		searchMap.put("keyWord", keyWord);
-		
-		//관리자 리스트
-		List<HashMap<Object,Object>> accessList = managerAccountService.getManagerAccessList(page,searchMap);
-		model.addAttribute("accessList",accessList);
-		
-		//페이징 처리 
-		PageBean pageBean = managerAccountService.getManagerAccessCnt(page,searchMap);
-		model.addAttribute("pageBean",pageBean);
-		
-		//검색 조건, 검색어 담기
-		model.addAttribute("startDate",startDate);
-		model.addAttribute("endDate",endDate);
-		model.addAttribute("keyWord",keyWord);
-		
-		return "manager/manage_access";
-	}
-	
-	// 가맹사 관리
-	
-	
 	
 }

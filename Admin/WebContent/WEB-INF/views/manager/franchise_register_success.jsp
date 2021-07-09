@@ -16,7 +16,7 @@
  	
  	swal({
 		title : "success!",
-		text : "등록되었습니다.",
+		text : "등록이 완료되었습니다.",
     	closeOnClickOutside : false
  	}).then(function(){
  		location.href = "${root}/manager/manage_franchise";

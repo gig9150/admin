@@ -52,7 +52,7 @@
                     <br>
                     
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"> 가게관리 > 가게 신청 심사 </h1>
+                    <h1 class="h3 mb-2 text-gray-800"> 회원관리 > 회원관리 </h1>
                     
                     <br><hr><br>
                     <form action="${root}/member/manage_member" method="get">
@@ -104,7 +104,7 @@
 		
 	                        				<select name="areaId" class="form-control" style="width:40%;display:inline-block;" id="areaDetailSelect">
 	                        					<option value="999" <c:if test="${memberManageBean.areaId eq 999}">selected</c:if>>지역전체</option>
-	                        					<option value="0" <c:if test="${memberManageBean.areaId eq 0}">selected</c:if>>전체</option>
+	                        					<option value="998" <c:if test="${memberManageBean.areaId eq 998}">selected</c:if>>전체</option>
 	                        					<c:forEach items="${areaSigunguDefaultList}" var="obj">
 	                        						<option value="${obj.id}" <c:if test="${memberManageBean.areaId eq obj.id}">selected</c:if>>${obj.sigungu_name}</option>
 	                        					</c:forEach>
@@ -141,7 +141,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">조회 결과</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">조회 결과 / <h4><a style="color:red;" href="javascript:void(0)" data-toggle="modal" data-target=".memberInfoModal">수정</a></h4></h6>
                         </div>
                         <div class="card-body">
                             <table class="table">
@@ -166,8 +166,8 @@
 	                               			<td>${obj.regdate}</td>
 	                               			<td><img src="${root}/upload/${obj.profile_image}"/></td>
 	                               			<td>${obj.franchise_name}</td>
-	                               			<td>${obj.member_code }</td>
-	                               			<td>${obj.name }</td>
+	                               			<td><a href="javascript:void(0)" data-toggle="modal" data-target=".memberInfoModal">${obj.member_code}</a></td>
+	                               			<td><a href="javascript:void(0)" data-toggle="modal" data-target=".memberInfoModal">${obj.name}</a></td>
 	                               			<td>${obj.sigungu_name}</td>
 	                               			<td>
 	                               				<c:choose>
@@ -177,8 +177,11 @@
 	                               					<c:when test="${obj.panalty_name eq 2 }">
 	                               						정지
 	                               					</c:when>
-	                               					<c:otherwise>
+	                               					<c:when test="${obj.panalty_name eq 3}">
 	                               						차단
+	                               					</c:when>
+	                               					<c:otherwise>
+	                               						-
 	                               					</c:otherwise>
 	                               				</c:choose>
 	                               			</td>
@@ -192,7 +195,7 @@
 	                               					</c:otherwise>
 	                               				</c:choose>
 	                               			</td>
-	                               			<td><a href="javascript:void(0)">수정</a></td>
+	                               			<td><a href="javascript:void(0)" data-toggle="modal" data-target=".memberInfoModal">수정</a></td>
 	                               		</tr>
                                 	</c:forEach>
                                 </tbody>
@@ -211,7 +214,7 @@
 				          				<li class="page-item">
 				          				<a class="page-link" href="${root}/member/manage_member?page=${pageBean.prevPage}&dateData=${memberManageBean.dateData}&
 				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
-				          					penalty=${memberManageBean.penalty}" aria-label="Previous">
+				          					penalty=${memberManageBean.penalty}&baseArea=${memberManageBean.baseArea}" aria-label="Previous">
 										        <span aria-hidden="true">&laquo;</span>
 										        <span class="sr-only">Previous</span>
 									      	</a></li>
@@ -222,12 +225,12 @@
 				          				<c:when test="${idx == pageBean.page}">
 				          					<li class="page-item active"><a class="page-link" href="${root}/member/manage_member?page=${idx}&dateData=${memberManageBean.dateData}&
 				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
-				          					penalty=${memberManageBean.penalty}">${idx}</a></li>
+				          					penalty=${memberManageBean.penalty}&baseArea=${memberManageBean.baseArea}">${idx}</a></li>
 				          				</c:when>
 				          				<c:otherwise>
 				          					<li class="page-item"><a class="page-link" href="${root}/member/manage_member?page=${idx}&dateData=${memberManageBean.dateData}&
 				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
-				          					penalty=${memberManageBean.penalty}">${idx}</a></li>
+				          					penalty=${memberManageBean.penalty}&baseArea=${memberManageBean.baseArea}">${idx}</a></li>
 				          				</c:otherwise>
 				          			</c:choose>	
 				          		</c:forEach>
@@ -244,7 +247,7 @@
 				          				<li class="page-item">
 										      <a class="page-link" href="${root}/member/manage_member?page=${pageBean.nextPage}&dateData=${memberManageBean.dateData}&
 				          					status=${memberManageBean.status}&franchiseId=${memberManageBean.franchiseId}&areaId=${memberManageBean.areaId}&nickName=${memberManageBean.nickName}&
-				          					penalty=${memberManageBean.penalty}" aria-label="Next">
+				          					penalty=${memberManageBean.penalty}&baseArea=${memberManageBean.baseArea}" aria-label="Next">
 										        <span aria-hidden="true">&raquo;</span>
 										        <span class="sr-only">Next</span>
 										      </a>
@@ -272,6 +275,88 @@
     </a>
 		
 	</div>
+	
+	<!-- BO_ZOO2 회원 상세정보 모달  -->
+	
+	<div class="modal fade memberInfoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLongTitle">회원 정보</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			    <span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			<table class="table table-bordered table-dark">
+			<colgroup>
+				<col scope="col" style="width:15%;">
+				<col scope="col" style="width:35%;">
+				<col scope="col" style="width:15%;">
+				<col scope="col" style="width:35%;">
+			</colgroup>	
+			  <tbody>
+			    <tr>
+			      <th scope="row">프로필</th>
+			      <td>Mark</td>
+			      <th scope="row">가입일</th>
+			      <td></td>
+			    </tr>
+			    <tr>
+			      <th scope="row">가맹사</th>
+			      <td>Mark</td>
+			      <th scope="row">회원코드</th>
+			      <td></td>
+			    </tr>
+			    <tr>
+			      <th scope="row">닉네임</th>
+			      <td>Mark</td>
+			      <th scope="row">등록지역</th>
+			      <td></td>
+			    </tr>
+			    <tr>
+			      <th scope="row">등록상태</th>
+			      <td>Mark</td>
+			      <th scope="row">가입상태</th>
+			      <td></td>
+			    </tr>
+			  </tbody>
+			  
+			</table>
+			
+			<table class="table table-bordered table-dark">
+			<colgroup>
+				<col scope="col">
+				<col scope="col">
+				<col scope="col">
+				<col scope="col">
+			</colgroup>	
+			<thead>
+				<tr>
+					<th scope="col">일자</th>
+					<th scope="col">수정항목</th>
+					<th scope="col">수정 전</th>
+					<th scope="col">수정 후</th>					
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>2020-01-01</th>
+					<td>이름</td>
+					<td>쿠팡맨</td>
+					<td>쿠키맨</td>
+				</tr>
+			</tbody>
+			  
+			</table>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			  <button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+	    </div>
+	  </div>
+	</div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="${root}/vendor/jquery/jquery.min.js"></script>
@@ -298,7 +383,6 @@
     <script>
 		$(function(){
 			
-			// 지역선택 하면 상세 지역 정보 얻어오기
 			$('#areaSelect').on('change',function(){
 				
 				$('#areaDetailSelect').empty();
@@ -310,19 +394,21 @@
 					type:'get',
 					success:function(data){
 						
-							$('#areaDetailSelect').append('<option value= 999 <c:if test="${memberManageBean.areaId eq 999}">selected</c:if>>지역전체</option>');
-							$('#areaDetailSelect').append('<option value= 0 <c:if test="${memberManageBean.areaId eq 0}">selected</c:if>>전체</option>');
-							
+							$('#areaDetailSelect').append('<option value= "999" <c:if test="${memberManageBean.areaId eq 999}">selected</c:if>>지역전체</option>');
+							$('#areaDetailSelect').append('<option value= "998" <c:if test="${memberManageBean.areaId eq 998}">selected</c:if>>전체</option>');
+						
 						$.each(data,function(index,value){
 							
-							$('#areaDetailSelect').append('<option value='+value.id+'<c:if test="${memberManageBean.areaId eq obj.id}">selected</c:if>>'+value.sigungu_name+'</option>');
-						
+							let areaId = "${memberManageBean.areaId}";
+							
+							if(areaId == value.id){
+								$('#areaDetailSelect').append('<option value='+value.id+' selected>'+value.sigungu_name+'</option>');
+							}else{
+								$('#areaDetailSelect').append('<option value='+value.id+'>'+value.sigungu_name+'</option>');
+							}
 						});
-						
 					}
-					
 				});
-				
 			});
 			
 		});

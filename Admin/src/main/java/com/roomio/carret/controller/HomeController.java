@@ -1,5 +1,6 @@
 package com.roomio.carret.controller;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,18 +31,28 @@ public class HomeController {
 		}else {
 			return "redirect:/manager/login";			
 		}
+//		
+//		return "redirect:/front/member/member_join";
+
+	}
+	
+	@GetMapping("/front/home")
+	public String goFrontHome() {
 		
+		return "front/home";
 	}
 	
 	@GetMapping("/error404")
     public String Error404() {
 
         return "404_page";
+        
     }
 	
 	@GetMapping("/error500")
     public String Error500() {
         return "404_page";
     }
+	
 	
 }
