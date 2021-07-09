@@ -139,10 +139,10 @@
                 </a>
                 <div id="e" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="login.html">1:1문의 관리</a>
-                        <a class="collapse-item" href="register.html">신고문의 관리</a>
-                        <a class="collapse-item" href="forgot-password.html">FAQ 관리</a>
-                        <a class="collapse-item" href="404.html">공지사항 관리</a>
+                        <a class="collapse-item" href="${root}/operation/question">1:1문의 관리</a>
+                        <a class="collapse-item" href="${root}/operation">신고문의 관리</a>
+                        <a class="collapse-item" href="${root}/operation">FAQ 관리</a>
+                        <a class="collapse-item" href="${root}/operation">공지사항 관리</a>
                     </div>
                 </div>
             </li>
