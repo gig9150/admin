@@ -12,11 +12,23 @@ public class OperationController {
 	@Autowired
 	private OperationService operationService;
 	
+	//1:1문의 게시판
+	
 	@RequestMapping("/operation/question")
 	public String question() {
 		
 		
 		return "operation/question";
 	}
+	
+	//1:1문의 답변 게시판
+	@RequestMapping("/operation/question_register")
+	public String question_register() {
+		
+		
+		
+		return "operation/question_register";
+	}
+	
 	
 }

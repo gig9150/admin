@@ -94,6 +94,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="${root}/js/sb-admin-2.min.js"></script>
+    <script src="${root}/js/bo-script.js"></script>
     
 
 </body>

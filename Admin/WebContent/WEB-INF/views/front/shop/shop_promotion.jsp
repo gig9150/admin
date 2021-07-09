@@ -71,7 +71,7 @@
 		                <div class="swiper-slide">
 		                    <div class="sub_box">
 		                        <div class="pic">
-		                        	<img style="width:100%;height:100%;" src="${root}/upload/${obj2.mainImage}">
+		                        	<a href="${root}/front/shop/shop_detail?shopIdx=${obj2.shopIdx}"><img style="width:100%;height:100%;" src="${root}/upload/${obj2.mainImage}"></a>
 		                        </div>
 		                        <div class="info">
 		                            <ul class="sub_info sub_info_1">
