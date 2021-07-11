@@ -283,7 +283,7 @@
 	<select id="getFrontShopReviews" resultMap="getFrontShopReviews" parameterType="hashMap">
 		
 		select sr.content as review_content,date_format(sr.regdate,'%Y-%m-%d') as regdate,
-		sr.like,rkc.content as review_category_content,sri.name as imageName,m.name as nickName,m.address
+		sr.review_like,rkc.content as review_category_content,sri.name as imageName,m.name as nickName,m.address
 		from shop_review sr
 		left join review_keyword rk
 		on sr.shop_review_id = rk.shop_review_id
@@ -299,7 +299,7 @@
 				order by sr.regdate desc
 			</when>
 			<otherwise>
-				order by sr.like desc
+				order by sr.review_like desc
 			</otherwise>
 		</choose>
 		

@@ -26,6 +26,12 @@
     <!-- Custom styles for this page -->
     <link href="${root}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="${root}/css/bo-style.css" rel="stylesheet">
+    
+    <style>
+    	.question-table tr{
+    		cursor: pointer;
+    	}
+    </style>
 
 </head>
 
@@ -130,7 +136,7 @@
 		                        	<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#excelConfirm" >엑셀다운</button>
 	                        	</div>
                         	</div>
-                            <table class="table" id="franchiseListTable" style="margin-top:1rem;">
+                            <table class="table question-table" id="franchiseListTable" style="margin-top:1rem;">
                                 <thead class="thead-dark">
                                   <tr>
                                     <th scope="col">NO</th>
@@ -138,29 +144,20 @@
                                     <th>이름</th>
                                     <th>아이디</th>
                                     <th>접속 아이피</th>
-									<th>처리 결과</th>
+																		<th>처리 결과</th>
                                     <th>사유</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-	                                <c:forEach items="${accessList}" var="obj">
-	                                	<tr>
-	                                		<th>${obj.manager_access_id}</th>
-	                                		<td>${obj.access_date}</td>
-	                                		<td>${obj.name}</td>
-	                                		<td>${obj.id}</td>
-	                                		<td>${obj.ip}</td>
-	                                		<c:choose>
-	                                			<c:when test="${obj.result eq 1 }">
-	                                				<td>성공</td>
-	                                			</c:when>
-	                                			<c:otherwise>
-	                                				<td>실패</td>
-	                                			</c:otherwise>
-	                                		</c:choose>
-	                                		<td>${obj.detail_content}</td>
-	                                	</tr>
-	                                </c:forEach>
+	                                <tr data-question-id='1'>
+	                                	<td>1</td>
+	                                	<td>1</td>
+	                                	<td>1</td>
+	                                	<td>1</td>
+	                                	<td>1</td>
+	                                	<td>1</td>
+	                                	<td>1</td>
+	                                </tr>
                                 </tbody>
                               </table>
                               <br>
@@ -334,7 +331,13 @@
    				
    			});
    			
-   		
+   			//답변 등록 페이지 이동
+   			$('.question-table tr').on('click',function(){
+   				let questionId = $(this).data('questionId');
+   				window.open("${root}/operation/question_register?questionId="+questionId,"_blank",
+   						"toolbar=yes,menubar=yes,width=700,height=500"),focus();
+   			});
+   			
 		});
 		
 		function getDateStr(myDate){
@@ -430,6 +433,7 @@
 				document.body.removeChild(elem);
 			}
 		}
+		
 	</script>    
 </body>
 

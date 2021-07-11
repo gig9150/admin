@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+<h1>문의 답변 팝업</h1>
 </body>
 </html>
