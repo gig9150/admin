@@ -6,12 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Resource;
+
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.roomio.carret.bean.FranchiseAddBean;
 import com.roomio.carret.bean.FranchiseRegisterBean;
 import com.roomio.carret.bean.FranchiseResponBean;
+import com.roomio.carret.bean.LoginManagerBean;
+import com.roomio.carret.bean.LoginMemberBean;
 import com.roomio.carret.bean.ManagerNoticeRegisterBean;
 import com.roomio.carret.bean.PageBean;
 import com.roomio.carret.bean.RoleGroupsBean;
@@ -41,6 +46,10 @@ public class ManagerService {
 	@Autowired
 	private ManagerDao managerDao;
 	
+	@Resource(name = "loginManagerBean")
+	@Lazy
+	private LoginManagerBean loginManagerBean;
+	
 	//업로드된 파일 이름 얻는 메소드 
 	private String saveUploadFile(MultipartFile upload_file) {
 		
@@ -55,8 +64,24 @@ public class ManagerService {
 		return file_name;
 	}
 	
-	public String checkManagerMember(HashMap<String, String> map) {
-		return managerDao.checkManagerMember(map);
+	public void checkManagerMember(HashMap<String, String> map) {
+		
+		 HashMap<Object,Object> loginMap = managerDao.checkManagerMember(map);
+		 
+		 if(loginMap != null) {
+			 
+			 loginManagerBean.setIslogin(true);
+			 
+			 loginManagerBean.setFranchise_manager_id((int)loginMap.get("franchise_manager_id"));
+			 loginManagerBean.setFranchise_id((int)loginMap.get("franchise_id"));
+			 loginManagerBean.setFranchise_manager_code((String)loginMap.get("franchise_manager_code"));
+			 loginManagerBean.setStatus((int)loginMap.get("status"));
+			 loginManagerBean.setId((String)loginMap.get("id"));
+			 loginManagerBean.setPw((String)loginMap.get("pw"));
+			 loginManagerBean.setName((String)loginMap.get("name"));
+			 
+		 }
+		 
 	}
 	
 	public List<HashMap<String,String>> getRoleDetailList(){

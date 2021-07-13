@@ -5,4 +5,6 @@
 	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
 	   
 	   <bean class="com.roomio.carret.bean.LoginMemberBean" id='loginMemberBean' scope='session'/>
+	   <bean class="com.roomio.carret.bean.LoginManagerBean" id='loginManagerBean' scope='session'/>
+	   
 </beans>

@@ -100,17 +100,7 @@
     
  
 
-<script>
 
-	$(function(){
-		
-		$('.two-collapse').on('click',function(){
-			$('.two-collapse-item').css('display','block');
-		});
-		
-	});
-	
-</script>
 </body>
 
 </html>

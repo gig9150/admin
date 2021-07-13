@@ -3,9 +3,11 @@ package com.roomio.carret.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.roomio.carret.bean.FranchiseAddBean;
 import com.roomio.carret.bean.FranchiseRegisterBean;
 import com.roomio.carret.bean.FranchiseResponBean;
+import com.roomio.carret.bean.LoginManagerBean;
 import com.roomio.carret.bean.ManagerNoticeRegisterBean;
 import com.roomio.carret.bean.PageBean;
 import com.roomio.carret.bean.RoleGroupsBean;
@@ -33,19 +36,25 @@ public class ManagerController {
 	@Autowired
 	private ShopService shopService;
 	
+	@Resource(name = "loginManagerBean")
+	@Lazy
+	private LoginManagerBean loginManagerBean;
+	
 	@GetMapping("/manager/login")
 	public String managerLogin() {
 		return "manager_login";
 	}
 	
 	@PostMapping("/manager/loginPro")
-	public String managerLoginPro(String id,String pw,HttpSession session) {
+	public String managerLoginPro(String id,String pw,HttpSession session,
+								Model model) {
 		HashMap<String,String> map = new HashMap<String, String>();
 		map.put("id", id);
 		map.put("pw", pw);
-		String check = managerService.checkManagerMember(map);
 		
-		if(check != null) {
+		managerService.checkManagerMember(map);
+
+		if(loginManagerBean.isIslogin() == true) {
 			session.setAttribute("id", id);
 			return "redirect:/";
 		}else {

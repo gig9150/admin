@@ -57,7 +57,7 @@
                     <br>
                     
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"> 관리자 설정 > 운영자 활동 내역  </h1>
+                    <h1 class="h3 mb-2 text-gray-800"> Home >> 운영관리 >> FAQ 관리  </h1>
 
                     <br><hr><br>
 
@@ -66,7 +66,7 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">검색 </h6>
                         </div>
-                        <form method="get" action="${root}/operation/question">
+                        <form method="get" action="${root}/operation/report">
                         	<input type="hidden" name="selectNum" value="${selectNum}">
                         	<input type="hidden" name="page" value="${page}">
 							<div class="card-body">
@@ -97,11 +97,11 @@
 									</div>
 									<div class="col-sm-1">문의종류</div>
 									<div class="col-sm-2">
-										<select class="form-control" name="questionCategoryId">
-											<option value="0" <c:if test="${bean.questionCategoryId eq 0}">selected</c:if>>전체</option>
-											<c:forEach items="${cateList}" var="obj">
-												<option value="${obj.question_category_id}" <c:if test="${bean.questionCategoryId eq obj.question_category_id}">selected</c:if>>${obj.content}</option>
-											</c:forEach>
+										<select class="form-control" name="reportCategoryId">
+											<option value="0" <c:if test="${bean.reportCategoryId eq 0}">selected</c:if>>전체</option>
+											<option value="1" <c:if test="${bean.reportCategoryId eq 1}">selected</c:if>>계정</option>
+											<option value="2" <c:if test="${bean.reportCategoryId eq 2}">selected</c:if>>게시글</option>
+											<option value="3" <c:if test="${bean.reportCategoryId eq 3}">selected</c:if>>상품</option>
 										</select>
 									</div>
 									<div class="col-sm-1">처리상태</div>
@@ -155,7 +155,7 @@
                         <div class="card-body">
                         	<div class="row">
 	                        	<div class="col-sm-1">
-		                        	<span>목록 총${questionCnt}개</span>
+		                        	<span>목록 총${reportCnt}개</span>
 	                        	</div>
 	                        	<div class="col-sm-10">
 		                        	<select class="form-control float-right" style="width:12%;" id="selectNum" >
@@ -172,48 +172,31 @@
                             <table class="table question-table" id="franchiseListTable" style="margin-top:1rem;">
                                 <thead class="thead-dark">
                                   <tr>
+                                  	<th><input type="checkbox"></th>
                                     <th scope="col">NO</th>
                                     <th>등록일</th>
                                     <th>가맹사</th>
                                     <th>문의번호</th>
                                     <th>작성자</th>
                                     <th></th>
-									<th>문의종류</th>
-                                    <th>문의내용</th>
+									<th>신고종류</th>
+                                    <th>신고내용</th>
                                     <th>답변여부</th>
                                     <th>처리자</th>
                                     <th>처리완료일</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-	                               	<c:forEach items="${questionList}" var="obj" varStatus="status">
-		                                <tr data-question-id='${obj.question_id}'>
-	                                		<td>${status.count}</td>
-	                                		<td>${obj.questionDate}</td>
-	                                		<td>${obj.franchise_name}</td>
-	                                		<td>${obj.name}</td>
-	                                		<td>${obj.member_id}</td>
-	                                		<td>${obj.content}</td>
-	                                		<td style="overflow:hidden;">${obj.question_content}</td>
-	                                		<c:choose>
-	                                			<c:when test="${obj.answer_status eq 1 }">
-	                                				<td>확인 중</td>
-	                                			</c:when>
-	                                			<c:otherwise>
-	                                				<td>답변 완료</td>
-	                                			</c:otherwise>
-	                                		</c:choose>
-	                                		<c:choose>	
-	                                			<c:when test="${obj.questionCategoryDate eq null}">
-	                                				<td>-</td>
-	                                				<td>-</td>
-	                                			</c:when>
-	                                			<c:otherwise>
-	                                				<td>${obj.id}</td>
-	                                				<td>${obj.questionCategoryDate}</td>
-	                                			</c:otherwise>
-	                                		</c:choose>
-	                               	</c:forEach>
+                                	<tr data-faq-id = '1'>
+                                		<td>1</td>
+                                		<td>1</td>
+                                		<td>1</td>
+                                		<td>1</td>
+                                		<td>1</td>
+                                		<td>1</td>
+                                		<td>1</td>
+                                		<td>1</td>
+                                	</tr>
                                 </tbody>
                               </table>
                               <br>
@@ -228,7 +211,7 @@
 				          			</c:when>
 				          			<c:otherwise>
 				          				<li class="page-item">
-				          				<a class="page-link" href="${root}/operation/question?page=${pageBean.prevPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&questionCategoryId=${bean.questionCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}" aria-label="Previous">
+				          				<a class="page-link" href="${root}/operation/report?page=${pageBean.prevPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&reportCategoryId=${bean.reportCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}" aria-label="Previous">
 										        <span aria-hidden="true">&laquo;</span>
 										        <span class="sr-only">Previous</span>
 									      	</a></li>
@@ -237,10 +220,10 @@
 				          		<c:forEach var="idx" begin="${pageBean.min}" end="${pageBean.max}">
 				          			<c:choose>
 				          				<c:when test="${idx == pageBean.page}">
-				          					<li class="page-item active"><a class="page-link" href="${root}/operation/question?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&questionCategoryId=${bean.questionCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}">${idx}</a></li>
+				          					<li class="page-item active"><a class="page-link" href="${root}/operation/report?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&reportCategoryId=${bean.reportCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}">${idx}</a></li>
 				          				</c:when>
 				          				<c:otherwise>
-				          					<li class="page-item"><a class="page-link" href="${root}/operation/question?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&questionCategoryId=${bean.questionCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}">${idx}</a></li>
+				          					<li class="page-item"><a class="page-link" href="${root}/operation/report?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&reportCategoryId=${bean.reportCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}">${idx}</a></li>
 				          				</c:otherwise>
 				          			</c:choose>	
 				          		</c:forEach>
@@ -255,7 +238,7 @@
 				          			</c:when>
 				          			<c:otherwise>
 				          				<li class="page-item">
-										      <a class="page-link" href="${root}/operation/question?page=${pageBean.nextPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&questionCategoryId=${bean.questionCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}" aria-label="Next">
+										      <a class="page-link" href="${root}/operation/report?page=${pageBean.nextPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&reportCategoryId=${bean.reportCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}" aria-label="Next">
 										        <span aria-hidden="true">&raquo;</span>
 										        <span class="sr-only">Next</span>
 										      </a>
@@ -264,6 +247,13 @@
 				          		</c:choose>
 				          	</ul>
 				          </div>
+						  <div style="position: relative;">
+						  	<select class="form-control" style="width:120px;position: absolute;left:0">
+						  		<option>노출상태</option>
+						  	</select>
+						  	<button class="btn btn-info" style="position: absolute;left:140px;">일괄처리</button>
+						  	<button class="btn btn-info addFAQ" style="position:absolute;right:0;">등록 </button>
+						  </div>
 				          <br>
                           <br>
                         </div>
@@ -299,10 +289,6 @@
 	    </div>
 	  </div>
 	</div>
-	
-	
-	
-	
 
     <!-- Bootstrap core JavaScript-->
     <script src="${root}/vendor/jquery/jquery.min.js"></script>
@@ -373,7 +359,7 @@
    			$('#selectNum').on('change',function(){
    				
    				let selectNum = $(this).val();
-   				location.href='${root}/operation/question?startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&questionCategoryId=${bean.questionCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}&selectNum='+selectNum;
+   				location.href='${root}/operation/report?startDate=${bean.startDate}&endDate=${bean.endDate}&franchiseId=${bean.franchiseId}&reportCategoryId=${bean.questionCategoryId}&status=${bean.status}&writer=${bean.writer}&writerInput=${bean.writerInput}&keyWord=${bean.keyWord}&keyWordInput=${bean.keyWordInput}&selectNum='+selectNum;
    			});
    			
    			//엑셀 다운로드 
@@ -386,13 +372,18 @@
    				
    			});
    			
-   			//답변 등록 페이지 이동
-   			$('.question-table tr').on('click',function(){
-   				let questionId = $(this).data('questionId');
-   				window.open("${root}/operation/question_register?questionId="+questionId,"_blank",
+   			//등록 페이지 이동
+   			$('.addFAQ').on('click',function(){
+   				window.open("${root}/operation/FAQ_register","_blank",
    						"toolbar=yes,menubar=yes,width="+screen.width+",height="+screen.height+"fullscreen=yes"),focus();
    			});
    			
+   			//수정 페이지 이동
+   			$('.question-table tr').on('click',function(){
+   				let FAQId = $(this).data('faqId');
+   				window.open("${root}/operation/FAQ_update?FAQId="+FAQId,"_blank",
+   						"toolbar=yes,menubar=yes,width="+screen.width+",height="+screen.height+"fullscreen=yes"),focus();
+   			});
 		});
 		
 		function getDateStr(myDate){

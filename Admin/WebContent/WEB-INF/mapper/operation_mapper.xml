@@ -3,6 +3,277 @@
 					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.roomio.carret.operation">
 
+	<!-- 문의 정보 resultMap  -->
+	
+	<resultMap type="hashMap" id="questionInfoMap">
+		<result column="franchise_name" property="franchise_name"/>
+		<result column="name" property="name"/>
+		<result column="member_id" property="member_id"/>
+		<result column="content" property="content"/>
+		<result column="question_id" property="question_id"/>
+		<result column="regdate" property="regdate"/>
+		<result column="question_content" property="question_content"/>
+		<result column="answer_status" property="answer_status"/>
+		<collection property="imageList" ofType="java.lang.String" javaType="list">
+			<result column="imageName"/>
+		</collection>
+	</resultMap>
+
+	<!-- 문의 정보 얻어오기 -->
+
+	<select id="getQuestion" parameterType="int" resultMap="questionInfoMap">
+		
+		select f.franchise_name,m.name,m.member_id,qc.content,q.question_id,q.regdate,
+		q.question_content,q.answer_status,qi.name as imageName
+		from question q
+		inner join member m 
+		on q.member_id = m.member_id
+		inner join question_category qc
+		on q.question_category_id = qc.question_category_id
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		left join question_image qi
+		on q.question_id = qi.question_id
+		where q.question_id = ${questionId}
+	
+	</select>
+	
+	<!-- 문의 답변 등록하기  -->
+	
+	<insert id="addQuestionAnswer" parameterType="hashMap">
+	
+		insert into question_answer(question_id,franchise_manager_id,content,send_message)
+		values(${questionId},${franchiseManagerId},#{content},${sendMessage})
+	
+	</insert>
+	
+	<!-- 문의 상태 변경(답변완료) -->
+	<update id="updateQuestion" parameterType="int">
+		
+		update question
+		set answer_status = 2 
+		where question_id = ${questionId}
+	
+	</update>
+	
+	<!-- 문의 카테고리 리스트 -->
+	<select id="getQuestionCategory" resultType="hashMap">
+		
+		select question_category_id,content
+		from question_category
+	
+	</select>
+	
+	<sql id="questionSearch">
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(q.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(q.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(q.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='franchiseId != null and franchiseId != 0'>and f.franchise_id = ${franchiseId}</if>
+			<if test='questionCategoryId != null and questionCategoryId != 0'>and qc.question_category_id = ${questionCategoryId}</if>
+			<if test="status == 1">and q.answer_status = 1</if>
+			<if test="status == 2">and q.answer_status = 2</if>
+			<if test='writer != null and writer.equals("all")'>
+				and m.member_id LIKE CONCAT('%',#{writerInput},'%') or
+				m.name LIKE CONCAT('%',#{writerInput},'%')
+			</if>
+			<if test='writer != null and writer.equals("num")'>and m.member_id LIKE CONCAT('%',#{writerInput},'%')</if>
+			<if test='writer != null and writer.equals("name")'>and m.name LIKE CONCAT('%',#{writerInput},'%')</if>
+			<if test='keyWord != null and keyWord.equals("all")'>
+				and q.question_id LIKE CONCAT('%',#{keyWordInput},'%') or
+				q.question_content LIKE CONCAT('%',#{keyWordInput},'%')
+			</if>
+			<if test='keyWord != null and keyWord.equals("num")'>and q.question_id LIKE CONCAT('%',#{keyWordInput},'%')</if>
+			<if test='keyWord != null and keyWord.equals("content")'>and q.question_content LIKE CONCAT('%',#{keyWordInput},'%')</if>
+		</where>
+	</sql>
+	
+	<!-- 문의 리스트 -->
+	
+	<select id="getQuestionList" parameterType="com.roomio.carret.bean.QuestionRegisterBean" resultType="hashMap">
+	 
+		select q.question_id,q.regdate as questionDate,f.franchise_name,m.name,m.member_id,qc.content,q.question_content,q.answer_status,fm.id,qa.regdate as questionCategoryDate
+		from question q 
+		left join question_answer qa
+		on q.question_id = qa.question_id
+		inner join franchise_manager fm
+		on qa.franchise_manager_id = fm.franchise_manager_id
+		inner join question_category qc
+		on q.question_category_id = qc.question_category_id
+		inner join member m
+		on q.member_id = m.member_id
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		
+		<include refid="questionSearch"></include>
+		
+	</select>
+	
+	<!-- 문의 글 갯수 -->
+	<select id="getQuestionCnt" parameterType="com.roomio.carret.bean.QuestionRegisterBean" resultType="int">
+	
+		select count(*)
+		from question q 
+		inner join question_answer qa
+		on q.question_id = qa.question_id
+		inner join franchise_manager fm
+		on qa.franchise_manager_id = fm.franchise_manager_id
+		inner join question_category qc
+		on q.question_category_id = qc.question_category_id
+		inner join member m
+		on q.member_id = m.member_id
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		
+		<include refid="questionSearch"></include>
+		
+	</select>
+	
+	<!-- 신고 정보 얻어오기  -->
+	
+	<resultMap type="hashMap" id="reportInfoMap">
+		<result column="franchise_name" property="franchise_name"/>
+		<result column="name" property="name"/>
+		<result column="member_id" property="member_id"/>
+		<result column="regdate" property="regdate"/>
+		<result column="report_id" property="report_id"/>
+		<result column="member_or_shop" property="member_or_shop"/>
+		<result column="member_or_shop_num" property="member_or_shop_num"/>
+		<result column="member_or_shop_name" property="member_or_shop_name"/>
+		<result column="content" property="content"/>
+		<result column="sub_content" property="sub_content"/>
+		<result column="report_to" property="report_to"/>
+		<result column="report_to_num" property="report_to_num"/>
+		<result column="reportContent" property="reportContent"/>
+		<result column="answer_status" property="answer_status"/>
+		<collection property="imageList" ofType="java.lang.String" javaType="list">
+			<result column="image_name"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getReportInfo" parameterType="int" resultMap="reportInfoMap">
+		
+		select f.franchise_name,m.name,m.member_id,r.regdate,r.report_id,r.member_or_shop,r.member_or_shop_name,
+		r.member_or_shop_num,rc.content,rc.sub_content,r.report_to,r.report_to_num,r.content as reportContent,
+		r.answer_status,ri.image_name
+		from report r
+		inner join franchise f
+		on r.franchise_id = f.franchise_id
+		inner join member m
+		on r.member_id = m.member_id
+		inner join report_categoris rc
+		on r.report_categoris_id = rc.report_categoris_id
+		left join report_image ri
+		on r.report_id = ri.report_id
+		where r.report_id = ${reportId}
+	
+	</select>
+	
+	<!-- 문의 답변 등록하기  -->
+	
+	<insert id="addReportReply" parameterType="hashMap">
+	
+		insert into report_reply(report_id,franchise_manager_id,reply_content,send_message)
+		values(${reportId},${franchiseManagerId},#{content},${sendMessage})
+	
+	</insert>
+	
+	<!-- 문의 상태 변경(답변완료) -->
+	<update id="updateReport" parameterType="int">
+		
+		update report
+		set answer_status = 2 
+		where report_id = ${reportId}
+	
+	</update>
+	
+	<!-- 신고 리스트 검색 조건 -->
+	<sql id="reportSearch">
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(r.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(r.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(r.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='franchiseId != null and franchiseId != 0'>and f.franchise_id = ${franchiseId}</if>
+			<if test='reportCategoryId == 1'>and rc.content = ${reportCategoryId}</if>
+			<if test='reportCategoryId == 2'>and rc.content = ${reportCategoryId}</if>
+			<if test='reportCategoryId == 3'>and rc.content = ${reportCategoryId}</if>
+			<if test="status == 1">and r.answer_status = 1</if>
+			<if test="status == 2">and r.answer_status = 2</if>
+			<if test='writer != null and writer.equals("all")'>
+				and m.member_id LIKE CONCAT('%',#{writerInput},'%') or
+				m.name LIKE CONCAT('%',#{writerInput},'%')
+			</if>
+			<if test='writer != null and writer.equals("num")'>and m.member_id LIKE CONCAT('%',#{writerInput},'%')</if>
+			<if test='writer != null and writer.equals("name")'>and m.name LIKE CONCAT('%',#{writerInput},'%')</if>
+			<if test='keyWord != null and keyWord.equals("all")'>
+				and r.report_id LIKE CONCAT('%',#{keyWordInput},'%') or
+				r.content LIKE CONCAT('%',#{keyWordInput},'%')
+			</if>
+			<if test='keyWord != null and keyWord.equals("num")'>and r.report_id LIKE CONCAT('%',#{keyWordInput},'%')</if>
+			<if test='keyWord != null and keyWord.equals("content")'>and r.content LIKE CONCAT('%',#{keyWordInput},'%')</if>
+		</where>
+	</sql>
+	
+	<!-- 신고 리스트 -->
+	
+	<select id="getReportList" parameterType="com.roomio.carret.bean.QuestionRegisterBean" resultType="hashMap">
+	 
+		select r.report_id,r.regdate as reportRegdate,f.franchise_name,m.name,m.member_id,
+		rc.sub_content,r.content,r.answer_status,fm.id,rr.regdate as replyRegdate
+		from report r
+		inner join franchise f
+		on r.franchise_id = f.franchise_id 
+		inner join member m
+		on r.member_id = m.member_id
+		inner join report_categoris rc
+		on r.report_categoris_id = rc.report_categoris_id
+		inner join report_reply rr
+		on r.report_id = rr.report_id
+		inner join franchise_manager fm 
+		on rr.franchise_manager_id = fm.franchise_manager_id
+		
+		<include refid="reportSearch"/>
+		
+	</select>
+	
+	<!-- 신고 리스트 갯수  -->
+	<select id="getReportCnt" parameterType="com.roomio.carret.bean.QuestionRegisterBean" resultType="int">
+	 
+		select count(*)
+		from report r
+		inner join franchise f
+		on r.franchise_id = f.franchise_id 
+		inner join member m
+		on r.member_id = m.member_id
+		inner join report_categoris rc
+		on r.report_categoris_id = rc.report_categoris_id
+		inner join report_reply rr
+		on r.report_id = rr.report_id
+		inner join franchise_manager fm 
+		on rr.franchise_manager_id = fm.franchise_manager_id
+		
+		<include refid="reportSearch"/>
+		
+	</select>
+	
+	<!-- 자주 묻는 질문 카테고리  -->
+	<select id="getFreQuestionCategory" resultType="hashMap">
+		
+		select frequent_question_category_id,content
+		from frequent_question_category
+	
+	</select>
+	
+	
+	
 		
 	
 </mapper>

@@ -68,7 +68,7 @@
 
 </head>
 <body>
-<form action="${root}/operation/question_register_pro" method="post">
+<form action="${root}/operation/report_register_pro" method="post">
 	<div class="container-fluid">
 		<table class="table">
 			<colgroup>
@@ -79,10 +79,10 @@
 			</colgroup>
 			<tbody>
 				<tr>
-					<td rowspan="4">
+					<td rowspan="5">
 						<div id="quImageSlider" class="carousel slide" data-ride="carousel">
 						  <div class="carousel-inner">
-						  	<c:forEach items="${quMap.imageList}" var="obj" varStatus="status">
+						  	<c:forEach items="${reMap.imageList}" var="obj" varStatus="status">
 						  		<c:choose>
 						  			<c:when test="${status.count eq 1}">
 							  			<div class="carousel-item active">
@@ -109,34 +109,70 @@
 						</div>
 					</td>
 					<td>
-						<label>가맹사<input type="text" class="form-control" value="${quMap.franchise_name}" readonly="readonly"></label>
+						<label>가맹사<input type="text" class="form-control" value="${reMap.franchise_name}" readonly="readonly"></label>
 					</td>
 					<td>
-						<label>닉네임<input type="text" class="form-control" value="${quMap.name }" readonly="readonly"></label>
+						<label>작성자<input type="text" class="form-control" value="${reMap.name }" readonly="readonly"></label>
 					</td>
 					<td>
-						<label>회원번호<input type="text" class="form-control" value="${quMap.member_id}" readonly="readonly"></label>
+						<label>회원번호<input type="text" class="form-control" value="${reMap.member_id}" readonly="readonly"></label>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<label>문의종류<input type="text" class="form-control" value="${quMap.content}" readonly="readonly"></label>
+						<label>등록일<input type="text" class="form-control" value="${reMap.regdate}" readonly="readonly"></label>
 					</td>
 					<td>
-						<label>문의번호<input type="text" name="questionId" class="form-control" value="${quMap.question_id}" readonly="readonly"></label>
+						<label>문의번호<input type="text" name="reportId" class="form-control" value="${reMap.report_id}" readonly="readonly"></label>
 					</td>
 					<td>
-						<label>등록일<input type="text" class="form-control" value="${quMap.regdate}" readonly="readonly"></label>
+						<label>
+							신고계정
+							<c:choose>
+								<c:when test="${reMap.member_or_shop eq 1}">
+									<input type="text" class="form-control" readonly="readonly" style="width:30%" placeholder="계정종류" value="회원">									
+								</c:when>
+								<c:otherwise>
+									<input type="text" class="form-control" readonly="readonly" style="width:30%" placeholder="계정종류" value="가게">	
+								</c:otherwise>
+							</c:choose>
+							<input type="text" class="form-control" readonly="readonly" style="width:40%" placeholder="[회원번호]회원명" value="[${reMap.member_or_shop_num}]${reMap.member_or_shop_name}">
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<c:choose>
+							<c:when test="${reMap.content eq 1}">
+								<label>신고항목<input type="text" class="form-control" value="계정" readonly="readonly"></label>
+							</c:when>
+							<c:when test="${reMap.content eq 2}">
+								<label>신고항목<input type="text" class="form-control" value="게시글" readonly="readonly"></label>
+							</c:when>
+							<c:otherwise>
+								<label>신고항목<input type="text" class="form-control" value="상품" readonly="readonly"></label>
+							</c:otherwise>
+						</c:choose>
+					</td>
+					<td>
+						<label>신고종류<input type="text" class="form-control" value="${reMap.sub_content}" readonly="readonly"></label>
+					</td>
+					<td>
+						<label>
+							신고대상
+							<input type="text" class="form-control" readonly="readonly" style="width:30%" placeholder="서비스명" value="${reMap.report_to}">
+							<input type="text" class="form-control" readonly="readonly" style="width:40%" placeholder="노출번호" value="${reMap.report_to_num}">
+						</label>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">
-						<label for="questionContent">문의 내용</label>
+						<label for="reportContent" >내용</label>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">
-						<input id="questionContent" value="${quMap.question_content}" type="text" class="form-control">
+						<input id="reportContent" value="${reMap.reportContent}" type="text" class="form-control" style="width:100%;margin-left:0">
 					</td>
 				</tr>
 			</tbody>
@@ -155,7 +191,7 @@
 						<td>
 							<label>처리상태<input type="text" class="form-control"
 							<c:choose>
-								<c:when test="${quMap.answer_status eq 1}">
+								<c:when test="${reMap.answer_status eq 1}">
 									value = "확인 중"
 								</c:when>
 								<c:otherwise>
@@ -175,11 +211,11 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="4"><label for="questionReply">답변 내용</label></td>
+						<td colspan="4"><label for="reportReply">답변 내용</label></td>
 					</tr>
 					<tr>
 						<td colspan="4">
-							<textarea id="questionReply" name="content" class="form-control" rows="5" cols=""></textarea>
+							<textarea id="reportReply" name="content" class="form-control" rows="5" style="margin-left:0;width:100%"></textarea>
 						</td>
 					</tr>
 					<tr>

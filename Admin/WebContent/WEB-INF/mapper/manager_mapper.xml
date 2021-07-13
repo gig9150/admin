@@ -4,11 +4,11 @@
 <mapper namespace="com.roomio.carret.manager">
 
 	<!-- 매니저 로그인  -->
-	<select id="checkManagerMember" parameterType="hashMap" resultType="String">
+	<select id="checkManagerMember" parameterType="hashMap" resultType="hashMap">
 	
 		<![CDATA[
-			select name
-			from manager_member
+			select franchise_manager_id,franchise_id,franchise_manager_code,status,id,pw,name
+			from franchise_manager
 			where id = #{id} 
 			and pw = #{pw}
 		]]>

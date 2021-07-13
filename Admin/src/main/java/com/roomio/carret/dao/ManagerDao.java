@@ -22,7 +22,7 @@ public class ManagerDao {
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 
-	public String checkManagerMember(HashMap<String,String> map) {
+	public HashMap<Object,Object> checkManagerMember(HashMap<String,String> map) {
 		return sqlSessionTemplate.selectOne("com.roomio.carret.manager.checkManagerMember",map);
 	}
 
