@@ -153,6 +153,7 @@ public class RestController {
 		
 		return urlCheck + "";
 	}
+	
 	@GetMapping("/manager/managerNoticeFranchise/{managerNoticeId}")
 	public List<Integer> managerNoticeFranchise(@PathVariable int managerNoticeId){
 		
@@ -161,9 +162,6 @@ public class RestController {
 		return list;
 	}
 
-	
-	
-	
 	
 	
 	

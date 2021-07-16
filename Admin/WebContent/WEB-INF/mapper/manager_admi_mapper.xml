@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roomio.carret.managerAdmi">
+	
+	<!-- 운영자 역할 등록 -->
+	<insert id="addRoleGroups" parameterType="hashMap">
+		insert into role_groups(role_group_name,role_group_info,registrar)
+		values(#{roleGroupName},#{roleGroupInfo},#{registrar})
+		
+		<selectKey resultType="int" keyProperty="roleGroupId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert>
+	
+	<!-- 운영자 상세 역할 등록  -->
+	<insert id="addRoleGroupDetail" parameterType="list">
+	
+		insert into role_group_and_detail(role_group_id,detail_role,crud)
+		values
+		<foreach item="item" separator="," collection="list">
+			(${item.roleGroupId},${item.detailRole},${item.crud})
+		</foreach>
+		
+	</insert>
+	
+	<resultMap type="hashMap" id="getRoleMap">
+		<result column="role_group_id" property="role_group_id"/>
+		<result column="role_group_name" property="role_group_name"/>
+		<result column="role_group_info" property="role_group_info"/>
+		<result column="regdate" property="regdate"/>
+		<result column="registrar" property="registrar"/>
+		<collection property="detailList" javaType="list" ofType="hashMap">
+			<result column="detail_role" property="detail_role"/>
+			<result column="crud" property="crud"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 운영자 역할 정보 얻어오기 -->
+	
+	<select id="getRoleInfo" parameterType="int" resultMap="getRoleMap">
+	
+		select r.role_group_id,r.role_group_name,r.role_group_info,r.regdate,r.registrar,rg.detail_role,rg.crud
+		from role_groups r
+		left join role_group_and_detail rg
+		on r.role_group_id = rg.role_group_id
+		where r.role_group_id = ${roleGroupId}
+		
+	</select>
+	
+	<!-- 운영자 역할 정보 수정하기 -->
+	<update id="updateRoleGroup" parameterType="hashMap">
+	
+		update role_groups
+		set role_group_name = #{roleGroupName}, role_group_info = #{roleGroupInfo},
+		registrar = #{registrar}, regdate = now()
+		where role_group_id = ${roleGroupId}
+	
+	</update>
+	
+	<!-- 운영자 역할 정보 상세 역할 삭제 -->
+	<delete id="deleteRoleGroup" parameterType="int">
+	
+		delete from role_group_and_detail
+		where role_group_id = ${roleGroupId}
+		
+	</delete>
+	
+	<!-- 운영자 역할 리스트 얻어오기 -->
+	
+	<!-- 신고 리스트 검색 조건 -->
+	<sql id="roleSearch">
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='registrar != null  and !registrar.equals("")'>and registrar LIKE CONCAT('%',#{registrar},'%')</if>
+			<if test='keyWord != null and !keyWord.equals("") and select == 0'>
+				and role_group_name LIKE CONCAT('%',#{keyWord},'%') or 
+				role_group_info LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test="select == 1">and role_group_name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test="select == 2">and role_group_info LIKE CONCAT('%',#{keyWord},'%')</if>
+		</where>
+	</sql>
+	
+	<select id="getRoleList" resultType="hashMap" parameterType="hashMap">
+	
+		select role_group_id,role_group_name,regdate,registrar
+		from role_groups
+		
+		<include refid="roleSearch"/>
+		
+	</select>
+	
+	<select id="getRoleCnt" resultType="int" parameterType="hashMap">
+		
+		select count(*)
+		from role_groups 
+		
+		<include refid="roleSearch"/>
+		
+		
+	</select>
+	
+	<!-- 역할 삭제 -->
+	<delete id="deleteRole" parameterType="int">
+		
+		delete from role_groups
+		where role_group_id = ${roleGroupId}
+	
+	</delete>
+	
+	<!-- 역할 전체삭제 -->
+	<delete id="deleteAllRole" parameterType="list">
+	
+		delete from role_groups
+		<where> 
+			<foreach collection="list" item="item" separator="OR"> 
+				(role_group_id = ${item})
+			</foreach> 
+		</where>
+	</delete>
+	
+	<!-- 역할 그룹 얻어오기 -->
+	<select id="getRoleName" resultType="hashMap">
+		select role_group_id,role_group_name
+		from role_groups
+	</select>
+	
+	<!-- 운영자 계정 등록 -->
+	<insert id="managerRegister" parameterType="com.roomio.carret.bean.ManagerAddBean">
+		
+		insert into franchise_manager(role_group_id,franchise_manager_code,level,status,id,pw,name,email,phone,excel)
+		values(${roleGroupId},#{franchiseManagerCode},2,${status},#{id},#{pw},#{name},#{email},#{phone},${excel})
+		
+		<selectKey resultType="int" keyProperty="franchiseManagerId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+	
+	</insert>
+	
+	<!-- 운영자 접근 가능 가맹사 등록  -->
+	<insert id="managerFranRegister" parameterType="list">
+		
+		insert into manager_and_franchise(franchise_manager_id,franchise_id)
+		values
+		<foreach item="item" separator="," collection="list">
+			(${item.franchiseManagerId},${item.franchiseId})
+		</foreach>
+		
+	</insert>
+	
+	<resultMap type="hashMap" id="getManagerInfoMap">
+		<result column="franchise_manager_id" property="franchise_manager_id"/>
+		<result column="role_group_id" property="role_group_id"/>
+		<result column="status" property="status"/>
+		<result column="id" property="id"/>
+		<result column="pw" property="pw"/>
+		<result column="name" property="name"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="excel" property="excel"/>
+		<result column="recent_ip" property="recent_ip"/>
+		<result column="access_date" property="access_date"/>
+		<result column="regdate" property="regdate"/>
+		<collection property="franIdList" javaType="list" ofType="Integer">
+			<result column="franchise_id" property="franchise_id"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 운영자 계정 정보 얻어오기 -->
+	<select id="getManagerInfo" resultMap="getManagerInfoMap" parameterType="int">
+		
+		select f.franchise_manager_id,f.role_group_id,f.status,f.id,f.pw,f.name,f.email,
+		f.phone,f.excel,f.recent_ip,f.access_date,f.regdate,mf.franchise_id
+		from franchise_manager f
+		left join manager_and_franchise mf
+		on f.franchise_manager_id = mf.franchise_manager_id
+		where f.franchise_manager_id = ${franchiseManagerId}
+	
+	</select>
+	
+	<!-- 매니저 정보 수정 -->
+	<update id="updateManagerInfo" parameterType="com.roomio.carret.bean.ManagerAddBean">
+		
+		update franchise_manager
+		set name=#{name},status=${status},id=#{id},pw=#{pw},phone=#{phone},email=#{email},
+		role_group_id=${roleGroupId},excel=${excel}
+		where franchise_manager_id = ${franchiseManagerId}
+		
+	</update>
+	
+	<!-- 매니저 접근 가능 지점 삭제 -->
+	<delete id="deleteManagerFran" parameterType="int">
+	
+		delete from manager_and_franchise
+		where franchise_manager_id = ${franchiseManagerId}
+		
+	</delete>
+	
+	<!-- 매니저 정보 삭제 -->
+	<delete id="deleteManager" parameterType="int">
+	
+		delete from franchise_manager
+		where franchise_manager_id = ${franchiseManagerId}
+	
+	</delete>
+	
+	<!-- 매니저 리스트 검색 조건 -->
+	<sql id="accountSearch">
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(fm.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(fm.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(fm.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='keyWord != null and !keyWord.equals("") and select == 100 '>
+				and fm.id LIKE CONCAT('%',#{keyWord},'%') or 
+				fm.name LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test="select == 1">and fm.id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test="select == 2">and fm.name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test='franchiseId != null and !franchiseId.equals("")'>
+				<foreach collection="franchiseId" item="item" >
+					and mf.franchise_id = ${item}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	<resultMap type="hashMap" id="getAccountMap">
+		<result column="franchise_manager_id" property="franchise_manager_id"/>
+		<result column="regdate" property="regdate"/>
+		<result column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="role_group_name" property="role_group_name"/>
+		<result column="access_date" property="access_date"/>
+		<result column="status" property="status"/>
+		<collection property="franList" javaType="list" ofType="string">
+			<result column="franchise_name" property="franchise_name"/>
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 매니저 리스트 -->
+	<select id="getAccountList" parameterType="hashMap" resultMap="getAccountMap">
+		
+	
+		select fm.franchise_manager_id,fm.regdate,fm.id,fm.name,f.franchise_id,f.franchise_name,r.role_group_name,fm.access_date,fm.status
+		from franchise_manager fm
+		left join manager_and_franchise mf
+		on fm.franchise_manager_id = mf.franchise_manager_id
+		inner join franchise f
+		on mf.franchise_id = f.franchise_id
+		inner join role_groups r
+		on fm.role_group_id = r.role_group_id
+		
+		<include refid="accountSearch"/>
+
+
+	
+	
+	</select>
+	
+	<!-- 매니저 리스트 글 갯수 -->
+	<select id="getAccountCnt" parameterType="hashMap" resultType="int">
+		
+		select count(*)
+		from franchise_manager fm
+		left join manager_and_franchise mf
+		on fm.franchise_manager_id = mf.franchise_manager_id
+		inner join franchise f
+		on mf.franchise_id = f.franchise_id
+		inner join role_groups r
+		on fm.role_group_id = r.role_group_id
+		
+		<include refid="accountSearch"/>
+		
+	</select>
+	
+	
+</mapper>

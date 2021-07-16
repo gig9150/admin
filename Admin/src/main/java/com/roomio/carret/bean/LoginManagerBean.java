@@ -3,7 +3,6 @@ package com.roomio.carret.bean;
 public class LoginManagerBean {
 
 	private int franchise_manager_id;
-	private int franchise_id;
 	private String franchise_manager_code;
 	private int status;
 	private String id;
@@ -22,14 +21,6 @@ public class LoginManagerBean {
 
 	public void setFranchise_manager_id(int franchise_manager_id) {
 		this.franchise_manager_id = franchise_manager_id;
-	}
-
-	public int getFranchise_id() {
-		return franchise_id;
-	}
-
-	public void setFranchise_id(int franchise_id) {
-		this.franchise_id = franchise_id;
 	}
 
 	public String getFranchise_manager_code() {

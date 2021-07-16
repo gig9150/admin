@@ -73,7 +73,6 @@ public class ManagerService {
 			 loginManagerBean.setIslogin(true);
 			 
 			 loginManagerBean.setFranchise_manager_id((int)loginMap.get("franchise_manager_id"));
-			 loginManagerBean.setFranchise_id((int)loginMap.get("franchise_id"));
 			 loginManagerBean.setFranchise_manager_code((String)loginMap.get("franchise_manager_code"));
 			 loginManagerBean.setStatus((int)loginMap.get("status"));
 			 loginManagerBean.setId((String)loginMap.get("id"));

@@ -1,1 +1,24 @@
-파일 업로드 할때  : enctype="multipart/form-data"
+1 . 파일 업로드 할때  : 
+	enctype="multipart/form-data"
+
+2 . swal : 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	swal({
+		title : "fail!",
+		text : "닉네임 변경 시 \n 30일동안 닉네임 변경 불가합니다 \n 정보를 변경 하시겠습니까?",
+		buttons: {
+			cancel : "취소",
+			defeat : "확인" 
+		},
+		closeOnClickOutside : false
+	}).then(function(value){
+		switch(value){
+			case "defeat" :
+				swal("회원 정보가 변경되었습니다.").then(function(){
+					$('#memberInfoUpdate')[0].submit();
+				})
+			break;
+			default :
+				e.preventDefault();
+		}
+	});

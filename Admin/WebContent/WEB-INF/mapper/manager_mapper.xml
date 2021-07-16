@@ -7,7 +7,7 @@
 	<select id="checkManagerMember" parameterType="hashMap" resultType="hashMap">
 	
 		<![CDATA[
-			select franchise_manager_id,franchise_id,franchise_manager_code,status,id,pw,name
+			select franchise_manager_id,franchise_manager_code,status,id,pw,name
 			from franchise_manager
 			where id = #{id} 
 			and pw = #{pw}

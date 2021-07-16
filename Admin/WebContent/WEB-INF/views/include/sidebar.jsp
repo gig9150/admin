@@ -70,8 +70,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="${root}/manager/manage_franchise">가맹사 관리</a>
                         <a class="collapse-item" href="${root}/manager/manage_notice">관리자 공지관리</a>
-                        <a class="collapse-item" href="${root}/manager/manage_account">운영계정 관리</a>
-                        <a class="collapse-item" href="${root}/manager/manage_role">운영자 역할관리</a>
+                        <a class="collapse-item" href="${root}/manager_admi/manager_account">운영계정 관리</a>
+                        <a class="collapse-item" href="${root}/manager_admi/manager_role">운영자 역할관리</a>
                         <a class="collapse-item" href="${root}/manager/manager_activity">운영자 활동 내역</a>
                         <a class="collapse-item" href="${root}/manager/manager_access">운영자 접속 내역</a>
                     </div>
@@ -87,7 +87,7 @@
                 </a>
                 <div id="c" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                    	<a class="collapse-item" href="${root}/member/manage_member">일반회원 관리</a>
+                    	<a class="collapse-item" href="${root}/account_manage/member">일반회원 관리</a>
                         <a class="collapse-item" href="${root}/shop/list">가게 리스트</a>
                         <a class="collapse-item" href="${root}/shop/apply">가게 신청 심사</a>
                         <a class="collapse-item" href="${root}/member/manage_penalty">패널티관리</a>
@@ -197,15 +197,15 @@
         
  <script>
 
-	$(function(){
+// 	$(function(){
 		
-		$('.two-collapse').on('click',function(){
-			$('.two-collapse-item').slideToggle("slow", function() {
+// 		$('.two-collapse').on('click',function(){
+// 			$('.two-collapse-item').slideToggle("slow", function() {
 				
-			})
-		});
+// 			})
+// 		});
 		
-	});
+// 	});
 	
 </script>
        

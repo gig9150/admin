@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roomio.carret.accountManage">
+	
+	
+	<!-- 지역 정보 -->
+	<select id="getAreaList" resultType="hashMap">
+			
+		select id,area_name
+		from area_dong	
+	
+	</select>
+	
+	<!-- 매니저 리스트 검색 조건 -->
+	<sql id="memberSearch">
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(m.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(m.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(m.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='keyWord != null and !keyWord.equals("") and select == 100 '>
+				and m.name LIKE CONCAT('%',#{keyWord},'%') or
+				m.member_id LIKE CONCAT('%',#{keyWord},'%')
+			</if>
+			<if test="select == 1">and m.name LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test="select == 2">and m.member_id LIKE CONCAT('%',#{keyWord},'%')</if>
+			<if test="franchiseId != 0">
+				and f.franchise_id = ${franchiseId}
+			</if>
+			<if test='id != null and id != 0'>and a.id = ${id}</if>
+			<if test='penalty != null and penalty.equals("on")'>
+				and (select count(*) from member_penalty p where m.member_id = p.member_id and p.penalty_date >= 1) >= 1
+			</if>
+			<if test='withdrawal == 1'>and m.withdrawal = 1</if>
+			<if test='withdrawal == 2'>and m.withdrawal = 2</if>
+		</where>
+	</sql>
+	
+	<!-- 회원 정보 글 갯수 -->
+	<select id="getMemberCnt" parameterType="com.roomio.carret.bean.MemberSearchBean" resultType="int">
+	
+		select count(*)
+		from member m 
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		inner join area_dong a
+		on m.id = a.id
+		<include refid="memberSearch"/>
+		
+	</select>
+	
+	<!-- 회원 정보 리스트 -->
+	<select id="getMemberList" resultType="hashMap" parameterType="com.roomio.carret.bean.MemberSearchBean">
+		
+		select m.member_id,m.regdate,f.franchise_name,m.name,a.area_name,m.withdrawal,
+		(select count(*) from member_penalty p where m.member_id = p.member_id and p.penalty_date >= 1) as penalty
+		from member m 
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		inner join area_dong a
+		on m.id = a.id
+		<include refid="memberSearch"/>
+
+	</select>
+
+</mapper>
