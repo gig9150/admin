@@ -29,4 +29,21 @@ public class AccountManageDao {
 		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getMemberCnt",bean);
 	}
 	
+	public HashMap<Object,Object> getMemberSta(int memberId){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getMemberSta",memberId);
+	}
+	
+	public List<HashMap<Object,Object>>  getMemberUpdate(int memberId){
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getMemberUpdate",memberId);
+	}
+	
+	public List<HashMap<Object, Object>> getMemberPenalty(int memberId){
+		
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getMemberUpdate",memberId);
+	}
+	
+	public void updateMemberInfo(int memberId) {
+		sqlSessionTemplate.update("com.roomio.carret.accountManage.updateMemberInfo",memberId);
+	}
+	
 }

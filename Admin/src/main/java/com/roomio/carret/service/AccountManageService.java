@@ -50,4 +50,20 @@ public class AccountManageService {
 		int memberCnt = accountManageDao.getMemberCnt(bean);
 		return memberCnt;
 	}
+	
+	public HashMap<Object,Object> getMemberSta(int memberId){
+		return accountManageDao.getMemberSta(memberId);
+	}
+	
+	public List<HashMap<Object,Object>> getMemberUpdate(int memberId){
+		return accountManageDao.getMemberUpdate(memberId);
+	}
+	
+	public List<HashMap<Object,Object>> getMemberPenalty(int memberId){
+		return accountManageDao.getMemberPenalty(memberId);
+	}
+	
+	public void updateMemberInfo(int memberId) {
+		accountManageDao.updateMemberInfo(memberId);
+	}
 }

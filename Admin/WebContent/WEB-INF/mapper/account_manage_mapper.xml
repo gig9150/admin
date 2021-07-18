@@ -66,5 +66,44 @@
 		<include refid="memberSearch"/>
 
 	</select>
+	
+	<!-- 일반 회원 활동 정보 얻어오기 -->
+	<select id="getMemberSta" parameterType="int" resultType="hashMap">
+	
+		select login,bookmark,sale,board,report,penalty
+		from member_sta
+		where member_id = ${memberId}
+	
+	</select>
+	
+	<!-- 일반 회원 수정 이력 -->
+	
+	<select id="getMemberUpdate" parameterType="int" resultType="hashMap">
+		
+		select u.update_column,u.update_before,u.update_after,u.regdate,u.manager_num,m.name,m.member_id,f.id
+		from member_update_list u
+		inner join franchise_manager f
+		on u.manager_num = f.franchise_manager_id 
+		inner join member m
+		on u.member_id = m.member_id
+		where u.member_id = ${memberId}
+		
+	</select>
+	
+	<select id="getMemberPenalty" parameterType="int" resultType="hashMap">
+	
+		select penalty_name,penalty_sort,discovery_path,regdate,state,register
+		from member_penalty
+		where member_id = ${memberId}
+		
+	</select>
+	
+	<update id="updateMemberInfo" parameterType="hashMap">
+	
+		update member
+		set withdrawal = ${withdrawal}, memo = #{memo}
+		where member_id = ${memberId}
+	
+	</update>
 
 </mapper>

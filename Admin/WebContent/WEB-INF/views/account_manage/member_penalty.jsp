@@ -73,80 +73,29 @@
                             <h6 class="m-0 font-weight-bold text-primary">운영자 상세정보</h6>
                         </div>
                         <div class="card-body">
-    						<table class="table table-borderless">
-    							<colgroup>
-    								<col width="15%">
-    								<col width="35%">
-    								<col width="15%">
-    								<col width="35%">
-    							</colgroup>
-    							<tbody>
-    								<tr>
-    									<td>운영자 이름</td>
-    									<td><input name="name" type="text" class="form-control"></td>
-    									<td>운영자 상태</td>
-    									<td>
-    										<select name="status" class="form-control">
-    											<option value="1">정상</option>
-    											<option value="2">정지</option>
-    										</select>
-    									</td>
-    								</tr>
-    								<tr>
-    									<td>아이디</td>
-    									<td>
-    										<input type="text" name="id" class="form-control idInput" style="width: 57%;display:inline-block;margin-right: 11px;">
-    										<button type="button" class="btn btn-secondary idCheck" style="width:40%">아이디 중복검사</button>
-    									</td>
-    									<td>비밀번호</td>
-    									<td><input type="password" name="pw" class="form-control" id="pw"></td>
-    								</tr>
-    								<tr>
-    									<td></td>
-    									<td><span style="color:red;display:none" class="idValidity">영어/숫자만 입력 가능합니다.</span></td>
-    									<td>비밀번호 확인</td>
-    									<td><input type="password" class="form-control" id="pwChk"></td>
-    								</tr>
-    								<tr>
-    									<td>연락처</td>
-    									<td><input type="text" name="phone" class="form-control"></td>
-    									<td></td>
-    									<td><span style="color:red;display:none;" class="pwValidity">비밀번호가 서로 다릅니다.</span></td>
-    								</tr>
-    								<tr>
-    									<td>이메일</td>
-    									<td><input type="text" class="form-control" name="email"></td>
-    									<td>가맹사 지정</td>
-    									<td rowspan="3">
-    										<label><input type="checkbox" class="franAllChk">&nbsp;전체선택</label><br>
-    										<c:forEach items="${franList}" var="obj">
-    											<label><input type="checkbox" name="franchiseId" class="franChk" value="${obj.franchise_id}">&nbsp;${obj.franchise_name}</label><br>
-    										</c:forEach>
-    									</td>
-    								</tr>
-    								<tr>
-    									<td>역할 지정</td>
-    									<td>
-    										<select class="form-control" name="roleGroupId">
-    											<c:forEach items="${roleList }" var="obj">
-    												<option value="${obj.role_group_id}">${obj.role_group_name}</option>
-    											</c:forEach>
-    										</select>
-    									</td>
-    								</tr>
-    								<tr>
-    									<td>엑셀 다운로드 권한</td>
-    									<td>
-    										<label><input name="excel" value="1" type="radio">&nbsp;Y</label>
-    										<label><input name="excel" value="2" type="radio">&nbsp;N</label>
-    									</td>
-    								</tr>
-    							</tbody>
-    						</table>
-    						<div class="text-center" style="margin-top:70px;">
-    							<button type="submit" class="btn btn-info">계정&nbsp;등록</button>
-    						</div>
-    						
+    											<table class="table" style="text-align: center;">
+    												<colgroup>
+    													<col width="22%">
+    													<col width="7.5%">
+    													<col width="18.5%">
+    													<col width="7.5%">
+    													<col width="18.5%">
+    													<col width="7.5%">
+    													<col width="18.5%">
+    												</colgroup>
+    												<tbody>
+    													<tr>
+    														<td rowspan="3"><img src=""></td>
+    														<td>가맹사</td>
+    														<td><input type="text" class="form-control"></td>
+    														<td>닉네임</td>
+    														<td><input type="text" class="form-control"></td>
+    														<td>회원번호</td>
+    														<td><input type="text" class="form-control"></td>
+    													</tr>
+    												
+    												</tbody>
+    											</table>
                         </div>
                     </div>
 	                </form>

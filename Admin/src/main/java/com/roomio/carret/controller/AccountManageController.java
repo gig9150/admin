@@ -59,10 +59,41 @@ public class AccountManageController {
 	
 	//회원 상세 정보(팝업)
 	@RequestMapping("/account_manage/member_detail")
-	public String memberDetail(@RequestParam int memberId) {
+	public String memberDetail(@RequestParam int memberId,
+								Model model) {
 		
+		//회원 활동 내역
+		HashMap actiMap = accountManageService.getMemberSta(memberId);
+		model.addAttribute("actiMap",actiMap);
+		
+		//회원정보 수정 이력 
+		List<HashMap<Object,Object>> upList = accountManageService.getMemberUpdate(memberId);
+		model.addAttribute("upList",upList);
+		
+		//패널티 내역 
+		List<HashMap<Object,Object>> peList = accountManageService.getMemberPenalty(memberId);
+		model.addAttribute("peList",peList);
+		
+		model.addAttribute("memberId",memberId);
 		
 		return "account_manage/member_detail";
+	}
+	
+	//회원 정보 수정
+	@RequestMapping("/account_manage/member_update")
+	public String memberUpdate(@RequestParam(required = false) int withdrawal,
+								@RequestParam(required = false) String memo,
+								@RequestParam(required = false) int memberId) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("withdrawal", withdrawal);
+		map.put("memo",memo);
+		map.put("memberId",memberId);
+		
+		//회원정보 수정 
+		accountManageService.updateMemberInfo(memberId);
+		
+		return "account_manage/member_update";
 	}
 	
 	//회원 패널티 적용(팝업)
