@@ -3,7 +3,8 @@ package com.roomio.carret.bean;
 import java.util.List;
 
 public class ShopCurationBean {
-	private int shopExhiId;
+	
+	private int exhiId;
 	private String exhiName;
 	private String exhiSub;
 	private String exhiExplain;
@@ -11,11 +12,12 @@ public class ShopCurationBean {
 	private List<ShopBean> curationList;
 	
 	
-	public int getShopExhiId() {
-		return shopExhiId;
+	
+	public int getExhiId() {
+		return exhiId;
 	}
-	public void setShopExhiId(int shopExhiId) {
-		this.shopExhiId = shopExhiId;
+	public void setExhiId(int exhiId) {
+		this.exhiId = exhiId;
 	}
 	public String getExhiName() {
 		return exhiName;

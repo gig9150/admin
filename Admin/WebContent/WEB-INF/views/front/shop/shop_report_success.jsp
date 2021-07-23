@@ -23,12 +23,12 @@
 	}
 	
 	.swal-button.swal-button--confirm{
-	    background-color: #e78436;
+	    background-color: #78a6d8;
 		color: #ffffff;
 	}
 	
 	.swal-button.swal-button--confirm:active{
-		background-color: #e78436;
+		background-color: #78a6d8;
 		color: #ffffff;
 	}
 	

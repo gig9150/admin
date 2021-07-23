@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.roomio.carret.bean.FranchiseRegisterBean;
@@ -19,6 +20,7 @@ import com.roomio.carret.service.ExhibitionService;
 import com.roomio.carret.service.ManagerAccountService;
 import com.roomio.carret.service.ManagerService;
 import com.roomio.carret.service.MemberService;
+import com.roomio.carret.service.MypageService;
 import com.roomio.carret.service.ShopService;
 
 @org.springframework.web.bind.annotation.RestController
@@ -38,6 +40,9 @@ public class RestController {
 	
 	@Autowired
 	private ExhibitionService exhibitionService;
+	
+	@Autowired
+	private MypageService mypageService;
 	
 	@Resource(name = "loginMemberBean")
 	@Lazy
@@ -127,14 +132,14 @@ public class RestController {
 		return shopList;
 	}
 	
-	//가게 홍보 지역 정보 얻어오기
-	@GetMapping("/front/shop/shopPromotionCuration/{page}/{shopExhiId}")
+	//가게 홍보 큐레이션 정보 얻어오기
+	@GetMapping("/front/shop/shopPromotionCuration/{page}/{exhiId}")
 	public List<HashMap<Object,Object>> ShopPromotionCuration(@PathVariable int page,
-									@PathVariable int shopExhiId) {
+															@PathVariable int exhiId) {
 		
 		HashMap<Object,Object> map = new HashMap<Object,Object>();
 		map.put("page",page);
-		map.put("shopExhiId",shopExhiId);
+		map.put("exhiId",exhiId);
 		//나중에 가맹점 값 넣어주기 ★★
 		map.put("franchiseId", 1);
 		
@@ -158,8 +163,26 @@ public class RestController {
 	public List<Integer> managerNoticeFranchise(@PathVariable int managerNoticeId){
 		
 		List<Integer> list = managerService.getManagerNoticeFran(managerNoticeId);
-		
 		return list;
+	}
+	
+	//자주묻는 질문 질문내용 얻어오기
+	@GetMapping("/front/mypage/getFreTitle/{id}")
+	public List<HashMap<Object,Object>> getFreTitle(@PathVariable int id){
+		
+		List<HashMap<Object,Object>> list = mypageService.getFrontFreTitle(id);
+		return list;
+		
+	}
+	
+	//가게이름 중복 체크
+	@RequestMapping("/front/mypage/chkShopName/{shopName}")
+	public String chkShopName(@PathVariable String shopName) {
+		
+		boolean chk = mypageService.checkShopName(shopName);
+		
+		return chk + "";
+		
 	}
 
 	

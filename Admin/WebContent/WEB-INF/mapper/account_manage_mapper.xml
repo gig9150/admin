@@ -33,13 +33,45 @@
 			</if>
 			<if test='id != null and id != 0'>and a.id = ${id}</if>
 			<if test='penalty != null and penalty.equals("on")'>
-				and (select count(*) from member_penalty p where m.member_id = p.member_id and p.penalty_date >= 1) >= 1
+				and TO_DAYS(p.endDate) - TO_DAYS(p.startDate) >= 0
 			</if>
 			<if test='withdrawal == 1'>and m.withdrawal = 1</if>
 			<if test='withdrawal == 2'>and m.withdrawal = 2</if>
 		</where>
 	</sql>
 	
+	<resultMap type="hashMap" id="getMebmberMap">
+		<result column="member_id" property="member_id"/>
+		<result column="regdate" property="regdate"/>
+		<result column="franchise_name" property="franchise_name"/>
+		<result column="name" property="name"/>
+		<result column="area_name" property="area_name"/>
+		<result column="withdrawal" property="withdrawal"/>
+		<collection property="peList" javaType="list" ofType="hashMap">
+			<result column="state" property="state"/>
+			<result column="start_date" property="start_date"/>
+			<result column="end_date" property="end_date"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 회원 정보 리스트 -->
+	<select id="getMemberList" resultMap="getMebmberMap" parameterType="com.roomio.carret.bean.MemberSearchBean">
+		
+		select m.member_id,m.regdate,f.franchise_name,m.name,a.area_name,m.withdrawal,
+		p.state ,date_format(p.startDate,'%Y-%m-%d') as start_date,
+		date_format(p.endDate,'%Y-%m-%d') as end_date
+		from member m 
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		inner join area_dong a
+		on m.id = a.id
+		left join member_penalty p
+		on m.member_id = p.member_id
+		
+		<include refid="memberSearch"/>
+
+	</select>
+		
 	<!-- 회원 정보 글 갯수 -->
 	<select id="getMemberCnt" parameterType="com.roomio.carret.bean.MemberSearchBean" resultType="int">
 	
@@ -49,23 +81,14 @@
 		on m.franchise_id = f.franchise_id
 		inner join area_dong a
 		on m.id = a.id
+		left join member_penalty p
+		on m.member_id = p.member_id
+		
 		<include refid="memberSearch"/>
 		
 	</select>
 	
-	<!-- 회원 정보 리스트 -->
-	<select id="getMemberList" resultType="hashMap" parameterType="com.roomio.carret.bean.MemberSearchBean">
-		
-		select m.member_id,m.regdate,f.franchise_name,m.name,a.area_name,m.withdrawal,
-		(select count(*) from member_penalty p where m.member_id = p.member_id and p.penalty_date >= 1) as penalty
-		from member m 
-		inner join franchise f
-		on m.franchise_id = f.franchise_id
-		inner join area_dong a
-		on m.id = a.id
-		<include refid="memberSearch"/>
-
-	</select>
+	
 	
 	<!-- 일반 회원 활동 정보 얻어오기 -->
 	<select id="getMemberSta" parameterType="int" resultType="hashMap">
@@ -90,14 +113,16 @@
 		
 	</select>
 	
+	<!-- 맴버 패널티  -->
 	<select id="getMemberPenalty" parameterType="int" resultType="hashMap">
 	
-		select penalty_name,penalty_sort,discovery_path,regdate,state,register
+		select penalty_name,penalty_sort,discovery_path,startDate as regdate,state,register
 		from member_penalty
 		where member_id = ${memberId}
 		
 	</select>
 	
+	<!-- 회원 정보 수정하기 -->
 	<update id="updateMemberInfo" parameterType="hashMap">
 	
 		update member
@@ -105,5 +130,293 @@
 		where member_id = ${memberId}
 	
 	</update>
+	
+	<!-- 회원 패널티 리스트 -->
+	
+	<select id="getMemberPenaltyList" parameterType="int" resultType="hashMap">
+		
+		select member_penalty_id,regdate,startDate,endDate,discovery_path,penalty_sort,penalty_name,state,register
+		from member_penalty
+		where member_id = ${memberId}
+		
+	</select>
+	
+	<!-- 회원 패널티 cnt -->
+	<select id="getMemberPenaltyCnt" parameterType="int" resultType="int">
+		
+		select count(*)
+		from member_penalty
+		where member_id = ${memberId}
+	
+	</select>
+	
+	<!-- 회원 패널티 적용 -->
+	<insert id="addMemberPenalty" parameterType="hashMap">
+		
+		insert into member_penalty(member_id,penalty_name,penalty_sort,discovery_path,reason,register,startDate,endDate,state) 
+		values(${memberId},${penaltyName},${penaltySort},${discoveryPath},#{reason},#{register},#{startDate},#{endDate},1)
+		
+	</insert>
+	
+	<!-- 업종  얻어오기 -->
+	<select id="getSectorList" resultType="hashMap">
+	
+		select sector_id,sector_content
+		from sector
+		
+	</select>
+	
+	<!-- 매니저 리스트 검색 조건 -->
+	<sql id="shopSearch">
+		<choose>
+			<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+				and date_format(s.approve_date,'%Y-%m-%d') between #{startDate} and #{endDate}
+			</when>
+			<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(s.approve_date,'%Y-%m-%d') > #{startDate}]]></when>
+			<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(s.approve_date,'%Y-%m-%d') < #{endDate}]]></when>
+		</choose>
+		<if test='keyWord != null and !keyWord.equals("") and select == 100 '>
+			and and m.name LIKE CONCAT('%',#{keyWord},'%') or
+			s.shop_idx LIKE CONCAT('%',#{keyWord},'%') or
+			s.shop_name LIKE CONCAT('%',#{keyWord},'%')
+		</if>
+		<if test="select == 1">and m.name LIKE CONCAT('%',#{keyWord},'%')</if>
+		<if test="select == 2">and s.shop_idx LIKE CONCAT('%',#{keyWord},'%')</if>
+		<if test="select == 3">and s.shop_name LIKE CONCAT('%',#{keyWord},'%')</if>
+		<if test="franchiseId != 0">
+			and f.franchise_id = ${franchiseId}
+		</if>
+		<if test='id != null and id != 0'>and a.id = ${id}</if>
+		<if test='sectorId != null and sectorId != 0'>and se.sector_id = ${sectorId}</if>
+		<if test='penalty != null and penalty.equals("on")'>
+			and TO_DAYS(p.endDate) - TO_DAYS(p.startDate) >= 0
+		</if>
+		<if test='activityStatus == 1'>and s.activity_status = 1</if>
+		<if test='activityStatus == 2'>and s.activity_status = 2</if>
+	</sql>
+	
+	<resultMap type="hashMap" id="getShopMap">
+		<result column="shop_idx" property="shop_idx"/>
+		<result column="approve_date" property="approve_date"/>
+		<result column="franchise_name" property="franchise_name"/>
+		<result column="shop_name" property="shop_name"/>
+		<result column="area_name" property="area_name"/>
+		<result column="sector_content" property="sector_content"/>
+		<result column="member_id" property="member_id"/>
+		<result column="name" property="name"/>
+		<result column="activity_status" property="activity_status"/>
+		<collection property="peList" javaType="list" ofType="hashMap">
+			<result column="state" property="state"/>
+			<result column="start_date" property="start_date"/>
+			<result column="end_date" property="end_date"/>
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 가게 정보 리스트 -->
+	<select id="getShopList" resultMap="getShopMap" parameterType="com.roomio.carret.bean.MemberSearchBean">
+		
+		select s.shop_idx,s.approve_date,f.franchise_name,s.shop_name,d.area_name,se.sector_content,
+		m.member_id , m.name ,s.activity_status, p.state ,date_format(p.startDate,'%Y-%m-%d') as start_date,
+		date_format(p.endDate,'%Y-%m-%d') as end_date
+		from shop s 
+		inner join member m 
+		on s.member_id = m.member_id
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong d 
+		on s.id = d.id
+		inner join sector se
+		on s.sector_id = se.sector_id
+		left join shop_penalty p
+		on s.shop_idx = p.shop_idx
+		where s.status = 1
+		<include refid="shopSearch"/>
+		
+	</select>
+	
+	<!-- 가게 정보 글 갯수 -->
+	<select id="getShopCnt" parameterType="com.roomio.carret.bean.MemberSearchBean" resultType="int">
+	
+		select count(*)
+		from shop s 
+		inner join member m 
+		on s.member_id = m.member_id
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong d 
+		on s.id = d.id
+		inner join sector se
+		on s.sector_id = se.sector_id
+		left join shop_penalty p
+		on s.shop_idx = p.shop_idx
+		where s.status = 1
+		<include refid="shopSearch"/>
+		
+	</select>
+	
+	<resultMap type="hashMap" id="shopDetailMap">
+		<result column="main_image" property="main_image"/>
+		<result column="address" property="address"/>
+		<result column="phone" property="phone"/>
+		<result column="start_date" property="start_date"/>
+		<result column="end_date" property="end_date"/>
+		<result column="homepage_url" property="homepage_url"/>
+		<result column="intro_ph" property="intro_ph"/>
+		<result column="to_benefit" property="to_benefit"/>
+		<result column="notice_info" property="notice_info"/>
+		<collection property="imageList" javaType="list" ofType="hashMap">
+			<result column="shop_image_idx" property="shop_image_idx"/>
+			<result column="image_name" property="image_name"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 가게 상세 정보 1  -->
+	
+	<select id="getShopDeatil" parameterType="int" resultMap="shopDetailMap">
+		
+		select s.main_image,i.shop_image_idx,i.image_name,s.address,s.phone,s.start_date,s.end_date,s.homepage_url,s.intro_ph,
+		s.to_benefit,s.notice_info
+		from shop s
+		left join shop_image i
+		on s.shop_idx = i.shop_idx
+		where s.shop_idx = ${shopIdx}
+		
+	</select>
+	
+	<resultMap type="hashMap" id="shopDetailMapTwo">
+		<result column="franchise_name" property="franchise_name"/>
+		<result column="shop_name" property="shop_name"/>
+		<result column="shop_idx" property="shop_idx"/>
+		<result column="area_name" property="area_name"/>
+		<result column="regdate" property="regdate"/>
+		<result column="approve_date" property="approve_date"/>
+		<result column="activity_status" property="activity_status"/>
+		<result column="recent_access" property="recent_access"/>
+		<result column="register" property="register"/>
+		<result column="responsibility_memo" property="responsibility_memo"/>
+		<result column="buisness_name" property="buisness_name"/>
+		<result column="buisness_num" property="buisness_num"/>
+		<result column="buisess_image_name" property="buisess_image_name"/>
+		<result column="sector_content" property="sector_content"/>
+		<result column="sector_id" property="sector_id"/>
+		<result column="name" property="name"/>
+		<result column="member_id" property="member_id"/>
+		<result column="bookCnt" property="bookCnt"/>
+		<result column="newsCnt" property="newsCnt"/>
+		<result column="directCnt" property="directCnt"/>
+		<result column="reportCnt" property="reportCnt"/>
+		<result column="penaltyCnt" property="penaltyCnt"/>
+		<collection property="keywordList" javaType="list" ofType="hashMap">
+			<result column="shop_keyword_id" property="shop_keyword_id"/>
+			<result column="keyword" property="keyword"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 가게 상세 정보 2  -->
+	<select id="getShopDetailTwo" parameterType="int" resultMap="shopDetailMapTwo">
+	
+		select f.franchise_name,s.shop_name,s.shop_idx,d.area_name,s.regdate,s.approve_date,
+		s.activity_status,s.recent_access,s.register,k.keyword,s.responsibility_memo,s.buisness_name,s.buisness_num,
+		s.buisess_image_name,se.sector_id,se.sector_content,m.name,m.member_id,
+		(select count(*) from member_and_shop ms where ms.member_id = m.member_id) as bookCnt,
+		(select count(*) from shop_news n where s.shop_idx = n.shop_idx) as newsCnt,
+		(select count(*) from direct_transaction dt where s.shop_idx = dt.shop_idx) as directCnt,
+		(select count(*) from report r where r.report_to_num = m.member_id) as reportCnt,
+		(select count(*) from member_penalty p where m.member_id = p.member_id) as penaltyCnt
+		from shop s
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong d
+		on s.id = d.id
+		left join shop_keyword k
+		on s.shop_idx = k.shop_idx
+		inner join sector se
+		on s.sector_id = se.sector_id
+		inner join member m 
+		on s.member_id = m.member_id
+		
+	</select>
+	
+	<!-- 가게 상세 정보 3  -->
+	<select id="getShopDetailThree" parameterType="int" resultType="hashMap">
+		
+		select s.regdate,s.appro_date,s.recent_access,m.name,m.member_id,s.active_status,s.prosessor
+		from shop_manager s
+		inner join member m 
+		on s.member_id = m.member_id
+		where shop_idx = ${shopIdx} 
+		and apply_status = 1
+	
+	</select>
+	
+	<!-- 가게 정보 수정 -->
+	
+	<update id="shopUpdate" parameterType="com.roomio.carret.bean.ShopUpdateBean">
+	
+		update shop
+		set shop_name = #{shopName},
+		activity_status = ${activityStatus},
+		register = #{register},
+		responsibility_memo = #{memo},
+		buisness_name = #{buisnessName} ,
+		buisness_num = ${buisnessNum},
+		sector_id = ${sectorId}
+		where shop_idx = ${shopIdx}
+		
+	
+	</update>
+	
+	<!-- 회원 정보 수정  -->
+	
+	<update id="memberNameUpdate" parameterType="com.roomio.carret.bean.ShopUpdateBean">
+		
+		update member
+		set name = #{name}
+		where member_id = ${memberId}
+	
+	</update>
+	
+	<!-- 가게 수정 이력 -->
+	
+	<select id="getShopUpdateList" parameterType="int" resultType="hashMap">
+	
+		select shop_update_list_id,regdate,update_category,
+		update_kind,update_before,update_after,register
+		from shop_update_list
+		where shop_idx = ${shopIdx}
+	
+	</select>
+	
+	<!-- 가게 패널티 이력  -->
+	<select id="getShopPenaltyList" parameterType="int" resultType="hashMap">
+		
+		select shop_penalty_id,regdate,startDate,endDate,discovery_path,
+		penalty_name,penalty_sort,register
+		from shop_penalty
+		where shop_idx = ${shopIdx}
+	
+	</select>
+	
+	<!-- 가게 패널티 글 갯수 -->
+	<select id="getShopPenaltyCnt" parameterType="int" resultType="int">
+	
+		select count(*)
+		from shop_penalty
+		where shop_idx = ${shopIdx}
+		
+		
+	</select>
+	
+	<!-- 가게 패널티 적용 -->
+	<insert id="addShopPenalty" parameterType="hashMap">
+		
+		insert into shop_penalty(shop_idx,penalty_name,penalty_sort,discovery_path,reason,register,startDate,endDate,state) 
+		values(${shopIdx},${penaltyName},${penaltySort},${discoveryPath},#{reason},#{register},#{startDate},#{endDate},1)
+		
+	</insert>
+	
 
+	
+	
 </mapper>

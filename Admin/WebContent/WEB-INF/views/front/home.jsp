@@ -821,12 +821,10 @@
                             </div>
                         </div>
                         <div class="txt_box">
-                                <p>공주시 동네사람만 아는 맛집 추천드립니다~<br>진짜 맛있어요 꼭 가세요</p>
-                            </div>
-                       
+                       		<p>공주시 동네사람만 아는 맛집 추천드립니다~<br>진짜 맛있어요 꼭 가세요</p>
+                        </div> 
                     </div>
                 </div>
-                 
             </div>
             <div class="swiper-pagination"></div>
         </div>

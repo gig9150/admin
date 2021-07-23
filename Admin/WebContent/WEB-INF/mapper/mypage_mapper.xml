@@ -7,12 +7,14 @@
 	<!-- 단골 리스트 -->
 	<select id="getFrontBookmarkShop" parameterType="int" resultType="hashMap">
 		
-		select s.shop_idx,s.shop_name,s.address,s.sector,s.holiday,s.start_date,s.end_date,s.business_status,
+		select s.shop_idx,s.shop_name,s.address,se.sector_content,s.holiday,s.start_date,s.end_date,s.business_status,
 		(select count(*) from shop_review sr where s.shop_idx = sr.shop_idx) as review_count,
 		(select count(*) from member_and_shop mms where s.shop_idx = mms.shop_idx) as bookmark_count
 		from member_and_shop ms
 		inner join shop s
 		on ms.shop_idx = s.shop_idx
+		inner join sector se
+		on s.sector_id = se.sector_id
 		where ms.member_id = ${memberId}
 		
 	</select>
@@ -21,20 +23,22 @@
 	
 	<select id="getFrontReviewShop" parameterType="int" resultType="hashMap">
 	
-		select s.shop_idx,s.shop_name,s.address,s.sector,s.holiday,s.start_date,s.end_date,s.business_status,
+		select s.shop_idx,s.shop_name,s.address,se.sector_content,s.holiday,s.start_date,s.end_date,s.business_status,
 		(select count(*) from shop_review sr where s.shop_idx = sr.shop_idx) as review_count,
 		(select count(*) from member_and_shop mms where s.shop_idx = mms.shop_idx) as bookmark_count
 		from shop_review r
 		inner join shop s
 		on r.shop_idx = s.shop_idx
+		inner join sector se
+		on s.sector_id = se.sector_id
 		where r.member_id = ${memberId}
 		
 	</select>
 	
 	<!-- 자주묻는 질문 카테고리 -->
-	<select id="getFrontFrequentQuestionCategory" resultType="String">
+	<select id="getFrontFrequentQuestionCategory" resultType="hashMap">
 		
-		select content
+		select frequent_question_category_id,content
 		from frequent_question_category 
 		
 	</select>
@@ -74,14 +78,16 @@
 		from notice n
 		left join notice_image i
 		on n.notice_id = i.notice_id
-		where notice_id = ${noticeId}
+		where n.notice_id = ${noticeId}
 		
 	</select>
 	
 	<!-- 1:1 문의  회원정보 -->
 	<select id="getFrontQuestionMemberInfo" parameterType="int" resultType="hashMap">
-		select profile_image,name,address
-		from member
+		select m.profile_image,m.name,d.area_name
+		from member m
+		inner join area_dong d
+		on m.id = d.id
 		where member_id = ${memberId}
 	</select>
 	
@@ -123,6 +129,159 @@
 		on q.question_category_id = qc.question_category_id 
 		where q.member_id = ${memberId}
 		
+	</select>
+	
+	<!-- 자주묻는질문 목록 얻어오기 -->
+	<select id="getFrontFreTitle" parameterType="int" resultType="hashMap">
+		
+		select f.frequent_question_id,f.title
+		from frequent_question f
+		inner join frequent_question_category fc
+		on f.frequent_question_category_id = fc.frequent_question_category_id
+		where f.frequent_question_category_id = ${id}
+		
+	</select>
+	
+	<!-- 자주묻는질문 상세 내용 -->
+	<select id="getFrontFreDetail" parameterType="int" resultType="hashMap">
+	
+		select fc.content as cateContent,f.title,f.content
+		from frequent_question f
+		inner join frequent_question_category fc
+		on f.frequent_question_category_id = fc.frequent_question_category_id
+		where f.frequent_question_id = ${id}
+	
+	</select>
+	
+	<!-- 탈퇴 카테고리 -->
+	<select id="getWithCategory" resultType="hashMap">
+	
+		select with_category_id,with_content
+		from with_category
+		
+	</select>
+	
+	<!-- 맴버 탈퇴  -->
+	<update id="memberWithDraw" parameterType="hashMap">
+	
+		update member
+		set with_category_id = ${withCategoryId},with_reason=#{withContent}
+		where member_id = ${memberId}
+		
+	</update>
+	
+	<!-- 지역 정보 얻어오기 -->
+	<select id="getAreaList" parameterType="string" resultType="hashMap">
+	
+		select distinct id,area_name
+		from area_dong 
+		where LEFT(zip_code,2) = #{zipCode}
+		GROUP BY area_name
+		
+	</select>
+	
+	<!-- 회원의 가게 리스트 얻어오기 -->
+	<select id="getMyShop" parameterType="int" resultType="hashMap">
+		
+		select s.shop_idx,s.main_image,s.shop_name,d.area_name
+		from shop s
+		inner join area_dong d
+		on s.id = d.id
+		where member_id = ${memberId} 
+	
+	</select>
+	
+	<!-- 가게 정보 수정 -->
+	<update id="updateShopInfo" parameterType="com.roomio.carret.bean.ShopInfoUpdateBean">
+		
+		update shop
+		<set>
+			<if test='address!=null and !address.equals("")'>address = #{address},</if>
+			<if test='phone!=null and !phone.equals("")'>phone = #{phone},</if>
+			<if test='intro!=null and !intro.equals("")'>intro_ph = #{intro},</if>
+			<if test='holiday!=null and !holiday.equals("")'>holiday = #{holiday},</if>
+			<if test='startDate!=null and !startDate.equals("")'>start_date = #{startDate},</if>
+			<if test='endDate!=null and !endDate.equals("")'>end_date = #{endDate},</if>
+			<if test='homepageUrl!=null and !homepageUrl.equals("")'>homepage_url = #{homepageUrl},</if>
+			<if test='toBenefit!=null and !toBenefit.equals("")'>to_benefit = #{toBenefit},</if>
+			<if test='noticeInfo!=null and !noticeInfo.equals("")'>notice_info = #{noticeInfo}</if>
+		</set>
+		where shop_idx = ${shopIdx}
+	
+	</update>
+	
+	<!-- 가격표 정보 얻어오기 -->
+	<select id="getGoodsList" parameterType="int" resultType="hashMap">
+	
+		select goods_id,name,price,min_price,additional_info,best
+		from goods 
+		where shop_idx = ${shopIdx}
+	
+	</select>
+	
+	<!-- 가격표 insert -->
+	<insert id="addGoods" parameterType="hashMap">
+		
+		insert into goods(shop_idx,name,price,min_price,additional_info,best)
+		values(${shopIdx},#{name},#{price},#{minPrice},#{additionalInfo},${best})
+	
+	</insert>
+	
+	<!-- 가격표 input 정보 -->
+	<select id="getGoodsInfo" parameterType="int" resultType="hashMap">
+		
+		select name,price,min_price,additional_info,best
+		from goods
+		where goods_id = ${goodsId}
+		
+	</select>
+	
+	<!-- 가격표 수정  -->
+	
+	<update id="updateGoodsInfo" parameterType="hashMap">
+		
+		update goods
+		set name=#{name},best=${best},price=#{price},
+		min_price=#{minPrice},additional_info=#{additionalInfo}
+		where goods_id = ${goodsId}	
+	
+	
+	</update>
+	
+	<!-- 가게 프로필 수정 필요한 정보들 얻어오기 -->
+	
+	<select id="getProInfo" parameterType="int" resultType="hashMap">
+	
+		select s.main_image,s.shop_name,s.id
+		from shop s
+		inner join area_dong d
+		on s.id = d.id 
+		where shop_idx = ${shopIdx}
+		
+	</select>
+	
+	<select id="getProImg" parameterType="int" resultType="String">
+	
+		select image_name
+		from shop_image
+		where shop_idx = ${shopIdx}
+		
+	</select>
+	
+	<select id="getProKeyword" parameterType="int" resultType="String">
+		
+		select keyword
+		from shop_keyword
+		where shop_idx = ${shopIdx}
+		
+	</select>
+	
+	<select id="checkShopName" parameterType="string" resultType="string">
+		
+		select shop_name
+		from shop
+		where shop_name = #{shopName}
+	
 	</select>
 	
 </mapper>

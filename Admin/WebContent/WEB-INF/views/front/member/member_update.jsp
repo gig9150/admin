@@ -30,10 +30,12 @@
 	        </div>
 	        
 	        <div class="inner">
+	        	<h6>닉네임을 설정해주세요.</h6><br>
 	            <div class="btn"><input type="text" id="updateName" name="name" ></div>
 	        </div>
 	        
 	        <div class="inner">
+	        	<h6>지역을 설정해주세요.</h6><br>
 	            <div class="btn"><input type="text" id="updateArea" name="address" ></div>
 	        </div>
 	        

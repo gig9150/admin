@@ -145,7 +145,7 @@
 		$(function(){
 				
 				let page = 5;
-				let shopExhiId = '${shopExhiId}';
+				let exhiId = '${exhiId}';
 				
 				$(window).scroll(function(){
 					
@@ -159,7 +159,7 @@
 		            	
 		            	
 		            	$.ajax({
-		            		url:'${root}/front/shop/shopPromotionCuration/'+page+'/'+shopExhiId,
+		            		url:'${root}/front/shop/shopPromotionCuration/'+page+'/'+exhiId,
 		            		type:'get',
 		            		dataType:'json',
 		            		success:function(data){

@@ -4,202 +4,96 @@
 	/* 가게 홈 modal */
 	
 	/* 단골 */
-	#BZ001-TB01.on::after{ 
+	section.on::after{ 
  	    position: absolute; left: 0; top: 0; 
  	    content:''; display: block; width: 100%; height: 100%;
  	    background-color: rgba(0, 0, 0, 0.5); 
  	}
  	
-	#BZ001-TB01 .pop_up_box{
+	section .pop_up_box{
 		display:none;
 	}
 	
-	#BZ001-TB01.on{position: relative; width: 100%; height: 100%;}
- 	#BZ001-TB01.on .pop_up_box{
+	section.on{position: relative; width: 100%; height: 100%;}
+ 	section.on .pop_up_box{
     display:block;position: absolute; left: 50%; top: 17%; transform: translate(-50%, -50%); z-index: 1;
     padding: 30px 20px; width: 80%; height: 150px; background-color: #fff; border-radius: 10px; text-align: center;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)}
-	#BZ001-TB01.on .pop_up_box .ask{font-size: 18px; font-weight: 500}
+	section.on .pop_up_box .ask{font-size: 18px; font-weight: 500}
 	
-	#BZ001-TB01.on .pop_up_box .btn_box .btn{float: left; margin: 30px 0 0 0; width: 48%; height: 36px; margin-right: 4%; border-radius: 5px; line-height: 34px;}
-	#BZ001-TB01.on .pop_up_box .btn_box .btn a{display: block; width: 100%; height: 100%; font-weight: bold}
-	#BZ001-TB01.on .pop_up_box .btn_box .cancel{border: 1px solid #bbb;}
-	#BZ001-TB01.on .pop_up_box .btn_box .cancel a{color: #000;}
-	#BZ001-TB01.on .pop_up_box .btn_box .sure{margin-right: 0; background-color: #78a6d8}
-	#BZ001-TB01.on .pop_up_box .btn_box .sure a{color: #fff;}
+	section.on .pop_up_box .btn_box .btn{float: left; margin: 30px 0 0 0; width: 48%; height: 36px; margin-right: 4%; border-radius: 5px; line-height: 34px;}
+	section.on .pop_up_box .btn_box .btn a{display: block; width: 100%; height: 100%; font-weight: bold}
+	section.on .pop_up_box .btn_box .cancel{border: 1px solid #bbb;}
+	section.on .pop_up_box .btn_box .cancel a{color: #000;}
+	section.on .pop_up_box .btn_box .sure{margin-right: 0; background-color: #78a6d8}
+	section.on .pop_up_box .btn_box .sure a{color: #fff;}
  	
  	/* 신고하기 */ 
- 	#BZ001-TB01.reviewon{position: relative; background-color: #fff; overflow: hidden;}
-	#BZ001-TB01.reviewon::after{
+ 	section.reviewon{position: relative; background-color: #fff; overflow: hidden;}
+	section.reviewon::after{
 	    position: absolute; left: 0; top: 0;
 	    content:''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
-	#BZ001-TB01 .report_box{
+	section .report_box{
 	position: absolute; left: 0; bottom: 0; z-index: 1;
 	width:100%; height: 70px; background-color: #fff; box-shadow: 0 0 50px rgba(0, 0, 0, 0.6); 
 	}
-	#BZ001-TB01 .report_box p{text-align: center; }
-	#BZ001-TB01 .report_box p a{display: block; width: 100%; height: 100%; line-height: 70px; font-size: 18px; font-weight: bold; color: #e78436; }
- 	
- 	
- 	/* 가게 소식 modal */
- 	/* 단골 */
- 	#BZ026.on::after{ 
- 	    position: absolute; left: 0; top: 0; 
- 	    content:''; display: block; width: 100%; height: 100%;
- 	    background-color: rgba(0, 0, 0, 0.5); 
- 	}
- 	
-	#BZ026 .pop_up_box{
-		display:none;
+	section .report_box p{text-align: center; }
+	section .report_box p a{display: block; width: 100%; height: 100%; line-height: 70px; font-size: 18px; font-weight: bold; color: #e78436; }
+
+	.report_box a{
+	
+		color:#78a6d8 !important;
+		
 	}
 	
- 	#BZ026.on  .pop_up_box { 
-     position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; 
-     padding: 30px 20px; width: 80%; height: 150px; background-color: #fff; border-radius: 10px; text-align: center; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)} 
- 	#BZ026.on  .pop_up_box .ask{font-size: 18px;  font-weight: 500} 
-
- 	#BZ026.on  .pop_up_box .btn_box .btn{float: left; margin: 30px 0 0 0; width: 48%; height: 36px; margin-right: 4%; border-radius: 5px; line-height: 34px;font-weight:bold} 
- 	#BZ026.on  .pop_up_box .btn_box .btn a{display: block; width: 100%; height: 100%;} 
- 	#BZ026.on  .pop_up_box .btn_box .cancel{border: 1px solid #bbb; } 
- 	#BZ026.on  .pop_up_box .btn_box .cancel a{color: #000;} 
- 	#BZ026.on  .pop_up_box .btn_box .sure{margin-right: 0; background-color: #e78436} 
- 	#BZ026.on  .pop_up_box .btn_box .sure a{color: #fff;}
- 	
- 	/* 신고하기 */
- 	
- 	#BZ026.reviewon{position: relative; background-color: #fff; overflow: hidden;}
-	#BZ026.reviewon::after{
-	    position: absolute; left: 0; top: 0;
+	#regularMember{
+		border : 1px solid #78a6d8;
+	}
+	
+	#withdraw .pop_up {display:none;}
+	
+	/* 회원탈퇴 사유 모달 */
+	#withdraw.out .pop_up {display:block;}
+	#withdraw.out::after{
+    position: absolute; left: 0; top: 0;
+    content:''; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
+	#withdraw.out .pop_up{
+	    position: absolute; left: 0; bottom: 0; z-index: 1;
+	    width: 100%; padding: 0 0 10px; overflow: hidden;
+	    background-color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px; box-shadow: 0 0 50px rgb(0 0 0 / 60%);
+	}
+	
+	#withdraw.out .pop_up>.top{padding: 0 20px; width: 100%; height: 60px; background-color: #fff; border-bottom: 2px solid #e1e1e1}
+	#withdraw.out .pop_up>.top::after{content:''; display: block; clear: both;}
+	#withdraw.out .pop_up>.top .icon_right{float: right; width: 8%; text-align: right;line-height: 60px;} 
+	#withdraw.out .pop_up>.top .icon_right a{color: #000;}
+	#withdraw.out .pop_up>.top .title{float: left; padding-left: 34px;  width: 92%; text-align: center; line-height: 60px;}
+	
+	#withdraw.out .pop_up>.box{width: 100%;padding: 15px 20px; border-bottom: 1px solid #e1e1e1}
+	#withdraw.out .pop_up>.box a{display: block; width: 100%; height: 100%; color: #222; font-size: 14px; font-weight: bold}
+	#withdraw.out .pop_up>.box:nth-of-type(2) a{color: #7ba8d9;}
+	#withdraw.out .pop_up>.box:last-of-type{border: 0;}
+	
+	/* 가게 프로필 신청 지역 선택 */
+	#MY001-BZRG .area_box{display:none;}
+	
+	#MY001-BZRG.area{background-color: transparent;position:absolute;top:0;z-index: 999; background-image: url(img/bg_img_.png); width: 100%; height: 100%; overflow: hidden}
+	#MY001-BZRG.area::after{
+	    position: absolute; left: 0; bottom: 0;
 	    content:''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
-	#BZ026 .report_box{
-	position: absolute; left: 0; bottom: 0; z-index: 1;
-	width:100%; height: 70px; background-color: #fff; box-shadow: 0 0 50px rgba(0, 0, 0, 0.6); 
+	#MY001-BZRG.area .area_box{
+	    position: absolute; left: 0; bottom: 0; z-index: 1; width: 100%;display:block;
+	    background-color: #fff; border-radius: 10px 10px 0 0 ;box-shadow: 0 0 50px rgb(0, 0, 0, 60%)
 	}
-	#BZ026 .report_box p{text-align: center; }
-	#BZ026 .report_box p a{display: block; width: 100%; height: 100%; line-height: 70px; font-size: 18px; font-weight: bold; color: #e78436; }
+	#MY001-BZRG.area .area_box .top_box{padding: 0 20px; width: 100%; height: 50px; border-bottom: 1px solid #bbb; text-align: center }
+	#MY001-BZRG.area .area_box .top_box .title{font-size: 16px; font-weight: bold; line-height: 50px}
+	#MY001-BZRG.area .area_box .top_box a{float: right;line-height: 50px; color: #000; font-weight: lighter}
 	
-	/* 가게 리뷰 modal */
- 	/* 단골 */
- 	
- 	#BZ027.on::after{ 
- 	    position: absolute; left: 0; top: 0; 
- 	    content:''; display: block; width: 100%; height: 100%;
- 	    background-color: rgba(0, 0, 0, 0.5); 
- 	}
- 	
-	#BZ027 .pop_up_box{
-		display:none;
-	}
+	#MY001-BZRG.area .area_box ul{}
+	#MY001-BZRG.area .area_box ul li{
+	    float: left; width: 50%; height: 40px;
+	    padding: 0 20px; border-bottom: 1px solid #ddd} 
+	#MY001-BZRG.area .area_box ul li:nth-of-type(1n){border-right: 1px solid #ddd;}
 	
- 	#BZ027.on  .pop_up_box { 
-     position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; 
-     padding: 30px 20px; width: 80%; height: 150px; background-color: #fff; border-radius: 10px; text-align: center; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)} 
- 	#BZ027.on  .pop_up_box .ask{font-size: 18px;  font-weight: 500} 
-
- 	#BZ027.on  .pop_up_box .btn_box .btn{float: left; margin: 30px 0 0 0; width: 48%; height: 36px; margin-right: 4%; border-radius: 5px; line-height: 34px;font-weight:bold} 
- 	#BZ027.on  .pop_up_box .btn_box .btn a{display: block; width: 100%; height: 100%;} 
- 	#BZ027.on  .pop_up_box .btn_box .cancel{border: 1px solid #bbb; } 
- 	#BZ027.on  .pop_up_box .btn_box .cancel a{color: #000;} 
- 	#BZ027.on  .pop_up_box .btn_box .sure{margin-right: 0; background-color: #e78436} 
- 	#BZ027.on  .pop_up_box .btn_box .sure a{color: #fff;}
- 	
- 	/* 신고하기 */
- 	
- 	#BZ027.reviewon{position: relative; background-color: #fff; overflow: hidden;}
-	#BZ027.reviewon::after{
-	    position: absolute; left: 0; top: 0;
-	    content:''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
-	#BZ027 .report_box{
-	position: absolute; left: 0; bottom: 0; z-index: 1;
-	width:100%; height: 70px; background-color: #fff; box-shadow: 0 0 50px rgba(0, 0, 0, 0.6); 
-	}
-	#BZ027 .report_box p{text-align: center; }
-	#BZ027 .report_box p a{display: block; width: 100%; height: 100%; line-height: 70px; font-size: 18px; font-weight: bold; color: #e78436; }
-
-
-
-	
-	
- 	
- 	/* 신고 페이지 재 작성 */
- 	
- 	/*BZ026 - 소식 - 게시글 신고하기*/
-	#BZ026{background-color: #fff;}
-	
-	#BZ026 .box{padding: 0 20px;}
-	#BZ026 .box::after{content: ''; display: block; clear: both;}
-	
-	#BZ026{background-color: #fff;}
-	#BZ026.reviewon{position: relative; background-color: #fff; overflow: hidden;}
-	#BZ026.reviewon::after{
-	    position: absolute; left: 0; top: 0;
-	    content:''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
-	#BZ026 .report_box{
-	position: absolute; left: 0; bottom: 0; z-index: 1;
-	width:100%; height: 70px; background-color: #fff; box-shadow: 0 0 50px rgba(0, 0, 0, 0.6); 
-	}
-	#BZ026 .report_box p{text-align: center; }
-	#BZ026 .report_box p a{display: block; width: 100%; height: 100%; line-height: 70px; font-size: 18px; font-weight: bold; color: #e78436; }
-	
-	
-	#BZ026 .top{padding: 0 20px; width: 100%; height: 50px; background-color: #fff; border-bottom: 2px solid #e1e1e1}
-	#BZ026 .top::after{content:''; display: block; clear: both;}
-	#BZ026 .top .icon_left{float: left; width: 20%; text-align: left;line-height: 50px;} 
-	#BZ026 .top .icon_left a{color: #000;}
-	#BZ026 .top .title{float: left; width: 60%; text-align: center; line-height: 50px;}
-	#BZ026 .top .icon_right{float: left; width: 20%; text-align: right;line-height: 50px;}
-	#BZ026 .top .icon_right a{color: #000;}
-	
-	#BZ026 .box_1{padding-top: 20px;}
-	#BZ026 .box_1::after{content:''; display: block; clear: both;}
-	#BZ026 .box_1 .pic{float: left; margin: 0 10px 0 0 ; width: 88px; height: 88px; background-color: #bbb;  border-radius: 100%;}
-	#BZ026 .box_1 img {float: left; margin: 0 10px 0 0 ; border-radius:100%; width:88px; height: 88px;}
-	#BZ026 .box_1 .info{float: left; margin: 0 0 30px 0;}
-	#BZ026 .box_1 .info .sub_title{font-size: 18px; margin: 0 0 5px 0;}
-	#BZ026 .box_1 .info .title_bottom{font-size: 12px; margin: 0 0 10px 0; color: #aaa}
-	#BZ026 .box_1 .info .regular{width: 68px; height: 30px; border: 1px solid #e78436; font-size: 12px; line-height: 28px; text-align: center; border-radius: 5px;}
-	#BZ026 .box_1 .info .regular a{color: #e78436}
-	#BZ026 .box_1 .info .regular a span{padding: 0 4%}
-	
-	
-	#BZ026 .box_2{margin: 0 0 30px 0;}
-	#BZ026 .box_2::after{content:''; display: block; clear: both;}
-	#BZ026 .box_2 li{float: left; width: 33.333%; font-size: 14px; text-align: center;}
-	#BZ026 .box_2 li a{color: #000;}
-	#BZ026 .box_2 li span{display: block; margin-bottom: 8px; font-size: 18px;}
-	
-	
-	#BZ026 .box_3::after{content:''; display: block; clear: both;}
-	#BZ026 .box_3{ padding: 0;}
-	#BZ026 .box_3 li{float: left; width: 33.333%; height: 33px; text-align: center; font-size: 14px;}
-	#BZ026 .box_3 li a{ color: #bbb;font-weight: bold;}
-	#BZ026 .box_3 li:nth-of-type(2){border-bottom: 2px solid black; }
-	#BZ026 .box_3 li:nth-of-type(2) a{color: #000;}
-	
-	
-	#BZ026 .notice{padding: 10px 20px;   border-top: 8px solid #eee; border-bottom: 8px solid #eee;}
-	#BZ026 .notice span{display: inline-block; margin-right: 10px; width: 40px; height: 40px; border-radius: 100%; background-color: #fff0e4; text-align: center; line-height: 40px; color: #e78436;}
-	
-	#BZ026 .infomation{padding: 20px 20px; font-size: 14px;}
-	#BZ026 .infomation .title_box{margin-bottom: 18px;}
-	#BZ026 .infomation .title_box::after{content:''; display: block; clear: both;}
-	#BZ026 .infomation .title_box>.pic{float: left; margin-right: 10px; width: 48px; height: 48px; border-radius: 100%; background-color: #bbb;}
-	#BZ026 .infomation .title_box>.info{position: relative; float: left; padding: 3px 0 0 0;  width: calc(100% - 58px)}
-	#BZ026 .infomation .title_box>.info .info_title{margin-bottom: 5px; width: 80%}
-	#BZ026 .infomation .title_box>.info .sub_title{width: 80%; font-size: 12px; color: #aaa}
-	#BZ026 .infomation .title_box>.info .sub_title span{padding: 0 5px; font-size: 12px;}
-	#BZ026 .infomation .title_box>.info .bar{position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 18px; color: #aaa;}
-	
-	#BZ026 .infomation .txt_box>.info{}
-	#BZ026 .infomation .txt_box>.info .txt_title{margin-bottom: 10px; font-size: 14px; font-weight: bold;}
-	#BZ026 .infomation .txt_box>.info .txt{font-size: 14px;}
-	#BZ026 .infomation .txt_box>.pic{margin-top: 18px; width: 100%; height: 160px; background-color: #bbb;}
-	
-	#BZ026 .bottom{padding: 10px 20px; border-top: 1px solid #e1e1e1; font-size: 14px; color: #444; }
-	#BZ026 .bottom::after{content:''; display: block; clear: both;}
-	#BZ026 .bottom li{}
-	#BZ026 .bottom .good{display: inline-block; margin-right: 16px;}
-	#BZ026 .bottom .good li{display: inline-block;}
-	#BZ026 .bottom .good li a{color: #444;}
-	#BZ026 .bottom .comment{display: inline-block;}
-	#BZ026 .bottom .comment li{display: inline-block;}
-	#BZ026 .bottom .comment li a{color: #444;}
+	#MY001-BZRG.area .area_box ul li a{font-size: 13px; font-weight: 400; line-height: 38px; color: #000}
+	#MY001-BZRG.area .area_box ul li:first-of-type a{font-size: 14px; font-weight: bold}
+	#MY001-BZRG.area .area_box ul li:last-of-type a{display: none}

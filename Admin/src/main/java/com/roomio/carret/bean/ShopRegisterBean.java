@@ -4,32 +4,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ShopRegisterBean {
 
-	private int shopIdx; 
+	private int shopIdx;
 	private String memberName;
 	private String buisnessNum;
 	private String buisnessName;
 	private String buisnessAddress;
-	private String sector;
+	private String address;
+	private int areaId;
+	private int sectorId;
 	private String shopName;
 	private int memberId;
 	private int franchiseId;
 	private String latitude;
 	private String longitude;
-	private String address;
 	private String shopCode;
 	private String[] keyword;
 	
 	private String buisnessImageName;
 	private MultipartFile uploadFile;
-	
-	
-	public String getBuisnessImageName() {
-		return buisnessImageName;
-	}
-	
-	public void setBuisnessImageName(String buisnessImageName) {
-		this.buisnessImageName = buisnessImageName;
-	}
 	
 	public int getShopIdx() {
 		return shopIdx;
@@ -61,30 +53,29 @@ public class ShopRegisterBean {
 	public void setBuisnessAddress(String buisnessAddress) {
 		this.buisnessAddress = buisnessAddress;
 	}
-	public String getSector() {
-		return sector;
+	public String getAddress() {
+		return address;
 	}
-	public void setSector(String sector) {
-		this.sector = sector;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public int getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
+	}
+	public int getSectorId() {
+		return sectorId;
+	}
+	public void setSectorId(int sectorId) {
+		this.sectorId = sectorId;
 	}
 	public String getShopName() {
 		return shopName;
 	}
 	public void setShopName(String shopName) {
 		this.shopName = shopName;
-	}
-	public String[] getKeyword() {
-		return keyword;
-	}
-	public void setKeyword(String[] keyword) {
-		this.keyword = keyword;
-	}
-	
-	public MultipartFile getUploadFile() {
-		return uploadFile;
-	}
-	public void setUploadFile(MultipartFile uploadFile) {
-		this.uploadFile = uploadFile;
 	}
 	public int getMemberId() {
 		return memberId;
@@ -110,18 +101,33 @@ public class ShopRegisterBean {
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
 	public String getShopCode() {
 		return shopCode;
 	}
 	public void setShopCode(String shopCode) {
 		this.shopCode = shopCode;
 	}
+	public String[] getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String[] keyword) {
+		this.keyword = keyword;
+	}
+	public String getBuisnessImageName() {
+		return buisnessImageName;
+	}
+	public void setBuisnessImageName(String buisnessImageName) {
+		this.buisnessImageName = buisnessImageName;
+	}
+	public MultipartFile getUploadFile() {
+		return uploadFile;
+	}
+	public void setUploadFile(MultipartFile uploadFile) {
+		this.uploadFile = uploadFile;
+	}
+	
+	
+	
 	
 	
 	

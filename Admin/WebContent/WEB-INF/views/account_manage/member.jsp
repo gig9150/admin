@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
 <c:set var="root" value="${pageContext.request.contextPath}" />
+<jsp:useBean id="toDay" class="java.util.Date" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +62,7 @@
                     <br>
                     
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800"> Home >> 관리자 설정 >> 운영자 역할 관리  </h1>
+                    <h1 class="h3 mb-2 text-gray-800"> Home >> 관리자 설정 >> 운영자 역할 관리 >> </h1>
 
                     <br><hr><br>
 
@@ -176,6 +179,8 @@
                                 </thead>
                                 <tbody>
                                 	<c:forEach items="${list}" var="obj" varStatus="status"> 
+                                		<c:set var="bool" value="true"/>
+                                		<c:set var="num" value="0"/>
 	                                	<tr data-member-id = '${obj.member_id}'>
 	                                		<td class="tableTd"><input type="checkbox" class="tableChk"></td>
 	                                		<th>${status.count}</th>
@@ -184,16 +189,25 @@
 	                                		<td>${obj.name}</td>
 	                                		<td>${obj.member_id}</td>
 	                                		<td>${obj.area_name}</td>
-	                                		<td>
+	                                		<c:forEach items="${obj.peList}" var="obj2">
+		                                		<fmt:parseDate value="${obj2.start_date}" var="strPlanDate" pattern="yyyy-MM-dd"/>
+												<fmt:parseNumber value="${strPlanDate.time / (1000*60*60*24)}" integerOnly="true" var="strDate"></fmt:parseNumber>
+												<fmt:parseDate value="${obj2.end_date}" var="endPlanDate" pattern="yyyy-MM-dd"/>
+												<fmt:parseNumber value="${(endPlanDate.time / (1000*60*60*24)) + 1}" integerOnly="true" var="endDate"></fmt:parseNumber>
+												<fmt:parseNumber value="${toDay.time / (1000*60*60*24)}" integerOnly="true" var="today_"></fmt:parseNumber>
 	                                			<c:choose>
-	                                				<c:when test="${obj.penalty ge 1}">
-	                                					Y
+	                                				<c:when test="${bool and today_ <= endDate}">
+	                                					<td>Y</td>
+	                                					<c:set var ="bool" value="false"/>
 	                                				</c:when>
-	                                				<c:otherwise>
-	                                					-
-	                                				</c:otherwise>
-	                                			</c:choose>	                                		
-	                                		</td>
+	                                				<c:when test="${bool and today_ > endDate}">
+	                                					<c:set var="num" value="${num + 1}"/>
+	                                				</c:when>
+	                                			</c:choose>
+		                                		<c:if test="${fn:length(obj.peList) eq num}">
+		                                			<td> - </td>
+		                                		</c:if>
+	                                		</c:forEach>
 	                                		<td>
 	                                			<c:choose>
 	                                				<c:when test="${obj.withddrawal eq 1}">
@@ -204,7 +218,10 @@
 	                                				</c:otherwise>
 	                                			</c:choose>	   
 	                                		</td>
-	                                		<td class="penaltyTd"><button type="button" class="penalty-btn btn btn-secondary">패널티 등록</button></td>
+	                                		<td class="penaltyTd"><button type="button" class="penalty-btn btn btn-secondary"
+	                                		 data-franchise-name="${obj.franchise_name}" data-name="${obj.name}"
+	                                		 data-member-id="${obj.member_id}" data-area-name="${obj.area_name}">패널티 등록</button></td>
+	                                		 
 	                                	</tr>
                                 	</c:forEach>
                                 </tbody>
@@ -381,9 +398,12 @@
    			});
    			
    			//패널티 등록 페이지 이동
-   			$('.penaltyTd').click(function(){
-   				let memberId = $(this).parent().data('memberId');
-   				window.open("${root}/account_manage/member_penalty?memberId="+memberId,"_blank",
+   			$('.penalty-btn').click(function(){
+   				let franchiseName = $(this).data('franchiseName');
+		 		let name = $(this).data('name');
+		 		let memberId = $(this).data('memberId');
+		 		let areaName = $(this).data('areaName');
+   				window.open("${root}/account_manage/member_penalty?memberId="+memberId+"&franchiseName="+franchiseName+"&name="+name+"&areaName="+areaName,"_blank",
    						"toolbar=yes,menubar=yes,width="+screen.width+",height="+screen.height+"fullscreen=yes"),focus();
    			});
    			

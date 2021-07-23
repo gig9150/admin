@@ -291,5 +291,17 @@ public class ShopService {
 	public HashMap<Object,Object> getFrontCurationBannerImage(int shopExhiId) {
 		return shopDao.getFrontCurationBannerImage(shopExhiId);
 	}
-
+	
+	public List<HashMap<Object,Object>> getNewsList(int shopIdx){
+		return shopDao.getNewsList(shopIdx);
+	}
+	
+	public HashMap<Object,Object> getNewsDetailInfo(int shopNewsId){
+		return shopDao.getNewsDetailInfo(shopNewsId);
+		
+	}
+	
+	public void addShopReport(HashMap<Object,Object> map){
+		shopDao.addShopReport(map);
+	}
 }

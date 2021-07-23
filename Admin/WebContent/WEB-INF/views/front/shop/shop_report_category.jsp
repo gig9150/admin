@@ -26,30 +26,11 @@
             <ul class="cause">
             	<li>신고하려는 이유를 선택해주세요.</li>
             	<c:forEach items="${categoryList}" var="obj">
-            		<c:choose>
-            			<c:when test="${obj.report_category_id eq 5}">
-            				<li><a href="${root}/front/shop/shop_report?status=${status}&shopIdx=${shopIdx}&reportCategoryId=${obj.report_category_id}">${obj.category_content}<span><i class="fas fa-chevron-right"></i></span></a></li>
-            			</c:when>
-            			<c:otherwise>
-            				<li><a class="categorySelect" href="${root}/front/shop/shop_report_success?status=${status}&shopIdx=${shopIdx}&reportCategoryId=${obj.report_category_id}" 
-            				data-report-category-id="${obj.report_category_id}">${obj.category_content}</a></li>
-            			</c:otherwise>
-            		</c:choose>
+       				<li><a href="${root}/front/shop/shop_report?status=${status}&shopIdx=${shopIdx}&reportCategoryId=${obj.report_category_id}">${obj.content}<span><i class="fas fa-chevron-right"></i></span></a></li>
             	</c:forEach>
             </ul>
         </div>
     </section>
 </body>
 <script src="${root}/vendor/jquery/jquery.min.js"></script>
-<script>
-
-// 	$(function(){
-// 		$('.categorySelect').on('click',function(){
-			
-// 			const reportCategoryId = $(this).data('reportCategoryId');
-			
-// 		});
-// 	});
-	
-</script>
 </html>

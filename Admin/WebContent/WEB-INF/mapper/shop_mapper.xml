@@ -247,9 +247,13 @@
 	
 	<select id="getFrontShopDetail" resultType="hashMap" parameterType="int" >
 	
-		select s.shop_idx,s.address,s.start_date,s.end_date,s.introduce_shop,s.notice_info,s.to_benefit,
-		s.shop_name,s.sector,s.holiday,s.main_image
+		select s.shop_idx,s.address,s.start_date,s.end_date,s.introduce_shop,s.notice_info,
+		s.to_benefit,s.shop_name,se.sector_content,s.holiday,s.main_image,d.area_name
 		from shop s
+		inner join sector se
+		on s.sector_id = se.sector_id
+		inner join area_dong d
+		on s.id = d.id 
 		where s.shop_idx = ${shopIdx}
 		
 	</select>
@@ -258,9 +262,10 @@
 	
 	<select id="getFrontShopGoods" resultType="hashMap" parameterType="int">
 	
-		select name,price,min_price,additional_info
+		select name,price,min_price
 		from goods
 		where shop_idx = ${shopIdx}
+		limit 0,5
 		
 	</select>
 	
@@ -283,7 +288,7 @@
 	<select id="getFrontShopReviews" resultMap="getFrontShopReviews" parameterType="hashMap">
 		
 		select sr.content as review_content,date_format(sr.regdate,'%Y-%m-%d') as regdate,
-		sr.review_like,rkc.content as review_category_content,sri.name as imageName,m.name as nickName,m.address
+		sr.review_like,rkc.content as review_category_content,sri.name as imageName,m.name as nickName,m.address,d.area_name
 		from shop_review sr
 		left join review_keyword rk
 		on sr.shop_review_id = rk.shop_review_id
@@ -293,6 +298,8 @@
 		on sr.shop_review_id = sri.shop_review_id
 		inner join member m
 		on sr.member_id = m.member_id
+		inner join area_dong d
+		on m.id = d.id
 		where shop_idx = ${shopIdx}
 		<choose>
 			<when test='sort.equals("latest")'>
@@ -302,7 +309,6 @@
 				order by sr.review_like desc
 			</otherwise>
 		</choose>
-		
 	</select>
 	
 	
@@ -310,7 +316,6 @@
 		<result column="title" property="title"/>
 		<result column="content" property="content"/>
 		<result column="regdate" property="regdate"/>
-		<result column="comment_count" property="comment_count"/>
 		<result column="like_count" property="like_count"/>
 		<result column="address" property="address"/>
 		<result column="shop_news_id" property="shop_news_id"/>
@@ -323,7 +328,6 @@
 	<select id="getFrontShopNews" resultMap="getShopNewsImages" parameterType="int">
 		
 		select s.title,s.content,date_format(s.regdate,'%Y-%m-%d') as regdate,i.name,sh.address,s.shop_news_id,
-		(SELECT COUNT(*) FROM shop_news_comments c  WHERE c.shop_news_id = s.shop_news_id) AS comment_count,
 		(SELECT COUNT(*) FROM shop_news_like l  WHERE s.shop_news_id = l.shop_news_id) AS like_count
 		from shop_news s 
 		left join shop_news_image i
@@ -429,8 +433,7 @@
 		
 		select member_and_shop_id
 		from member_and_shop
-		where member_id = ${memberId} 
-		and shop_idx = ${shopIdx}
+		where member_id = ${memberId}
 		
 	</select>
 	
@@ -457,8 +460,10 @@
 	
 	<!-- 가게 신고 카테고리 select -->
 	<select id="getFrontReportCategory" resultType="hashMap">
-		select report_category_id,category_content
+	
+		select report_category_id,content
 		from report_category
+		
 	</select>
 	
 	<!-- 가게 신고 -->
@@ -494,9 +499,9 @@
 	<insert id="addFrontShop" parameterType="com.roomio.carret.bean.ShopRegisterBean">
 	
 		insert into shop(member_id,franchise_id,shop_name,member_name,representative,buisness_num,buisness_name,buisness_address,buisness_image_name,
-		status,latitude,longitude,address,shop_code,activity_status,sector)
+		status,latitude,longitude,address,shop_code,activity_status,sector_id,id)
 		values(${memberId},${franchiseId},#{shopName},#{memberName},#{memberName},#{buisnessNum},#{buisnessName},#{buisnessAddress},#{buisnessImageName},
-		2,#{latitude},#{longitude},#{address},#{shopCode},1,#{sector})
+		2,#{latitude},#{longitude},#{buisnessAddress},#{shopCode},1,${sectorId},${areaId})
 		
 		<selectKey resultType="int" keyProperty="shopIdx" order="AFTER">
        		SELECT LAST_INSERT_ID()
@@ -506,13 +511,13 @@
 	
 	<insert id="addFrontShopKeyword" parameterType="hashMap">
 	
-		insert into shop_keyword(shop_idx,keyword) 
+		insert into shop_keyword(shop_idx,keyword)
 		values(${shopIdx},#{keyword})
 		
 	</insert>
 	
 	<resultMap type="com.roomio.carret.bean.ShopCurationBean" id="shopCuration">
-		<result column="shop_exhi_id" property="shopExhiId"/>
+		<result column="exhi_id" property="exhiId"/>
 		<result column="exhi_name" property="exhiName"/>
 		<result column="exhi_sub" property="exhiSub"/>
 		<result column="exhi_explain" property="exhiExplain"/>
@@ -535,32 +540,37 @@
 	<!-- 가게 큐레이션 홈 정보 얻어오기 -->
 	<select id="getFrontShopPromotion" resultMap="shopCuration" parameterType="int">
 		
-		select se.shop_exhi_id,se.exhi_name,se.exhi_sub,se.exhi_explain,se.banner_image,s.shop_idx,s.shop_name,
-		a.area_name,s.sector,s.holiday,s.start_date,s.end_date,s.main_image,
+		select e.exhi_id,e.exhi_name,e.exhi_sub,e.exhi_explain,e.banner_image,s.shop_idx,s.shop_name,
+		a.area_name,se.sector_content,s.holiday,s.start_date,s.end_date,s.main_image,
 		(select count(*) from shop_review r where s.shop_idx = r.shop_idx) as reviewCount,
 		(select count(*) from member_and_shop ms where s.shop_idx = ms.shop_idx) as bookmarkCount
-		from shop_exhi se
-		left join shop_and_exhi sae
-		on se.shop_exhi_id = sae.shop_exhi_id
+		from exhi e
+		left join exhi_sub es
+		on e.exhi_id = es.exhi_id
 		left join shop s
-		on sae.shop_idx = s.shop_idx 
+		on es.shop_idx = s.shop_idx 
+		inner join sector se 
+		on se.sector_id = s.sector_id
 		left join area_dong a
 		on s.id = a.id
-		where se.regi_status = 1 
-		and se.franchise_id = ${franchiseId}
-		order by se.regi_order asc
+		where e.regi_status = 1 
+		and e.exhi_section = 1 
+		and e.franchise_id = ${franchiseId}
+		order by e.regi_order asc
 		
 	</select>
 	
 	<!-- 가게 큐레이션 지역 정보 얻어오기 -->
 	<select id="getFrontShopPromotionArea" parameterType="hashMap" resultType="hashMap">
 	
-		select s.shop_idx,s.shop_name,a.area_name,s.sector,s.holiday,s.start_date,s.end_date,s.main_image,
+		select s.shop_idx,s.shop_name,a.area_name,se.sector_content,s.holiday,s.start_date,s.end_date,s.main_image,
 		(select count(*) from shop_review r where s.shop_idx = r.shop_idx) as reviewCount,
 		(select count(*) from member_and_shop ms where s.shop_idx = ms.shop_idx) as bookmarkCount
 		from shop s 
 		left join area_dong a
 		on s.id = a.id 
+		inner join sector se
+		on s.sector_id = se.sector_id
 		where s.franchise_id = ${franchiseId}
 		<if test="area != 999">
 			and s.id = ${area}
@@ -572,8 +582,8 @@
 	<select id="getFrontCurationBannerImage" parameterType="int" resultType="hashMap">
 		
 		select exhi_name,banner_image
-		from shop_exhi
-		where shop_exhi_id = ${shopExhiId}
+		from exhi
+		where exhi_id = ${exhiId}
 	
 	
 	</select>
@@ -581,20 +591,70 @@
 	<!-- 가게 큐레이션 지역 정보 얻어오기 -->
 	<select id="getFrontShopPromotionCuration" parameterType="hashMap" resultType="hashMap">
 	
-		select s.shop_idx,s.shop_name,a.area_name,s.sector,s.holiday,s.start_date,s.end_date,s.main_image,
+		select s.shop_idx,s.shop_name,a.area_name,se.sector_content,s.holiday,s.start_date,s.end_date,s.main_image,
 		(select count(*) from shop_review r where s.shop_idx = r.shop_idx) as reviewCount,
 		(select count(*) from member_and_shop ms where s.shop_idx = ms.shop_idx) as bookmarkCount
 		from shop s 
 		left join area_dong a
 		on s.id = a.id 
-		inner join shop_and_exhi sae
-		on s.shop_idx = sae.shop_idx
-		inner join shop_exhi se 
-		on se.shop_exhi_id = sae.shop_exhi_id
+		inner join sector se
+		on s.sector_id = se.sector_id
+		inner join exhi_sub es
+		on s.shop_idx = es.shop_idx
+		inner join exhi e 
+		on e.exhi_id = es.exhi_id
 		where s.franchise_id = ${franchiseId}
-		and se.shop_exhi_id = ${shopExhiId}
+		and e.exhi_id = ${exhiId}
 		limit ${page},5
 	
 	</select>
 	
+	<resultMap type="hashMap" id="getNewsMap">
+		<result column="shop_news_id" property="shop_news_id"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="regate" property="regate"/>
+		<result column="cate_content" property="cate_content"/>
+		<result column="likeCnt" property="likeCnt"/>
+		<collection property="imageList" javaType="list" ofType="string">
+			<result column="name" property="name"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 가게 소식 정보 얻어오기  -->
+	<select id="getNewsList" parameterType="int" resultMap="getNewsMap">
+		
+		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
+		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt
+		from shop_news sn
+		inner join shop_news_category snc
+		on sn.shop_news_category_id = snc.shop_news_category_id
+		left join shop_news_image sni
+		on sn.shop_news_id = sni.shop_news_id 
+		where sn.shop_idx = ${shopIdx}
+		
+	</select>
+	
+	<!-- 가게 소식 디테일 -->
+	<select id="getNewsDetailInfo" parameterType="int" resultMap="getNewsMap">
+	
+		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
+		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt
+		from shop_news sn
+		inner join shop_news_category snc
+		on sn.shop_news_category_id = snc.shop_news_category_id
+		left join shop_news_image sni
+		on sn.shop_news_id = sni.shop_news_id 
+		where sn.shop_news_id = ${shopNewsId}
+		
+	</select>
+	
+	<!-- 신고 insert -->
+	<insert id="addShopReport" parameterType="hashMap">
+		
+		insert into report(franchise_id,member_id,member_or_shop,member_or_shop_num,member_or_shop_name,report_category_id,content,answer_status)
+		values(${franchiseId},${memberId},2,${shopIdx},#{shopName},${reportCategoryId},#{content},1)
+		
+	
+	</insert>	
 </mapper>

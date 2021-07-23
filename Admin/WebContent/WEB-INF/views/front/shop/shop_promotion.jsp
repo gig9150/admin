@@ -62,8 +62,8 @@
 	                    </ul>
 	                </div>
 	                <ul class="view_more">
-	                    <li><a href="${root}/front/shop/shop_promotion_curation?shopExhiId=${obj.shopExhiId}">더보기</a></li>
-	                    <li><a href="${root}/front/shop/shop_promotion_curation?shopExhiId=${obj.shopExhiId}"><i class="fas fa-chevron-right"></i></a></li>
+	                    <li><a href="${root}/front/shop/shop_promotion_curation?exhiId=${obj.exhiId}">더보기</a></li>
+	                    <li><a href="${root}/front/shop/shop_promotion_curation?exhiId=${obj.exhiId}"><i class="fas fa-chevron-right"></i></a></li>
 	                </ul>
 	            </div>
 	            <div class="swiper-wrapper">
@@ -209,7 +209,7 @@
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-user"></i></div>
-                <div class="info"><a href="">MY</a></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
             </div>
         </div>
         

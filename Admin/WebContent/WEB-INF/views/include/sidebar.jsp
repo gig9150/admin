@@ -88,7 +88,7 @@
                 <div id="c" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                     	<a class="collapse-item" href="${root}/account_manage/member">일반회원 관리</a>
-                        <a class="collapse-item" href="${root}/shop/list">가게 리스트</a>
+                        <a class="collapse-item" href="${root}/account_manage/shop_list">가게 리스트</a>
                         <a class="collapse-item" href="${root}/shop/apply">가게 신청 심사</a>
                         <a class="collapse-item" href="${root}/member/manage_penalty">패널티관리</a>
                     </div>

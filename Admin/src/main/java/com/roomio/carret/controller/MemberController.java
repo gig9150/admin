@@ -125,31 +125,7 @@ public class MemberController {
 		
 	}
 	
-	//일반 유저 마이페이지 이동
-	@GetMapping("/front/member/myPage")
-	public String myPage() {
-		
-		return "front/member/myPage";
-	}
 	
-	//프로필 수정 이동
-	@GetMapping("/front/member/member_update")
-	public String memberUpdate() {
-		
-		return "front/member/member_update";
-	}
-	
-	@PostMapping("/front/member/member_update_pro")
-	public String memberUpdatePro(@ModelAttribute MemberUpdateBean memberUpdateBean) {
-		
-		//나중에 로그인 객체 받아오면 수정해주기 ★★
-		memberUpdateBean.setMemberId(1);
-		
-		//update 쿼리 실행하기 
-		memberService.frontMemberInfoUpdate(memberUpdateBean);
-		
-		return "redirect:/front/member/myPage";
-	}	
 	
 	
 }

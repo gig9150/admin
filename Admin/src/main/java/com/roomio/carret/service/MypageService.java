@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.roomio.carret.bean.MemberRegisterBean;
+import com.roomio.carret.bean.ShopInfoUpdateBean;
 import com.roomio.carret.dao.MypageDao;
 
 @Service
@@ -51,7 +52,7 @@ public class MypageService {
 		return mypageDao.getFrontMemberQuestion(memberId);
 	}
 
-	public List<String> getFrontFrequentQuestionCategory() {
+	public List<HashMap<Object,Object>> getFrontFrequentQuestionCategory() {
 		return mypageDao.getFrontFrequentQuestionCategory();
 	}
 
@@ -93,13 +94,99 @@ public class MypageService {
 				if(!file.get(i).isEmpty() && file.get(i).getSize() > 0) {
 					String fileName = saveUploadFile(file.get(i));
 					imageMap.put("name",fileName);
+					System.out.println(fileName);
 					imageList.add(imageMap);
 				}
 			}
+			//이미지 등록 
+			mypageDao.addFrontMemberQuestionImage(imageList);
+		}
+	}
+	
+	public List<HashMap<Object,Object>> getFrontFreTitle(int id){
+		return mypageDao.getFrontFreTitle(id);
+	}
+	
+	public HashMap<Object,Object> getFrontFreDetail(int id){
+		return mypageDao.getFrontFreDetail(id);
+	}
+	
+	public List<HashMap<Object,Object>> getWithCategory(){
+		return mypageDao.getWithCategory();
+	}
+	
+	public void memberWithDraw(HashMap<Object,Object> map) {
+		mypageDao.memberWithDraw(map);
+	}
+	
+	public List<HashMap<Object,Object>> getAreaList(String zipCode){
+		return mypageDao.getAreaList(zipCode);
+	}
+	
+	public List<HashMap<Object,Object>> getMyShop(int memberId){
+		return mypageDao.getMyShop(memberId);
+	}
+	
+	public void updateShopInfo(ShopInfoUpdateBean bean) {
+		
+		
+		//주소 정보 합치기
+		bean.setAddress(bean.getAddress1() +  " " + bean.getAddress2());
+		
+		//휴일 정보 입력
+		String holiday = "";
+		
+		for(int i=0;i<bean.getDay().length;i++) {
+			
+			if(i == 0) {
+				holiday = bean.getDay()[i];
+				continue;
+			}
+			
+			holiday += "," + bean.getDay()[i];
+			
 		}
 		
-		//이미지 등록 
-		mypageDao.addFrontMemberQuestionImage(imageList);
+		bean.setHoliday(holiday);
 		
+		mypageDao.updateShopInfo(bean);
+	}
+	
+	public List<HashMap<Object,Object>> getGoodsList(int shopIdx){
+		return mypageDao.getGoodsList(shopIdx);
+		
+	}
+	
+	public void addGoods(HashMap<Object,Object> map) {
+		mypageDao.addGoods(map);
+	}
+	
+	public HashMap<Object,Object> getGoodsInfo(int goodsId){
+		return mypageDao.getGoodsInfo(goodsId);
+	}
+	
+	public void updateGoodsInfo(HashMap<Object,Object> map) {
+		mypageDao.updateGoodsInfo(map);
+	}
+	
+	public HashMap<Object,Object> getProInfo(int shopIdx){
+		return mypageDao.getProInfo(shopIdx);
+	}
+	
+	public List<String> getProImg(int shopIdx){
+		return mypageDao.getProImg(shopIdx);
+	}
+	
+	public List<String> getProKeyword(int shopIdx){
+		return mypageDao.getProKeyword(shopIdx);
+	}
+	
+	public boolean checkShopName(String shopName) {
+		String name = mypageDao.checkShopName(shopName);
+		if(name != null) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 }

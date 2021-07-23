@@ -13,6 +13,24 @@ public class MemberSearchBean {
 	private int select;
 	private String keyWord;
 	
+	//가게 정보 search 
+	private int sectorId;
+	private int activityStatus;
+
+	
+	
+	public int getSectorId() {
+		return sectorId;
+	}
+	public void setSectorId(int sectorId) {
+		this.sectorId = sectorId;
+	}
+	public int getActivityStatus() {
+		return activityStatus;
+	}
+	public void setActivityStatus(int activityStatus) {
+		this.activityStatus = activityStatus;
+	}
 	public String getStartDate() {
 		return startDate;
 	}
