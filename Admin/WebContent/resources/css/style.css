@@ -3048,7 +3048,7 @@ height: 28px; background-color: #e78436; border: 0; border-radius: 5px; outline:
 #BZ002-PF01 .name-inner{display:none;}
 
 /*99페이지(6/30파일) #BZ002-PF01-2 가게프로필 – 가게 프로필 수정*/
-#BZ002-PF01.on1{position: relative; width: 100%; height: 500px; background-color: #fff}
+#BZ002-PF01.on1{position: relative; width: 100%; background-color: #fff}
 #BZ002-PF01.on1::after{content: ''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
 #BZ002-PF01.on1 .name-inner{
     display:block;position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 1; padding: 7%; width: 80%;background-color: #fff; border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)
@@ -3059,44 +3059,72 @@ height: 28px; background-color: #e78436; border: 0; border-radius: 5px; outline:
     color: #fff; font-size: 14px; font-weight: bold
 }
 
-/*99페이지(6/30파일) #BZ002-PF01-3 가게프로필 – 가게 프로필 수정*/
-/* #BZ002-PF01{position: relative; padding: 0 20%; width: 100%; height: 500px;} */
-/* #BZ002-PF01::after{position: absolute; left: 0; top: 0; content: ''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)} */
-/* #BZ002-PF01 .pop_up_box{ */
-/*     position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1; */
-/*     padding: 30px 20px; width: 80%; height: auto; background-color: #fff; border-radius: 10px; text-align: center;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)} */
-/* #BZ002-PF01 .pop_up_box .ask{font-size: 14px; font-weight: bold} */
-/* #BZ002-PF01 .pop_up_box .ask span{color: #7ba8d9;} */
+#BZ002-PF01 .pop_up_box{display:none;}
 
-/* #BZ002-PF01 .pop_up_box .btn_box .btn{float: left; margin: 30px 0 0 0; width: 48%; height: 36px; margin-right: 4%; border-radius: 5px; line-height: 34px;} */
-/* #BZ002-PF01 .pop_up_box .btn_box .btn a{display: block; width: 100%; height: 100%; font-weight: bold} */
-/* #BZ002-PF01 .pop_up_box .btn_box .cancel{border: 1px solid #bbb;} */
-/* #BZ002-PF01 .pop_up_box .btn_box .cancel a{color: #000;} */
-/* #BZ002-PF01 .pop_up_box .btn_box .sure{margin-right: 0; background-color: #78a6d8} */
-/* #BZ002-PF01 .pop_up_box .btn_box .sure a{color: #fff;} */
+/* 99페이지(6/30파일) #BZ002-PF01-3 가게프로필 – 가게 프로필 수정 */
+#BZ002-PF01.on2{position: relative; width: 100%;}
+#BZ002-PF01.on2::after{position: absolute; left: 0; top: 0; content: ''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
+#BZ002-PF01.on2 .pop_up_box{
+    display:block;position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1;
+    padding: 30px 20px; width: 80%; height: auto; background-color: #fff; border-radius: 10px; text-align: center;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)}
+#BZ002-PF01.on2 .pop_up_box .ask{font-size: 14px; font-weight: bold}
+#BZ002-PF01.on2 .pop_up_box .ask span{color: #7ba8d9;}
 
+#BZ002-PF01.on2 .pop_up_box .btn_box .btn{float: left; margin: 30px 0 0 0; width: 48%; height: 36px; margin-right: 4%; border-radius: 5px; line-height: 34px;}
+#BZ002-PF01.on2 .pop_up_box .btn_box .btn a{display: block; width: 100%; height: 100%; font-weight: bold}
+#BZ002-PF01.on2 .pop_up_box .btn_box .cancel{border: 1px solid #bbb;}
+#BZ002-PF01.on2 .pop_up_box .btn_box .cancel a{color: #000;}
+#BZ002-PF01.on2 .pop_up_box .btn_box .sure{margin-right: 0; background-color: #78a6d8}
+#BZ002-PF01.on2 .pop_up_box .btn_box .sure a{color: #fff;}
+
+#BZ002-PF01 .input-inner{display:none;}
 
 /*99페이지(6/30파일) #BZ002-PF01-4 가게프로필 – 가게 프로필 수정*/
-/* #BZ002-PF01{position: relative; width: 100%; height: 500px; background-color: #fff} */
-/* #BZ002-PF01::after{content: ''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)} */
-/* #BZ002-PF01 .inner{ */
-/*     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 1; padding: 7%; width: 80%;background-color: #fff; border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) */
-/* } */
-/* #BZ002-PF01 p{margin: 0 0 40px 0; font-size: 15px; font-weight: bold; text-align: center; color: #444;} */
-/* #BZ002-PF01 button{ */
-/*     width: 100%; height: 36px; background-color: #78a6d8; border-radius: 3px; border: 0; outline: 0; cursor: pointer; */
-/*     color: #fff; font-size: 14px; font-weight: bold */
-/* } */
+#BZ002-PF01.on3{position: relative; width: 100%;background-color: #fff}
+#BZ002-PF01.on3::after{content: ''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
+#BZ002-PF01.on3 .input-inner{
+    display:block;position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 1; padding: 7%; width: 80%;background-color: #fff; border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)
+}
+#BZ002-PF01.on3 p{margin: 0 0 40px 0; font-size: 15px; font-weight: bold; text-align: center; color: #444;}
+#BZ002-PF01.on3 button{
+    width: 100%; height: 36px; background-color: #78a6d8; border-radius: 3px; border: 0; outline: 0; cursor: pointer;
+    color: #fff; font-size: 14px; font-weight: bold
+}
 
+
+#BZ002-PF01 .final-inner{display:none;}
 
 /*99페이지(6/30파일) #BZ002-PF01-5 가게프로필 – 가게 프로필 수정*/
-/* #BZ002-PF01{position: relative; width: 100%; height: 500px; background-color: #fff} */
-/* #BZ002-PF01::after{content: ''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)} */
-/* #BZ002-PF01 .inner{ */
-/*     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 1; padding: 7%; width: 80%;background-color: #fff; border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) */
-/* } */
-/* #BZ002-PF01 p{margin: 0 0 40px 0; font-size: 15px; font-weight: bold; text-align: center; color: #444;} */
-/* #BZ002-PF01 button{ */
-/*     width: 100%; height: 36px; background-color: #78a6d8; border-radius: 3px; border: 0; outline: 0; cursor: pointer; */
-/*     color: #fff; font-size: 14px; font-weight: bold */
-/* } */
+#BZ002-PF01.on4{position: relative; width: 100%;background-color: #fff}
+#BZ002-PF01.on4::after{content: ''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
+#BZ002-PF01.on4 .final-inner{
+    display:block;position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 1; padding: 7%; width: 80%;background-color: #fff; border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)
+}
+#BZ002-PF01.on4 p{margin: 0 0 40px 0; font-size: 15px; font-weight: bold; text-align: center; color: #444;}
+#BZ002-PF01.on4 button{
+    width: 100%; height: 36px; background-color: #78a6d8; border-radius: 3px; border: 0; outline: 0; cursor: pointer;
+    color: #fff; font-size: 14px; font-weight: bold
+}
+
+/*101페이지 #BZ002-DG01 가게프로필 - 단골*/
+#BZ002-DG01{background-color: #fff;}
+#BZ002-DG01 .box::after{content:''; display: block; clear: both;}
+
+#BZ002-DG01 .top{padding: 0 20px; width: 100%; height: 50px; background-color: #fff; border-bottom: 2px solid #e1e1e1}
+#BZ002-DG01 .top::after{content:''; display: block; clear: both;}
+#BZ002-DG01 .top .icon_left{float: left; width: 10%; text-align: left;line-height: 50px;} 
+#BZ002-DG01 .top .icon_left a{color: #000;}
+#BZ002-DG01 .top .title{float: left; width: 83%; text-align: center; line-height: 50px;}
+
+#BZ002-DG01 .box1{padding: 20px 20px 0;}
+#BZ002-DG01 .box1 p{font-size: 16px; font-weight: bold; }
+#BZ002-DG01 .box1 p span{padding: 0 5px; color: #78a6d8}
+
+#BZ002-DG01 .profile{padding: 20px;} 
+#BZ002-DG01 .profile>.box{padding: 10px 0;} 
+#BZ002-DG01 .profile>.box::after{content: '';display: block; clear: both;}
+#BZ002-DG01 .profile>.box .pic{float: left; margin-right: 15px; width: 60px; height: 60px; background-color: #eee; border-radius: 100%;} 
+#BZ002-DG01 .profile>.box .info{float: left; padding-top: 10px;} 
+#BZ002-DG01 .profile>.box .info li:nth-of-type(1){margin-bottom: 2px; font-weight: bold;font-size: 14px;}
+#BZ002-DG01 .profile>.box .info li:nth-of-type(2){font-size: 12px; color: #777}
+

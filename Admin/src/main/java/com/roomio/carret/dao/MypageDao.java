@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.roomio.carret.bean.ProfileUpdateBean;
 import com.roomio.carret.bean.ShopInfoUpdateBean;
 import com.roomio.carret.bean.ShopUpdateBean;
 
@@ -118,6 +119,34 @@ public class MypageDao {
 	
 	public String checkShopName(String shopName) {
 		return sqlSessionTemplate.selectOne("com.roomio.carret.mypage.checkShopName",shopName);
+	}
+	
+	public void updateShopProfile(ProfileUpdateBean bean) {
+		sqlSessionTemplate.update("com.roomio.carret.mypage.updateShopProfile",bean);
+	}
+	
+	public void deleteShopImage(int shopIdx) {
+		sqlSessionTemplate.delete("com.roomio.carret.mypage.deleteShopImage",shopIdx);
+	}
+	
+	public void addShopImage(List<HashMap<Object,Object>> list) {
+		sqlSessionTemplate.delete("com.roomio.carret.mypage.addShopImage",list);
+	}
+	
+	public void deleteShopKeyword(int shopIdx) {
+		sqlSessionTemplate.delete("com.roomio.carret.mypage.deleteShopKeyword",shopIdx);
+	}
+	
+	public void addShopKeyword(List<HashMap<Object,Object>> list) {
+		sqlSessionTemplate.delete("com.roomio.carret.mypage.addShopKeyword",list);
+	}
+	
+	public List<HashMap<Object,Object>> getShopBookmark(int shopIdx){
+		return sqlSessionTemplate.selectList("com.roomio.carret.mypage.getShopBookmark",shopIdx);
+	}
+	
+	public int getShopBookmarkCnt(int shopIdx) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.mypage.getShopBookmarkCnt",shopIdx);
 	}
 	
 }

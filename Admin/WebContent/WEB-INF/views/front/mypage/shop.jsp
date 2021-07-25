@@ -34,7 +34,7 @@
                 <li>매일 11:30 ~ 22:00</li>
             </ul>
 			
-            <ul class="right_box">
+            <ul class="right_box" onclick="javascript:location.href='${root}/front/mypage/shop_bookmark?shopIdx=${shopIdx}'">
                 <li><a href=""><i class="fas fa-plus"></i></a></li>
                 <li>단골</li>
                 <li>0</li>

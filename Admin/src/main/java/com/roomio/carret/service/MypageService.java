@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.roomio.carret.bean.MemberRegisterBean;
+import com.roomio.carret.bean.ProfileUpdateBean;
 import com.roomio.carret.bean.ShopInfoUpdateBean;
 import com.roomio.carret.dao.MypageDao;
 
@@ -189,4 +190,73 @@ public class MypageService {
 			return true;
 		}
 	}
+	
+	public void updateShopProfile(ProfileUpdateBean bean) {
+		
+		List<HashMap<Object,Object>> imgList = new ArrayList<HashMap<Object,Object>>();
+		List<HashMap<Object,Object>> keyList = new ArrayList<HashMap<Object,Object>>();
+		
+		
+		if(bean.getUploadFile() != null && bean.getUploadFile().getSize() > 0) {
+			
+			String mainImage = saveUploadFile(bean.getUploadFile());
+			bean.setMainImage(mainImage);
+
+		}
+		
+		//회원 정보 수정 
+		mypageDao.updateShopProfile(bean);
+		
+		//이미지 삭제
+		mypageDao.deleteShopImage(bean.getShopIdx());
+
+		if(bean.getMulUploadFile() != null) {
+			for(int i=0;i<bean.getMulUploadFile().size();i++) {
+				if(!bean.getMulUploadFile().get(i).isEmpty() && bean.getMulUploadFile().get(i).getSize() > 0) {
+					
+					HashMap<Object,Object> imgMap = new HashMap<Object,Object>();
+					imgMap.put("shopIdx",bean.getShopIdx());
+					
+					String imageName = saveUploadFile(bean.getMulUploadFile().get(i));
+					imgMap.put("imageName",imageName);
+					
+					imgList.add(imgMap);
+					
+				}
+			}
+		}
+		
+		//이미지 추가
+		mypageDao.addShopImage(imgList);
+		
+		//키워드 삭제
+		mypageDao.deleteShopKeyword(bean.getShopIdx());
+		
+		
+		if(bean.getKeyword() != null) {
+			for(int i=0;i<bean.getKeyword().size();i++) {
+				
+				HashMap<Object,Object> keyMap = new HashMap<Object,Object>();
+				keyMap.put("shopIdx",bean.getShopIdx());
+				keyMap.put("keyword", bean.getKeyword().get(i));
+				
+				keyList.add(keyMap);
+				
+			}
+		}
+		
+		//키워드 등록 
+		mypageDao.addShopKeyword(keyList);
+		
+	}
+	
+	public List<HashMap<Object,Object>> getShopBookmark(int shopIdx){
+		return mypageDao.getShopBookmark(shopIdx);
+	}
+	
+	public int getShopBookmarkCnt(int shopIdx) {
+		return mypageDao.getShopBookmarkCnt(shopIdx);
+	}
+	
+	
 }

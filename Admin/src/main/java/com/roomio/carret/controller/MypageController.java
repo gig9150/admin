@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.roomio.carret.bean.LoginMemberBean;
 import com.roomio.carret.bean.MemberUpdateBean;
+import com.roomio.carret.bean.ProfileUpdateBean;
 import com.roomio.carret.bean.ShopInfoUpdateBean;
 import com.roomio.carret.bean.ShopRegisterBean;
 import com.roomio.carret.service.AccountManageService;
@@ -444,6 +445,8 @@ public class MypageController {
 		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
 		model.addAttribute("areaList",areaList);
 		
+		model.addAttribute("shopIdx",shopIdx);
+		
 		
 		return "front/mypage/profile_update";
 		
@@ -451,10 +454,32 @@ public class MypageController {
 	
 	//가게 프로필 수정 진행
 	@RequestMapping("/front/mypage/profile_update_pro")
-	public String profileUpdatePro() {
+	public String profileUpdatePro(@ModelAttribute ProfileUpdateBean bean,
+									RedirectAttributes attr) {
 		
 		
-		return "";
+		attr.addAttribute("shopIdx",bean.getShopIdx());
+		
+		//프로필 수정 
+		mypageService.updateShopProfile(bean);
+		
+		return "redirect:/front/mypage/shop";
+	}
+	
+	//나의 가게 단골 페이지
+	@RequestMapping("/front/mypage/shop_bookmark")
+	public String shopBookMark(@RequestParam int shopIdx,
+								Model model) {
+		
+		//단골 리스트
+		List<HashMap<Object,Object>> list = mypageService.getShopBookmark(shopIdx);
+		model.addAttribute("list",list);
+		
+		//단골 회원수 
+		int cnt = mypageService.getShopBookmarkCnt(shopIdx);
+		model.addAttribute("cnt",cnt);
+		
+		return "front/mypage/shop_bookmark";
 	}
 	
 	

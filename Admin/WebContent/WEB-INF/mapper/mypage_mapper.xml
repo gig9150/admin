@@ -284,4 +284,82 @@
 	
 	</select>
 	
+	<!-- 가게 프로필 업데이트 -->
+	<update id="updateShopProfile" parameterType="com.roomio.carret.bean.ProfileUpdateBean">
+	
+		update shop
+		set shop_name = #{shopName}, id = ${area}, main_image = #{mainImage}
+		where shop_idx = ${shopIdx}
+		
+	</update>
+	
+	<!-- 가게 프로필 이미지 수정 -->
+	
+	<delete id="deleteShopImage" parameterType="int">
+	
+		delete from shop_image
+		where shop_idx = ${shopIdx}
+	
+	</delete>
+	
+	<insert id="addShopImage" parameterType="list">
+			
+			insert into shop_image(shop_idx,image_name)
+			values
+			<foreach item="item" collection="list" separator=",">
+				(${item.shopIdx},#{item.imageName})
+			</foreach>
+			
+	</insert>
+	
+	
+	<!-- 가게 키워드 수정  -->
+	
+	<delete id="deleteShopKeyword" parameterType="int">
+	
+		delete from shop_keyword
+		where shop_idx = ${shopIdx}
+		
+	</delete> 
+	
+	<insert id="addShopKeyword" parameterType="hashMap">
+		
+		insert into shop_keyword(shop_idx,keyword)
+		values
+		<foreach item="item" collection="list" separator=",">
+				(${item.shopIdx},#{item.keyword})
+			</foreach>
+	
+	</insert>
+	
+	<!-- 가게별 단골  -->
+	
+	<select id="getShopBookmarkCnt" parameterType="int" resultType="int">
+	
+		select count(*)
+		from member m
+		left join member_and_shop ms
+		on m.member_id = ms.member_id
+		left join shop s
+		on ms.shop_idx = s.shop_idx
+		inner join area_dong d
+		on m.id = d.id
+		WHERE s.shop_idx = ${shopIdx}
+	
+	</select>
+	
+	<select id="getShopBookmark" parameterType="int" resultType="hashMap">
+		
+		select m.profile_image,m.name,d.area_name
+		from member m
+		left join member_and_shop ms
+		on m.member_id = ms.member_id
+		left join shop s
+		on ms.shop_idx = s.shop_idx
+		inner join area_dong d
+		on m.id = d.id
+		WHERE s.shop_idx = ${shopIdx}
+	
+	</select>
+	
 </mapper>
