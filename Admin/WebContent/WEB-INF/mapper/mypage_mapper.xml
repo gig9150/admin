@@ -23,7 +23,8 @@
 	
 	<select id="getFrontReviewShop" parameterType="int" resultType="hashMap">
 	
-		select s.shop_idx,s.shop_name,s.address,se.sector_content,s.holiday,s.start_date,s.end_date,s.business_status,
+		select s.shop_idx,s.shop_name,s.address,se.sector_content,s.holiday,
+		s.start_date,s.end_date,s.business_status,s.main_image,
 		(select count(*) from shop_review sr where s.shop_idx = sr.shop_idx) as review_count,
 		(select count(*) from member_and_shop mms where s.shop_idx = mms.shop_idx) as bookmark_count
 		from shop_review r
@@ -304,11 +305,11 @@
 	
 	<insert id="addShopImage" parameterType="list">
 			
-			insert into shop_image(shop_idx,image_name)
-			values
-			<foreach item="item" collection="list" separator=",">
-				(${item.shopIdx},#{item.imageName})
-			</foreach>
+		insert into shop_image(shop_idx,image_name)
+		values
+		<foreach item="item" collection="list" separator=",">
+			(${item.shopIdx},#{item.imageName})
+		</foreach>
 			
 	</insert>
 	
@@ -360,6 +361,81 @@
 		on m.id = d.id
 		WHERE s.shop_idx = ${shopIdx}
 	
+	</select>
+	
+	<!-- 소식 글 카테고리 정보  -->
+	<select id="getNewsCate" resultType="hashMap">
+		
+		select shop_news_category_id,cate_content
+		from shop_news_category
+	
+	</select>
+	
+	<!-- 가게 소식 등록 -->
+	<insert id="addShopNews" parameterType="hashMap">
+		insert into shop_news(shop_idx,shop_news_category_id,title,content) 
+		values(${shopIdx},${shopNewsCategoryId},#{title},#{content})
+		
+		<selectKey resultType="int" keyProperty="shopNewsId" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+	
+	</insert>
+	
+	<!-- 가게 소식 이미지 등록  -->
+	<insert id="addShopNewsImg" parameterType="list">
+		insert into shop_news_image(shop_news_id,name)
+		values
+		<foreach item="item" separator="," collection="list">
+			(${item.shopNewsId},#{item.name})
+		</foreach>
+	</insert>
+	
+	<resultMap type="hashMap" id="getReviewMap">
+		<result column="shop_review_id" property="shop_review_id"/>
+		<result column="nickName" property="nickName"/>
+		<result column="reviewCnt" property="reviewCnt"/>
+		<result column="view_count" property="view_count"/>
+		<result column="reply" property="reply"/>
+		<result column="regdate" property="regdate"/>
+		<result column="likeCnt" property="likeCnt"/>
+		<result column="content" property="content"/>
+		<collection property="imageList" javaType="list" ofType="string">
+			<result column="name" property="name"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 가게 후기 정보  -->
+	<select id="getReviewList" parameterType="int" resultMap="getReviewMap">
+		select m.name as nickName,
+		(select count(*) from shop_review r2 where r2.member_id = m.member_id) as reviewCnt,
+		r.shop_review_id,r.content,r.view_count,r.reply,r.regdate,ri.name,
+		(select count(*) from shop_review_like rl where r.shop_review_id = rl.shop_review_id) as likeCnt
+		from shop_review r
+		inner join member m
+		on r.member_id = m.member_id
+		left join shop_review_image ri 
+		on r.shop_review_id = ri.shop_review_id 
+		where r.shop_idx = ${shopIdx}
+	</select> 
+	
+	<!-- 가게 후기 답글 등록 -->
+	<update id="reviewReply" parameterType="hashMap">
+		
+		update shop_review
+		set reply = #{reply}
+		where shop_review_id = ${shopReviewId}
+		
+	</update>
+	
+	<!-- 본인 가게인지 확인 -->
+	<select id="chkMemShop" parameterType="hashMap" resultType="string">
+	
+		select shop_name
+		from shop
+		where shop_idx= ${shopIdx}
+		and member_id = ${memberId}
+		
 	</select>
 	
 </mapper>

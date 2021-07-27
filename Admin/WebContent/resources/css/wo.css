@@ -97,3 +97,83 @@
 	#MY001-BZRG.area .area_box ul li a{font-size: 13px; font-weight: 400; line-height: 38px; color: #000}
 	#MY001-BZRG.area .area_box ul li:first-of-type a{font-size: 14px; font-weight: bold}
 	#MY001-BZRG.area .area_box ul li:last-of-type a{display: none}
+	
+	/* 가게 디테일페이지 레이아웃 */
+	section.on .top{padding: 0 15px;}
+	section .top{padding: 0 20px; width: 100%; height: 50px; background-color: #fff; border-bottom: 2px solid #e1e1e1; transition: 0.3s}
+	section .top::after{content:''; display: block; clear: both;}
+	section .top .icon_left{float: left; width: 20%; text-align: left;line-height: 50px;} 
+	section .top .icon_left a{color: #000;}
+	section .top .title{float: left; width: 60%; text-align: center; line-height: 50px;}
+	section .top .icon_right{float: left; width: 20%; text-align: right;line-height: 50px;}
+	section .top .icon_right a{color: #000;}
+	
+	section .profile_top{position: relative; width: 100%; height: 240px; background-color: beige;}
+	section .profile_bottom{
+	     display: flex; flex-flow: row nowrap; justify-content: space-between; flex-direction: row; align-items: center;
+	    position: absolute; left: 50%;transform:translate(-50%, -60px); padding: 5%; width: 85%; background-color: #fff; box-shadow: 0 -3px 5px #ddd;
+	}
+	section .profile_bottom .left_box{}
+	section .profile_bottom .left_box li{margin-bottom: 5px;}
+	section .profile_bottom .left_box li:nth-of-type(1){font-size: 20px; font-weight: bold;}
+	section .profile_bottom .left_box li:nth-of-type(2){font-size: 14px; color: #777}
+	section .profile_bottom .left_box li:nth-of-type(3){font-size: 14px; color: #777}
+	
+	section .profile_bottom .right_box{
+	         display: flex; flex-flow: row nowrap; justify-content: space-between; flex-direction: row; align-items: center; height: 36px;
+	    ;background-color: #78a6d8; border-radius: 5px;
+	}
+	section .profile_bottom .right_box li{padding: 0 5px; color: #fff; font-size: 14px;}
+	section .profile_bottom .right_box li a{color: #fff; font-size: 14px;}
+	
+	section .call{
+	     display: flex; flex-flow: row nowrap; justify-content: space-between; flex-direction: row; align-items: center; text-align: center; font-weight: bold; font-size: 16px;
+	    margin-top:55px; border: 1px solid #ddd}
+	section .call a{display: block; width: 100%; height: 100%; }
+	section .call .call_left{width: 50%; border-right: 1px solid #ddd}
+	section .call .call_left a{line-height: 50px; color: #000 }
+	section .call .call_left a span{padding: 0 10px}
+	
+	section .call .call_right{width: 50%}
+	section .call .call_right a{line-height: 60px; color: #000 }
+	section .call .call_right a span{padding: 0 10px}
+	
+	section #gnb::after{content: ''; display: block; clear: both}
+	section #gnb li{float: left; width: 25%; text-align: center; background: #ffffff;}
+	section #gnb li:nth-of-type(1){background-color: #78a6d8}
+	section #gnb li:nth-of-type(1) a{color: #fff;}
+	
+	section #gnb li a{display: block; width: 100%; height: 100%; color: #78a6d8; line-height: 38px; font-weight: bold;}
+	
+	
+	section{background-color: #fff;}
+	
+	section .top{padding: 0 20px; width: 100%; height: 50px; background-color: #fff; border-bottom: 2px solid #e1e1e1}
+	section .top::after{content:''; display: block; clear: both;}
+	section .top .icon_left{float: left; width: 10%; text-align: left;line-height: 50px;} 
+	section .top .icon_left a{color: #000;}
+	section .top .title{float: left; width: 83%; text-align: center; line-height: 50px;}
+	
+	section .box::after{content:''; display: block; clear: both;}
+	
+	section .title_box{padding: 0 20px; height: 50px; background-color: #fff;}
+	
+	section .title_box .title{line-height: 50px; font-size: 20px; text-align: center;}
+	
+	section .title_box .icon{float: left; line-height: 50px;}
+	section .title_box .icon a{color: #000;}
+	
+	section #gnb::after{content: ''; display: block; clear: both}
+	section #gnb li{float: left; width: 25%; text-align: center;}
+	section #gnb li:nth-of-type(1){background-color: #78a6d8}
+	section #gnb li:nth-of-type(1) a{color: #fff;}
+	
+	section #gnb li a{display: block; width: 100%; height: 100%; color: #78a6d8; line-height: 38px; font-weight: bold;}
+
+	.layout2{
+		display: none;
+	    position: fixed;
+	    top: 0px;
+	    width: 100%;
+	    z-index:999;
+	}

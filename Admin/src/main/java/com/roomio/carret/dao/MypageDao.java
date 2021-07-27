@@ -149,4 +149,29 @@ public class MypageDao {
 		return sqlSessionTemplate.selectOne("com.roomio.carret.mypage.getShopBookmarkCnt",shopIdx);
 	}
 	
+	public List<HashMap<Object,Object>> getNewsCate(){
+		return sqlSessionTemplate.selectList("com.roomio.carret.mypage.getNewsCate");
+	}
+	
+	public void addShopNews(HashMap<Object, Object> map) {
+		sqlSessionTemplate.insert("com.roomio.carret.mypage.addShopNews",map);
+	}
+	
+	public void addShopNewsImg(List<HashMap<Object,Object>> list) {
+		sqlSessionTemplate.insert("com.roomio.carret.mypage.addShopNewsImg",list);
+	}
+	
+	public List<HashMap<Object,Object>> getReviewList(int shopIdx){
+		return sqlSessionTemplate.selectList("com.roomio.carret.mypage.getReviewList",shopIdx);
+	}
+	
+	public void reviewReply(HashMap<Object,Object> map) {
+		sqlSessionTemplate.update("com.roomio.carret.mypage.reviewReply",map);
+	}
+	
+	public String chkMemShop(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.mypage.chkMemShop",map);
+	}
+	
+	
 }

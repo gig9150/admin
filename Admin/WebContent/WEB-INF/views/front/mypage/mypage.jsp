@@ -59,7 +59,7 @@
             </div>
             <div class="box_3_box">
                 <div class="pic">
-                    <a href="${root}/front/mypage/shop_review"><i class="fas fa-shopping-basket"></i></a>
+                    <a href="${root}/front/mypage/my_review"><i class="fas fa-shopping-basket"></i></a>
                 </div>
                 <div class="info">
                     <p>후기목록</p>

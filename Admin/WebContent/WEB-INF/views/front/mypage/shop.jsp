@@ -21,16 +21,16 @@
   <section id="BZ002-TB01-A" class="content">
        <div class="top">
             <div class="icon_left"><a href=""><i class="fas fa-times"></i></a></div>
-            <h1 class="title">라루체</h1>
+            <h1 class="title">${map.shop_name}</h1>
             <div class="icon_right"><a href=""><i class="fas fa-ellipsis-v"></i></a></div>
         </div>
         
-        <div class="profile_top"><img src="" alt="">
+        <div class="profile_top"><img src="${root}/upload/${map.main_image}" style="width:100%;height: 100%;">
         <a href="${root}/front/mypage/profile_update?shopIdx=${shopIdx}" style="position: absolute;right: 8px;">수정</a></div>
         <div class="profile_bottom">
             <ul class="left_box">
-                <li>라루체</li>
-                <li>반포면</li>
+                <li>${map.shop_name}</li>
+                <li>${map.area_name}</li>
                 <li>매일 11:30 ~ 22:00</li>
             </ul>
 			
@@ -121,7 +121,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="btn"><a href="">소식 더보기</a></div>
+                <div class="btn"><a href="${root}/front/mypage/news_summ?shopIdx=${shopIdx}">소식 더보기</a></div>
             </div>
             
              <div class="box box4">
@@ -159,13 +159,12 @@
                             <li><p>좋아요</p></li>
                             <li><p>3</p></li>
                             <li class="slash"><p>/</p></li>
-
                             <li><p>조회</p></li>
                             <li><p>999</p></li>
                         </ul>
                     </div>
                 </div>
-                <div class="btn"><a href="">후기 관리하기</a></div>
+                <div class="btn"><a href="${root}/front/mypage/shop_review?shopIdx=${shopIdx}">후기 더보기</a></div>
             </div>
         </div>
     </section>

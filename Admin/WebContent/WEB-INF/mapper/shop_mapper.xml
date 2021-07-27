@@ -275,6 +275,7 @@
 		<result column="like" property="like"/>
 		<result column="name" property="name"/>
 		<result column="nickName" property="nickName"/>
+		<result column="review_like" property="review_like"/>
 		<result column="address" property="address"/>
 		<collection property="keywordList" javaType="list" ofType="java.lang.String"> 
 			<result column="review_category_content"/>
@@ -288,7 +289,8 @@
 	<select id="getFrontShopReviews" resultMap="getFrontShopReviews" parameterType="hashMap">
 		
 		select sr.content as review_content,date_format(sr.regdate,'%Y-%m-%d') as regdate,
-		sr.review_like,rkc.content as review_category_content,sri.name as imageName,m.name as nickName,m.address,d.area_name
+		(select count(*) from shop_review_like srl where sr.shop_review_id = srl.shop_review_id) as review_like,
+		rkc.content as review_category_content,sri.name as imageName,m.name as nickName,m.address,d.area_name
 		from shop_review sr
 		left join review_keyword rk
 		on sr.shop_review_id = rk.shop_review_id
@@ -613,38 +615,42 @@
 		<result column="shop_news_id" property="shop_news_id"/>
 		<result column="title" property="title"/>
 		<result column="content" property="content"/>
-		<result column="regate" property="regate"/>
+		<result column="regdate" property="regdate"/>
 		<result column="cate_content" property="cate_content"/>
 		<result column="likeCnt" property="likeCnt"/>
+		<result column="member_id" property="member_id"/>
+		<result column="view_count" property="view_count"/>
 		<collection property="imageList" javaType="list" ofType="string">
 			<result column="name" property="name"/>
 		</collection>
 	</resultMap>
 	
 	<!-- 가게 소식 정보 얻어오기  -->
-	<select id="getNewsList" parameterType="int" resultMap="getNewsMap">
+	<select id="getNewsList" parameterType="hashMap" resultMap="getNewsMap">
 		
 		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
-		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt
+		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt,
+		(select member_id from shop_news_like where member_id = ${memberId}) AS member_id
 		from shop_news sn
 		inner join shop_news_category snc
 		on sn.shop_news_category_id = snc.shop_news_category_id
 		left join shop_news_image sni
-		on sn.shop_news_id = sni.shop_news_id 
+		on sn.shop_news_id = sni.shop_news_id
 		where sn.shop_idx = ${shopIdx}
 		
 	</select>
 	
 	<!-- 가게 소식 디테일 -->
-	<select id="getNewsDetailInfo" parameterType="int" resultMap="getNewsMap">
+	<select id="getNewsDetailInfo" parameterType="hashMap" resultMap="getNewsMap">
 	
 		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
-		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt
+		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt,
+		(select member_id from shop_news_like where member_id = ${memberId}) AS member_id
 		from shop_news sn
 		inner join shop_news_category snc
 		on sn.shop_news_category_id = snc.shop_news_category_id
 		left join shop_news_image sni
-		on sn.shop_news_id = sni.shop_news_id 
+		on sn.shop_news_id = sni.shop_news_id
 		where sn.shop_news_id = ${shopNewsId}
 		
 	</select>
@@ -655,6 +661,23 @@
 		insert into report(franchise_id,member_id,member_or_shop,member_or_shop_num,member_or_shop_name,report_category_id,content,answer_status)
 		values(${franchiseId},${memberId},2,${shopIdx},#{shopName},${reportCategoryId},#{content},1)
 		
-	
 	</insert>	
+	
+	<!-- 가게 소식 좋아요 추가 -->
+	<insert id="addNewsLike" parameterType="hashMap">
+	
+		insert into shop_news_like(member_id,shop_news_id)
+		values(${memberId},${shopNewsId})
+		
+	</insert>
+	
+	<!-- 가게 소식 좋아요 삭제 -->
+	<delete id="delNewsLike" parameterType="hashMap">
+	
+		delete from shop_news_like
+		where shop_news_id = ${shopNewsId}
+		and member_id = ${memberId}
+		
+	</delete>
+	
 </mapper>

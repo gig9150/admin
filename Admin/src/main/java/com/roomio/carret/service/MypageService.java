@@ -258,5 +258,53 @@ public class MypageService {
 		return mypageDao.getShopBookmarkCnt(shopIdx);
 	}
 	
+	public List<HashMap<Object,Object>> getNewsCate(){
+		return mypageDao.getNewsCate();
+	}
 	
+	public void addShopNews(HashMap<Object,Object> map,
+							List<MultipartFile> uploadFile) {
+
+		List<HashMap<Object,Object>> imgList = new ArrayList<HashMap<Object,Object>>();
+		
+		//소식 등록 
+		mypageDao.addShopNews(map);
+		
+		if(uploadFile != null) {
+			for(int i=0;i<uploadFile.size();i++) {
+				if(!uploadFile.get(i).isEmpty() && uploadFile.get(i).getSize() > 0) {
+					
+					HashMap<Object,Object> imgMap = new HashMap<Object,Object>();
+					imgMap.put("shopNewsId",map.get("shopNewsId"));
+					
+					String name = saveUploadFile(uploadFile.get(i));
+					imgMap.put("name",name);
+					
+					imgList.add(imgMap);
+					
+				}
+			}
+		}
+		
+		//이미지 추가
+		mypageDao.addShopNewsImg(imgList);
+		
+	}
+	
+	public List<HashMap<Object,Object>> getReviewList(int shopIdx){
+		return mypageDao.getReviewList(shopIdx);
+	}
+	
+	public void reviewReply(HashMap<Object,Object> map){
+		mypageDao.reviewReply(map);
+	}
+	
+	public int chkMemShop(HashMap<Object,Object> map) {
+		String name = mypageDao.chkMemShop(map);
+		if(name != null) {
+			return 1;
+		}else {
+			return 2;
+		}
+	}
 }

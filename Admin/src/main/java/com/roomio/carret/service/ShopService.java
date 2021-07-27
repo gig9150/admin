@@ -292,16 +292,23 @@ public class ShopService {
 		return shopDao.getFrontCurationBannerImage(shopExhiId);
 	}
 	
-	public List<HashMap<Object,Object>> getNewsList(int shopIdx){
-		return shopDao.getNewsList(shopIdx);
+	public List<HashMap<Object,Object>> getNewsList(HashMap<Object,Object> map){
+		return shopDao.getNewsList(map);
 	}
 	
-	public HashMap<Object,Object> getNewsDetailInfo(int shopNewsId){
-		return shopDao.getNewsDetailInfo(shopNewsId);
+	public HashMap<Object,Object> getNewsDetailInfo(HashMap<Object,Object> map){
+		return shopDao.getNewsDetailInfo(map);
 		
 	}
-	
 	public void addShopReport(HashMap<Object,Object> map){
 		shopDao.addShopReport(map);
+	}
+	
+	public int addNewsLike(HashMap<Object,Object> map) {
+		return shopDao.addNewsLike(map);
+	}
+	
+	public int delNewsLike(HashMap<Object,Object> map) {
+		return shopDao.delNewsLike(map);
 	}
 }

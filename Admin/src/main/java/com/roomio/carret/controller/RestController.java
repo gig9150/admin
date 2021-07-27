@@ -184,6 +184,44 @@ public class RestController {
 		return chk + "";
 		
 	}
+	
+	//가게 소식 좋아요 추가 
+	@RequestMapping("/front/shop/newsLikeAdd/{shopNewsId}")
+	public String newsLikeAdd(@PathVariable int shopNewsId) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopNewsId",shopNewsId);
+		
+		//나중에 수정해주기 ★★
+		map.put("memberId",1);
+		
+		int num = shopService.addNewsLike(map);
+		
+		if(num >= 1) {
+			return "success";
+		}else {
+			return "fail";			
+		}
+	}
+	
+	//가게 소식 좋아요 삭제
+	@RequestMapping("/front/shop/newsLikeDel/{shopNewsId}")
+	public String newsLikeDel(@PathVariable int shopNewsId) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopNewsId",shopNewsId);
+		
+		//나중에 수정해주기 ★★
+		map.put("memberId",1);
+		
+		int num = shopService.delNewsLike(map);
+		
+		if(num >= 1) {
+			return "success";
+		}else {
+			return "fail";
+		}
+	}
 
 	
 	

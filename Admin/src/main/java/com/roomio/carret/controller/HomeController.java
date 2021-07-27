@@ -39,13 +39,13 @@ public class HomeController {
 	@GetMapping("/")
 	public String home(HttpSession session,Locale locale) {
 	
-		if(loginManagerBean.isIslogin() == true) {
-			return "home";
-		}else {
-			return "redirect:/manager/login";			
-		}
+//		if(loginManagerBean.isIslogin() == true) {
+//			return "home";
+//		}else {
+//			return "redirect:/manager/login";			
+//		}
 		
-//		return "redirect:/front/shop/shop_promotion";
+		return "redirect:/front/shop/shop_promotion";
 
 	}
 	
@@ -68,10 +68,10 @@ public class HomeController {
         
     }
 	
-//	@GetMapping("/error500")
-//    public String Error500() {
-//        return "404_page";
-//    }
+	@GetMapping("/error500")
+    public String Error500() {
+        return "404_page";
+    }
 	
 	
 }

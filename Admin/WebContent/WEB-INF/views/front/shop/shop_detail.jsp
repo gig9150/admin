@@ -30,7 +30,7 @@
             <li><a href="">상품<span>8</span></a></li>
             <li><a href="">후기<span>9</span></a></li>
         </ul>
-        <div class="profile_top"><img src="" alt=""></div>
+        <div class="profile_top"><img src="${root}/upload/${detailMap.main_image}" style="width:100%;height:100%"></div>
         <div class="profile_bottom">
             <ul class="left_box">
                 <li>${detailMap.shop_name}</li>

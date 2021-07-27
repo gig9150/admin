@@ -1,0 +1,127 @@
+<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Test Sheet</x:Name><x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body><table border='1px'>
+                                <thead class="thead-dark">
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th>등록일</th>
+                                    <th>가맹사명</th>
+                                    <th>가맹사 번호</th>
+                                    <th>서비스명</th>
+                                    <th>주소</th>
+                                    <th>고객센터</th>
+                                    <th>운영여부</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="41" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">1</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>41</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="42" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">2</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>42</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="43" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">3</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>43</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="44" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">4</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>44</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="45" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">5</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>45</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="46" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">6</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>46</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="47" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">7</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>47</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="48" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">8</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>48</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="49" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">9</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>49</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+	                               		<tr>
+		                                	<th scope="row"><a href="javascript:void(0)" data-toggle="modal" data-target=".bd-example-modal-lg-update" data-franchise-id="50" data-subdomain-list="[]" data-service-name="123123" data-main-domain="asdqwd" data-franchise-name="qwfwqf" data-logo-file="1623992622505_99219C345BE91A7E32.png" data-point-color="#000000" data-business-number="qwfasf" data-address="asf" data-phone-number="dsf" data-fax="adfwef" data-memo="dfasdfqf" data-id="">10</a></th>
+	                                    	<td>2021-07-06</td>
+	                                    	<td>qwfwqf</td>
+	                                    	<td>50</td>
+	                                    	<td>123123</td>
+	                                    	<td>asf</td>
+	                                    	<td></td>
+	                                    	<td>영업</td>
+	                          			</tr>         	                                	
+                                	
+                                </tbody>
+                              </table></body></html>

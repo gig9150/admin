@@ -55,6 +55,12 @@ public class MypageController {
 	public String shop(@RequestParam int shopIdx,
 						Model model) {
 		model.addAttribute("shopIdx",shopIdx);
+		
+		//가게 정보 
+		HashMap<Object,Object> map = shopService.getFrontShopDetail(shopIdx);
+		model.addAttribute("map",map);
+		
+		
 		return "front/mypage/shop";
 		
 	}
@@ -226,7 +232,7 @@ public class MypageController {
 	}
 	
 	//가게 후기 페이지 이동
-	@RequestMapping("/front/mypage/shop_review")
+	@RequestMapping("/front/mypage/my_review")
 	public String shopReview(Model model) {
 		
 		//후기 페이지 list
@@ -235,7 +241,7 @@ public class MypageController {
 		model.addAttribute("reviewList",reviewList);
 		
 		
-		return "front/mypage/shop_review";
+		return "front/mypage/my_review";
 	}
 	
 	//1:1 문의 카테고리 페이지 이동
@@ -480,6 +486,170 @@ public class MypageController {
 		model.addAttribute("cnt",cnt);
 		
 		return "front/mypage/shop_bookmark";
+	}
+	
+	//소식 요약 페이지 이동
+	@RequestMapping("/front/mypage/news_summ")
+	public String newsSumm(@RequestParam int shopIdx,
+							Model model) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopIdx",shopIdx);
+		//나중에 로그인 객체에서 값 대체해주기 ★★
+		map.put("memberId",1);
+		
+		//가게 소식 
+		List<HashMap<Object,Object>> list = shopService.getNewsList(map);
+		model.addAttribute("list",list);
+		
+		model.addAttribute("shopIdx",shopIdx);
+		
+		return "front/mypage/news_summ";
+	}
+		
+	//관리자 소식 페이지 이동
+	@RequestMapping("/front/mypage/shop_news")
+	public String shopNews(@RequestParam int shopIdx,
+							Model model) {
+		
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopIdx",shopIdx);
+		//나중에 로그인 객체에서 값 대체해주기 ★★
+		map.put("memberId",1);
+		
+		//가게 소식 
+		List<HashMap<Object,Object>> list = shopService.getNewsList(map);
+		model.addAttribute("list",list);
+		
+		//가게 정보 
+		HashMap<Object,Object> shopMap = shopService.getFrontShopDetail(shopIdx);
+		model.addAttribute("shopMap",shopMap);
+		
+		model.addAttribute("shopIdx",shopIdx);
+		
+//		HashMap<Object, Object> checkMap = new HashMap<Object, Object>();
+//		checkMap.put("shopIdx", shopIdx);
+//		// 나중에는 member 객체에 담긴 정보 넣어주기 ★★
+//		checkMap.put("memberId", 1);
+//
+//		// 가게 단골 체크 : 1은 단골아님 2는 단골
+//		if (shopService.checkFrontShopMember(checkMap) == null) {
+//			model.addAttribute("checkNum", 1);
+//		} else {
+//			model.addAttribute("checkNum", 2);
+//		}
+//
+//		//본인 가게인지 확인 
+//		int shopChk = mypageService.chkMemShop(checkMap);
+//		model.addAttribute("shopChk",shopChk);
+//		model.addAttribute("shopChk",2);
+//		
+//		// 단골가게 회원 수
+//		int bookmarkCnt = shopService.getBookmarkShopCnt(shopIdx);
+//		model.addAttribute("bookmarkCnt", bookmarkCnt);
+		
+		
+		return "front/mypage/shop_news";
+	}
+	
+	//가게 소식 상세페이지 이동
+	@RequestMapping("/front/mypage/news_detail")
+	public String newsDetail(@RequestParam int shopNewsId,
+							@RequestParam int shopIdx,
+							Model model) {
+		
+		HashMap<Object,Object> paramMap = new HashMap<Object,Object>();
+		paramMap.put("shopNewsId",shopNewsId);
+		//나중에 수정해주기 ★★
+		paramMap.put("memberId",1);
+		
+		//가게 정보 
+		HashMap<Object,Object> shopMap = shopService.getFrontShopDetail(shopIdx);
+		model.addAttribute("shopMap",shopMap);
+		
+		//소식 디테일 정보
+		HashMap<Object,Object> map = shopService.getNewsDetailInfo(paramMap);
+		model.addAttribute("map",map);
+		
+		return "front/mypage/news_detail";
+	}
+	
+	//소식 작성 페이지 이동
+	@RequestMapping("/front/mypage/news_regi")
+	public String newsRegi(@RequestParam int shopIdx,
+							Model model) {
+		
+		//가게 정보 
+		HashMap<Object,Object> map = shopService.getFrontShopDetail(shopIdx);
+		model.addAttribute("map",map);
+		
+		//소식글 카테고리 얻어오기
+		List<HashMap<Object,Object>> list = mypageService.getNewsCate();
+		model.addAttribute("list",list);
+		
+		return "front/mypage/news_regi";
+	}
+	
+	//소식 작성 
+	@RequestMapping("/front/mypage/news_regi_pro")
+	public String newsRegiPro(@RequestParam int cateId,
+							@RequestParam String title,
+							@RequestParam String content,
+							@RequestParam int shopIdx,
+							@RequestParam List<MultipartFile> uploadFile,
+							RedirectAttributes attr) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopNewsCategoryId",cateId);
+		map.put("title",title);
+		map.put("content",content);
+		map.put("shopIdx",shopIdx);
+			
+		mypageService.addShopNews(map, uploadFile);
+		
+		attr.addAttribute("shopIdx",shopIdx);
+		
+		return "redirect:/front/mypage/shop";
+		
+		
+	}
+	
+	// 후기 페이지 이동
+	@RequestMapping("/front/mypage/shop_review")
+	public String shopReview(@RequestParam int shopIdx,
+							Model model) {
+		
+		//가게 정보 
+		HashMap<Object,Object> map = shopService.getFrontShopDetail(shopIdx);
+		model.addAttribute("map",map);
+		
+		//후기 정보
+		List<HashMap<Object,Object>> list = mypageService.getReviewList(shopIdx);
+		model.addAttribute("list",list);
+		
+		model.addAttribute("shopIdx",shopIdx);
+		
+		
+		return "front/mypage/shop_review";
+	}
+	
+	//후기 댓글 등록 (사장)
+	@RequestMapping("/front/mypage/review_reply")
+	public String reviewReply(@RequestParam int shopReviewId,
+							@RequestParam String reply,
+							@RequestParam int shopIdx,
+							RedirectAttributes attr) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopReviewId", shopReviewId);
+		map.put("reply",reply);
+		
+		attr.addAttribute("shopIdx", shopIdx);
+		
+		mypageService.reviewReply(map);
+		
+		return "redirect:/front/mypage/shop_review";
 	}
 	
 	

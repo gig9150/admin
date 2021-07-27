@@ -236,7 +236,7 @@ public class ShopController {
 
 		return "front/shop/shop_news";
 	}
-
+	
 	// 가게 소식 페이지 이동
 	@GetMapping("/front/shop/shop_news2")
 	public String shopNews2(@RequestParam("shopIdx") String shopIdx, Model model) {
@@ -244,9 +244,14 @@ public class ShopController {
 		// 가게 정보
 		HashMap<Object, Object> detailMap = shopService.getFrontShopDetail(Integer.parseInt(shopIdx));
 		model.addAttribute("detailMap", detailMap);
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopIdx",Integer.parseInt(shopIdx));
+		//나중에 로그인 객체에서 값 대체해주기 ★★
+		map.put("memberId",1);
 
 		// 가게 소식
-		List<HashMap<Object, Object>> list = shopService.getNewsList(Integer.parseInt(shopIdx));
+		List<HashMap<Object, Object>> list = shopService.getNewsList(map);
 		model.addAttribute("list", list);
 
 //		HashMap<Object,Object> checkMap = new HashMap<Object,Object>();
@@ -291,9 +296,14 @@ public class ShopController {
 		// 가게 정보
 		HashMap<Object, Object> detailMap = shopService.getFrontShopDetail(Integer.parseInt(shopIdx));
 		model.addAttribute("detailMap", detailMap);
-
+		
+		HashMap<Object,Object> paramMap = new HashMap<Object,Object>();
+		paramMap.put("shopNewsId",Integer.parseInt(shopNewsId));
+		//나중에 수정해주기 ★★
+		paramMap.put("memberId",1);
+		
 		// 디테일 정보
-		HashMap<Object, Object> map = shopService.getNewsDetailInfo(Integer.parseInt(shopNewsId));
+		HashMap<Object, Object> map = shopService.getNewsDetailInfo(paramMap);
 		model.addAttribute("map", map);
 
 		HashMap<Object, Object> checkMap = new HashMap<Object, Object>();

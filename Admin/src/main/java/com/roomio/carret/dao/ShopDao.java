@@ -163,15 +163,23 @@ public class ShopDao {
 		return sqlSessionTemplate.selectOne("com.roomio.carret.shop.getFrontCurationBannerImage",shopExhiId);
 	}
 	
-	public List<HashMap<Object,Object>> getNewsList(int shopIdx){
-		return sqlSessionTemplate.selectList("com.roomio.carret.shop.getNewsList",shopIdx);
+	public List<HashMap<Object,Object>> getNewsList(HashMap<Object,Object> map){
+		return sqlSessionTemplate.selectList("com.roomio.carret.shop.getNewsList",map);
 	}
 	
-	public HashMap<Object,Object> getNewsDetailInfo(int shopNewsId){
-		return sqlSessionTemplate.selectOne("com.roomio.carret.shop.getNewsDetailInfo",shopNewsId);
+	public HashMap<Object,Object> getNewsDetailInfo(HashMap<Object,Object> map){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.shop.getNewsDetailInfo",map);
 	}
 	
 	public void addShopReport(HashMap<Object,Object> map) {
 		sqlSessionTemplate.insert("com.roomio.carret.shop.addShopReport",map);
+	}
+	
+	public int addNewsLike(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.insert("com.roomio.carret.shop.addNewsLike",map);
+	}
+	
+	public int delNewsLike(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.delete("com.roomio.carret.shop.delNewsLike",map);
 	}
 }
