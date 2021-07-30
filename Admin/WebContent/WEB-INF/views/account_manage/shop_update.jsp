@@ -16,7 +16,7 @@
 <script>
 	$(function(){
 		
-		window.open('','_self').close(); 
+		window.open('','_self').close();
 		
 	});
 </script>

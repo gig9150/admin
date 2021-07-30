@@ -220,7 +220,7 @@
         </div>
         
         <div class="view_more"><a href="">더&nbsp;보&nbsp;기</a></div>
-        <div class="bottom_box">
+        <div class="box bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
                 <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
@@ -239,7 +239,7 @@
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-user"></i></div>
-                <div class="info"><a href="${root}/front/member/myPage">MY</a></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
             </div>
         </div>
     </section>

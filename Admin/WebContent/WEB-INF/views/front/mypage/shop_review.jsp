@@ -53,53 +53,68 @@
 	<!--    98페이지(6/30 파일) BZ002-TB01-E 가게프로필 탭 - 소개(후기)-->
     <section id="BZ002-TB01-E" class="content">
     
-    	<div class="layout1">
-	    	<div class="top">
-	            <div class="icon_left"><a href=""><i class="fas fa-times"></i></a></div>
-	            <h1 class="title">라루체</h1>
-	            <div class="icon_right"><a href=""><i class="fas fa-ellipsis-v"></i></a></div>
-	        </div>
-	        
-	        <div class="profile_top"><img src="" alt="">
-	        <a href="${root}/front/mypage/profile_update?shopIdx=${shopIdx}" style="position: absolute;right: 8px;">수정</a></div>
-	        <div class="profile_bottom">
-	            <ul class="left_box">
-	                <li>${map.shop_name}</li>
-	                <li>${map.area_name}</li>
-	                <li>매일 11:30 ~ 22:00</li>
-	            </ul>
-				
-	            <ul class="right_box" onclick="javascript:location.href='${root}/front/mypage/shop_bookmark?shopIdx=${shopIdx}'">
-	                <li><a href=""><i class="fas fa-plus"></i></a></li>
-	                <li>단골</li>
-	                <li>0</li>
-	            </ul>
-	        </div>
-	
-	        <div class="call">
-	            <div class="call_left"><a href="">채팅관리</a></div>
-	            <div class="call_right"><a href="">매니저관리</a></div>
-	        </div>
-	        <ul id="gnb">
-	            <li><a href="">소개</a></li>
-	            <li><a href="">소식</a></li>
-	            <li><a href="">상품<span>8</span></a></li>
-	            <li><a href="">후기<span>9</span></a></li>
-	        </ul>
+    	<div class="top">
+			<div class="icon_left">
+				<a href="${root}/front/myPage"><i class="fas fa-times"></i></a>
+			</div>
+			<h1 class="title">${map.shop_name}</h1>
+			<div class="icon_right">
+				<a href="javascript:void(0)"><i class="fas fa-ellipsis-v"></i></a>
+			</div>
 		</div>
 		
-        <div class="layout2" style="display:none;">
-	       <div class="top">
-	            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
-	            <h1 class="title">${map.shop_name}</h1>
-	        </div>
-	        <ul id="gnb">
-	            <li><a href="">소개</a></li>
-	            <li><a href="">소식</a></li>
-	            <li><a href="">상품<span>8</span></a></li>
-	            <li><a href="">후기<span>9</span></a></li>
-	        </ul>
-        </div>
+		<div class="profile_top">
+			<img src="${root}/upload/${map.main_image}"
+				style="width: 100%; height: 100%;position: absolute;top: 0;right: 0;">
+			<div class="img_file">
+                  <label for="file_box"><i class="fas fa-camera"></i></label>
+                  <input type="file" id="file_box">
+            </div>
+            <div class="cancel">
+                <a href="${root}/front/mypage/profile_delete?shopIdx=${shopIdx}"><i class="far fa-times-circle"></i></a>
+            </div>
+		</div>
+		<div class="profile_bottom">
+			<ul class="left_box">
+				<li>${map.shop_name}</li>
+				<li>${map.area_name}</li>
+				<li>${map.start_date}~ ${map.end_date}</li>
+			</ul>
+		
+			<ul class="right_box"
+				onclick="javascript:location.href='${root}/front/mypage/shop_bookmark?shopIdx=${shopIdx}'">
+				<li><a href="javascript:void(0)"><i class="fas fa-plus"></i></a></li>
+				<li>단골</li>
+				<li>${bookmarkCnt}</li>
+			</ul>
+		</div>
+		
+		<div class="call">
+			<div class="call_left">
+				<a href="javascript:void(0)">채팅관리</a>
+			</div>
+			<div class="call_right">
+				<a href="javascript:void(0)">매니저관리</a>
+			</div>
+		</div>
+		<ul id="gnb">
+			<li><a href="${root}/front/mypage/shop?shopIdx=${map.shop_idx}">소개</a></li>
+			<li><a href="${root}/front/mypage/shop_news?shopIdx=${map.shop_idx}">소식</a></li>
+			<li><a href="${root}/front/mypage/shop_review?shopIdx=${map.shop_idx}">후기<span></span></a></li>
+		</ul>
+		<div class="layout2" style="display: none;">
+			<div class="top">
+				<div class="icon_left">
+					<a href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>
+				</div>
+				<h1 class="title">가게프로필명</h1>
+			</div>
+			<ul id="gnb">
+				<li><a href="${root}/front/mypage/shop?shopIdx=${map.shop_idx}">소개</a></li>
+				<li><a href="${root}/front/mypage/shop_news?shopIdx=${map.shop_idx}">소식</a></li>
+				<li><a href="${root}/front/mypage/shop_review?shopIdx=${map.shop_idx}">후기<span></span></a></li>
+			</ul>
+		</div>
         <c:forEach items="${list}" var="obj">
 	        <div class="big_box">
 	            <div class="box box_1">
@@ -113,7 +128,7 @@
 	                    </ul>
 	                </div>
 	            </div>    
-	            <ul class="box txt_box">
+	            <ul class="box txt_box" data-id="${obj.shop_review_id}">
 	                <li><p>${obj.content }</p></li>
 	            </ul>
 	            <div class="box swiper-container">
@@ -126,28 +141,35 @@
 	                </div>
 	            </div>
 	            <ul class="box thumb_box">
-	                <li><a href=""><i class="far fa-thumbs-up"></i></a></li>
+	            	<c:choose>
+						<c:when test="${not empty obj.member_id}">
+							<li class="thumb-li" data-id="${obj.shop_review_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="thumb-li" data-id="${obj.shop_review_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-down"></i></a></li>
+						</c:otherwise>
+					</c:choose>
 	                <li><p>좋아요</p></li>
-	                <li><p>${obj.likeCnt }</p></li>
+	                <li><p>${obj.likeCnt}</p></li>
 	                <li class="slash"><p>/</p></li>
 	
 	                <li><p>조회</p></li>
 	                <li><p>${obj.view_count}</p></li>
-	                <li class="right_menu"><a href=""><i class="fas fa-ellipsis-h"></i></a></li>
+	                <li class="right_menu"><a href="javascript:void(0)"><i class="fas fa-ellipsis-h"></i></a></li>
 	            </ul>
 	        </div>
 	        <c:choose>
 	        	<c:when test="${not empty obj.reply}">
 			        <ul class="comment">
 			            <li>
-<!-- 			                <p></p> -->
+			                <p>사장님 댓글</p>
 			                <ul class="comment_btn">
-			                    <li><a href="">삭제</a></li>
-			                    <li><a href="">수정</a></li>
+			                    <li><a href="javascript:void(0)">삭제</a></li>
+			                    <li><a href="javascript:void(0)">수정</a></li>
 			                </ul>
 			            </li>
 			            <li><p>${obj.reply}</p></li>
-			        </ul>		
+			        </ul>	
 	        	</c:when>
 	        	<c:otherwise>
 	        		<form action="${root}/front/mypage/review_reply">
@@ -199,38 +221,46 @@
 			
 			//좋아요
 			$('.thumb-li').click(function(){
-				let shopNewsId = $(this).data('id');
+				
+				let shopReviewId = $(this).data('id');
+				
 				if($(this).find('i').hasClass('fa-thumbs-down')){
 					
 					$(this).find('i').removeClass('fa-thumbs-down').addClass('fa-thumbs-up');
 					$.ajax({
-						url:'${root}/front/shop/newsLikeAdd/'+shopNewsId,
+						url:'${root}/front/shop/reviewLikeAdd/'+shopReviewId,
 						type:'get',
 						success:function(data){
 							console.log(data);
 						}
 					});
-					$('.like-p').html(parseInt($('.like-p').html()) + 1);
+					
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) + 1);
 					
 				}else{
 					
 					$(this).find('i').removeClass('fa-thumbs-up').addClass('fa-thumbs-down');
 					$.ajax({
-						url:'${root}/front/shop/newsLikeDel/'+shopNewsId,
+						url:'${root}/front/shop/reviewLikeDel/'+shopReviewId,
 						type:'get',
 						success:function(data){
 							console.log(data);
 						}
 					});
-					$('.like-p').html(parseInt($('.like-p').html()) - 1);
+					
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) - 1);
 					
 				}
 			});
 			
 			$('.txt_box').click(function(){
-				let shopNewsId = $(this).data('id');
+				let shopReviewId = $(this).data('id');
 				let shopIdx = '${shopIdx}';
-				location.href="${root}/front/mypage/news_detail?shopNewsId="+shopNewsId+"&shopIdx="+shopIdx;
+				location.href="${root}/front/mypage/review_detail?shopReviewId="+shopReviewId+"&shopIdx="+shopIdx;
+			});
+			
+			$('.img_file').click(function(){
+				location.href="${root}/front/mypage/profile_update?shopIdx=${shopIdx}";
 			});
 			
 		});

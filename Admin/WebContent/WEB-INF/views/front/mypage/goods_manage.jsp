@@ -20,7 +20,7 @@
 	<!--    86페이지(6/30일 파일) - #BZ002-TB01-B - 가게프로필 탭 – 소개 (가격표) _ 가격표생성하기-->
     <section id="BZ002-TB01-B" class="content">
         <div class="top">
-            <div class="icon_left"><a href="javascript:void(0);"><i class="fas fa-chevron-left"></i></a></div>
+            <div class="icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">가격표 관리하기</h1>
         </div>
         <c:forEach items="${list}" var="obj">

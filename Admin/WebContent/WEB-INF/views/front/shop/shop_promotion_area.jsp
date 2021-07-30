@@ -48,7 +48,7 @@
         <div class="box box_1">
             <ul class="place">
                 <li class="place"><a href="javascript:void(0);">지역<span><i class="fas fa-chevron-down"></i></span></a></li>
-                <li><a href="">유구읍</a></li>
+                <li><a href="javascript:void(0)">${shopList[0].area_name}</a></li>
             </ul>
             <ul class="right_box">
                 <li><a href=""><i class="fas fa-bars"></i></a></li>
@@ -95,7 +95,7 @@
         <div class="box bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
-                <div class="info"><a href="${root}/front/home">홈</a></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-heart"></i></div>
@@ -111,7 +111,7 @@
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-user"></i></div>
-                <div class="info"><a href="">MY</a></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
             </div>
         </div>
         
@@ -120,28 +120,12 @@
 		    <div class="box">
 		       <div class="top_box">
 		            <h1 class="title">지역선택 <span><a class="closeAreaSelect" href="javascript:void(0)"><i class="fas fa-times"></i></a></span></h1>
-		               
 		       </div>
-		        
-		        <ul>
-		            <li><a href="${root}/front/shop/shop_promotion_area">공주시 전체</a></li>
-		            <li><a href="">유구읍</a></li>
-		            <li><a href="">이인면</a></li>
-		            <li><a href="">탄천면</a></li>
-		            <li><a href="">계룡면</a></li>
-		            <li><a href="">반포면</a></li>
-		            <li><a href="">의당면</a></li>
-		            <li><a href="">정안면</a></li>
-		            <li><a href="">우성면</a></li>
-		            <li><a href="">사곡면</a></li>
-		            <li><a href="">신풍면</a></li>
-		            <li><a href="">중학동</a></li>
-		            <li><a href="">웅진동</a></li>
-		            <li><a href="">금학동</a></li>
-		            <li><a href="">옥룡동</a></li>
-		            <li><a href="">신관동</a></li>
-		            <li><a href="">월송동</a></li>
-		            <li><a href="">월송동</a></li>
+		        <ul class="area-ul">
+		        	<li><a class="all-a">지역 전체</a></li>
+		            <c:forEach items="${areaList}" var="obj">
+		            	<li><a data-id="${obj.id}">${obj.area_name}</a></li>
+		            </c:forEach>
 		        </ul>
 		    </div>
 		</section>
@@ -237,6 +221,17 @@
 			$('#GNB001').removeClass('areaSelect');
 			$('#GNB001-JY01').css('display','none');
 		});	
+		
+		$('.area-ul li a').not('all-a').on('click',function(){
+			
+			let id = $(this).data('id');
+			location.href="${root}/front/shop/shop_promotion_area?area="+id;
+	
+		});
+		
+		$('.all-a').on('click',function(){
+			location.href="${root}/front/shop/shop_promotion_area";
+		});
 
         
         

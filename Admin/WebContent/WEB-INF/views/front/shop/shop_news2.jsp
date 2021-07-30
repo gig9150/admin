@@ -19,17 +19,61 @@
 <body>
 	<!--    30페이지 - #BZ001-TB02 가게 프로필 TAB – 소식-->
 	<section id="BZ001-TB02" class="content">
-	    <div class="box title_box">
-	            <div class="icon"><a href=""><i class="fas fa-chevron-left"></i></a></div>
-	            <h1 class="title">당근마켓 서비스</h1>
-	
-	    </div>
-	    <ul id="gnb">
-	        <li><a href="">소개</a></li>
-	        <li><a href="">소식</a></li>
-	        <li><a href="">상품<span>8</span></a></li>
-	        <li><a href="">후기<span>9</span></a></li>
-	    </ul>
+	    <div class="box top">
+            <div class="icon_left"><a href="${root}/front/shop/shop_promotion"><i class="fas fa-times"></i></a></div>
+            <h1 class="title">${detailMap.shop_name}</h1>
+            <div class="icon_right"><a href="javascript:void(0)" id="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
+        </div>
+        <div class="profile_top"><img src="${root}/upload/${detailMap.main_image}" style="width:100%;height:100%"></div>
+        <div class="profile_bottom">
+            <ul class="left_box">
+                <li>${detailMap.shop_name}</li>
+                <li>${detailMap.area_name}</li>
+                <li>${detailMap.start_date} ~ ${detailMap.end_date}</li>
+            </ul>
+			<c:choose>
+            	<c:when test="${checkNum eq 1}">
+            		<ul class="right_box" id="regularMember">
+		                <li><a href="javascript:void(0)"><i class="fas fa-plus"></i></a></li>
+		                <li>단골</li>
+		                <li >${bookmarkCnt}</li>
+		            </ul>
+            	</c:when>
+            	<c:otherwise>
+            		<ul class="right_box" id="regularMember" style="background-color:#ffffff;border: 1px solid #7aa4d7;">
+		                <li><a href="javascript:void(0)"><i style="color:#78a6d8" class="fas fa-plus"></i></a></li>
+		                <li style="color:#78a6d8">단골</li>
+		                <li style="color:#78a6d8">${bookmarkCnt}</li>
+		            </ul>
+            	</c:otherwise>
+            </c:choose>
+
+        </div>
+
+        <div class="call">
+            <div class="call_left"><a href=""><span><i class="fas fa-phone"></i></span>전화문의</a></div>
+            <div class="call_right"><a href="${root}/front/shop/shop_review_register?shopIdx=${detailMap.shop_idx}"><span><i class="fas fa-edit"></i></span>후기작성</a></div>
+        </div>
+
+        <ul class="tab">
+            <li><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}">홈</a></li>
+            <li><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}">소식</a></li>
+            <li><a href="${root}/front/shop/shop_review2?shopIdx=${detailMap.shop_idx}">후기</a></li>
+        </ul>
+        
+        <div class="layout2">
+	       <div class="top">
+	            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+	            <h1 class="title">가게프로필명</h1>
+	        </div>
+	        <ul id="gnb">
+	            <li><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}">소개</a></li>
+	            <li><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}">소식</a></li>
+	            <li><a href="${root}/front/shop/shop_review2?shopIdx=${detailMap.shop_idx}">후기<span></span></a></li>
+	        </ul>
+        </div>
+        
+        
 	    <c:forEach items="${list}" var="obj">
 		    <div class="box box_1">
 		        <div class="pic"></div>
@@ -37,14 +81,14 @@
 		            <div class="sub_box"><p>${detailMap.shop_name}</p></div>
 		            <div class="sub_box"><p>${detailMap.area_name}<span>/</span>${obj.regdate}</p></div>
 		        </div>
-		    </div>    
+		    </div>
 		    <ul class="box btn">
 		        <li><a href="">${obj.cate_content}</a></li>
 	<!-- 	        <li><a href="">쿠폰</a></li> -->
 		    </ul>
 		    <a href="${root}/front/shop/shop_news_extend2?shopIdx=${detailMap.shop_idx}&shopNewsId=${obj.shop_news_id}">
 			    <ul class="box txt_box">
-			        <li><p>${obj.title }</p></li>
+			        <li><p>${obj.title}</p></li>
 			        <li><p>${obj.content}</p></li>
 			    </ul>
 			    <div class="box swiper-container">
@@ -56,18 +100,145 @@
 			    </div>
 			</a>
 		    <ul class="box thumb_box">
-		        <li><a href=""><i class="far fa-thumbs-up"></i></a></li>
+		        <c:choose>
+					<c:when test="${not empty obj.member_id}">
+						<li class="thumb-li" data-id="${obj.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="thumb-li" data-id="${obj.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-down"></i></a></li>
+					</c:otherwise>
+				</c:choose>
 		        <li><p>좋아요</p></li>
-		        <li><p>${obj.likeCnt }</p></li>
+		        <li><p>${obj.likeCnt}</p></li>
 		        <li class="slash"><p>/</p></li>
 		    
 		        <li><p>조회</p></li>
 		        <li><p>${obj.view_count}</p></li>
 		    </ul>
 		</c:forEach>
+		
+		<div class="box bottom_box">
+            <div class="box">
+                <div class="pic"><i class="fas fa-home"></i></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><i class="far fa-heart"></i></div>
+                <div class="info"><a href="">찜</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><i class="far fa-edit"></i></div>
+                <div class="info"><a href="">글쓰기</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><i class="far fa-comment-dots"></i></div>
+                <div class="info"><a href="">채팅</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><i class="far fa-user"></i></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
+            </div>
+        </div>
+		
+		<div class="report_box" style="display:none">
+        	<p class="report"><a class="reportA" href="${root}/front/shop/shop_report_category?status=shop&shopIdx=${detailMap.shop_idx}">신고하기</a></p>
+        </div>
+        
+         <div class="pop_up_box">
+         	<c:choose>
+         		<c:when test="${checkNum eq 1}">
+         			<p class="ask">단골로 추가하시겠습니까&nbsp;?</p>
+         		</c:when>
+         		<c:otherwise>
+         			<p class="ask">단골로 해제하시겠습니까&nbsp;?</p>
+         		</c:otherwise>
+         	</c:choose>
+
+            <div class="btn_box">
+                <div class="btn cancel"><a href="">취소</a></div>
+                <c:choose>
+                	<c:when test="${checkNum eq 1}">
+		            	<div class="btn sure"><a href="${root}/front/shop/shop_bookmark?shopIdx=${detailMap.shop_idx}&nowPage=detail">확인</a></div>
+                	</c:when>
+                	<c:otherwise>
+                		<div class="btn sure"><a href="${root}/front/shop/shop_bookmark_cancel?shopIdx=${detailMap.shop_idx}&nowPage=detail">확인</a></div>
+                	</c:otherwise>
+                </c:choose>
+            </div>
+        </div>		
 	</section>
 	<script src="${root}/vendor/jquery/jquery.min.js"></script>
 	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	<script src="${root}/js/main.js"></script>
+	
+	<script>
+		$(function() {
+			
+			$(window).scroll(function(){
+				var num = $(this).scrollTop();
+				if(num > 420){
+					$(".layout2").css("display","block");
+				}else{
+					$(".layout2").css("display","none");
+				}
+			});
+			
+			
+			$('#reportTriger').on('click',function(){ 
+				if($('.content').hasClass('reviewon')){
+					$('.content').removeClass('reviewon');
+					$('.report_box').css('display','none');
+				}else{
+					$('.content').addClass('reviewon');
+					$('.report_box').css('display','block');
+				}
+			});
+			
+			$('#regularMember').on('click',function(){
+				if($('.content').hasClass('on')){
+					$('.content').removeClass('on');
+					$('.pop_up_box').css('display','none');
+				}else{
+					$('.content').addClass('on');
+					$('.pop_up_box').css('display','block');
+				}
+			});
+			
+			
+			//좋아요
+			$('.thumb-li').click(function(){
+				
+				let shopNewsId = $(this).data('id');
+				if($(this).find('i').hasClass('fa-thumbs-down')){
+					
+					$(this).find('i').removeClass('fa-thumbs-down').addClass('fa-thumbs-up');
+					$.ajax({
+						url:'${root}/front/shop/newsLikeAdd/'+shopNewsId,
+						type:'get',
+						success:function(data){
+							console.log(data);
+						}
+					});
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) + 1);
+					
+				}else{
+					
+					$(this).find('i').removeClass('fa-thumbs-up').addClass('fa-thumbs-down');
+					$.ajax({
+						url:'${root}/front/shop/newsLikeDel/'+shopNewsId,
+						type:'get',
+						success:function(data){
+							console.log(data);
+						}
+					});
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) - 1);
+					
+				}
+			});
+			
+			
+		});
+		
+	</script>
 </body>
 </html>

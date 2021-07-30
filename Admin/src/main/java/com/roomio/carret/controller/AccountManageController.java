@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.roomio.carret.bean.LoginManagerBean;
 import com.roomio.carret.bean.MemberSearchBean;
 import com.roomio.carret.bean.PageBean;
+import com.roomio.carret.bean.PenaltySearchBean;
 import com.roomio.carret.bean.ShopUpdateBean;
 import com.roomio.carret.service.AccountManageService;
 import com.roomio.carret.service.ShopService;
@@ -164,7 +165,7 @@ public class AccountManageController {
 		List<HashMap<Object,Object>> secList = accountManageService.getSectorList();
 		model.addAttribute("secList",secList);
 		
-		//가기 리스트
+		//가게 리스트
 		List<HashMap<Object,Object>> list = accountManageService.getShopList(page, bean, selectNum);
 		PageBean pageBean = accountManageService.getShopCnt(page, bean, selectNum);
 		int shopCnt = accountManageService.getShopRealCnt(bean);
@@ -244,6 +245,7 @@ public class AccountManageController {
 		return "account_manage/shop_penalty";
 	}
 	
+	//가게 패널티 등록
 	@RequestMapping("/account_manage/shop_penalty_register")
 	public String shopPenaltyRegi(@RequestParam HashMap<Object,Object> map) {
 		
@@ -254,6 +256,235 @@ public class AccountManageController {
 		accountManageService.addShopPenalty(map);
 		
 		return "account_manage/member_update";
+	}
+	
+	//가게 신청 심사 페이지 이동
+	@RequestMapping("/account_manage/shop_apply_list")
+	public String shopApplyList(Model model,
+								@ModelAttribute MemberSearchBean bean,
+								@RequestParam(value="page" , defaultValue = "1") int page,
+								@RequestParam(defaultValue = "10") int selectNum
+									) {
+		//지역정보
+		List<HashMap<Object,Object>> areaList = accountManageService.getAreaList();
+		model.addAttribute("areaList",areaList);
+	
+		//가맹점 정보
+		List<HashMap<Object,Object>> franList = shopService.getFranchiseName();
+		model.addAttribute("franList",franList);
+		
+		//업종 정보
+		List<HashMap<Object,Object>> secList = accountManageService.getSectorList();
+		model.addAttribute("secList",secList);
+		
+		//가게 리스트
+		List<HashMap<Object,Object>> list = accountManageService.getShopApplyList(page, bean, selectNum);
+		PageBean pageBean = accountManageService.getShopApplyCnt(page, bean, selectNum);
+		int shopCnt = accountManageService.getShopApplyRealCnt(bean);
+		
+		
+		model.addAttribute("list",list);
+		model.addAttribute("pageBean",pageBean);
+		model.addAttribute("shopCnt",shopCnt);
+		
+		model.addAttribute("page",page);
+		model.addAttribute("selectNum",selectNum);
+		model.addAttribute("bean",bean);
+		
+		return "account_manage/shop_apply_list"; 
+	}
+	
+	//가게 신청 심사 처리 페이지
+	@RequestMapping("/account_manage/shop_apply_detail")
+	public String shopApplyDetail(@RequestParam int shopIdx,
+								Model model) {
+		
+		HashMap<Object,Object> map = accountManageService.getShopApplyInfo(shopIdx);
+		List<HashMap<Object,Object>> list = accountManageService.getShopHold(shopIdx);
+		
+		model.addAttribute("map",map);
+		model.addAttribute("list",list);
+		model.addAttribute("shopIdx",shopIdx);
+		
+		//뿌리는거 이어서 하기
+		
+		return "account_manage/shop_apply_detail";
+	}
+	
+	//사업장 등록증 팝업
+	@RequestMapping("/account_manage/buisness_image")
+	public String buisnessImage(@RequestParam String imageName,
+								Model model) {
+		
+		model.addAttribute("imageName",imageName);
+		
+		return "account_manage/buisness_image";
+	}
+	
+	//가게 신청 처리
+	@RequestMapping("/account_manage/shop_apply_pro")
+	public String shopApplyPro(@RequestParam int shopIdx,
+								@RequestParam String reason,
+								@RequestParam int status,
+								@RequestParam String memo) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopIdx", shopIdx);
+		map.put("reason", reason);
+		map.put("status",status);
+		map.put("memo",memo);
+				
+		accountManageService.updateShopStatus(map);
+		
+		return "account_manage/member_update";
+		
+	}
+	
+	//맴버 패널티 관리
+	@RequestMapping("/account_manage/penalty")
+	public String penalty(Model model,
+						@ModelAttribute PenaltySearchBean bean,
+						@RequestParam(value="page" , defaultValue = "1") int page,
+						@RequestParam(defaultValue = "10") int selectNum) {
+		
+		//지역정보
+		List<HashMap<Object,Object>> areaList = accountManageService.getAreaList();
+		model.addAttribute("areaList",areaList);
+	
+		//가맹점 정보
+		List<HashMap<Object,Object>> franList = shopService.getFranchiseName();
+		model.addAttribute("franList",franList);
+		
+		//가게 리스트
+		List<HashMap<Object,Object>> list = accountManageService.getMemPenalty(page, bean, selectNum);
+		PageBean pageBean = accountManageService.getMemPenaltyCnt(page, bean, selectNum);
+		int peCnt = accountManageService.getMemPenaltyRealCnt(bean);
+		
+		
+		model.addAttribute("list",list);
+		model.addAttribute("pageBean",pageBean);
+		model.addAttribute("peCnt",peCnt);
+		
+		model.addAttribute("page",page);
+		model.addAttribute("selectNum",selectNum);
+		model.addAttribute("bean",bean);
+		
+		return "account_manage/penalty";
+		
+	}
+	
+	//맴버 패널티 상세 
+	@RequestMapping("/account_manage/penalty_detail")
+	public String penaltyDetail(@RequestParam(value="page" , defaultValue = "1") int page,
+								@RequestParam int memberPenaltyId,
+								Model model) {
+
+		//패널티 페이지 필요한 정보
+		HashMap<Object,Object> memMap = accountManageService.getMemPenaltyInfo(memberPenaltyId);
+		
+		//패널티 수정 이력 
+		List<HashMap<Object,Object>> list = accountManageService.getMemPeUpdate(page, memberPenaltyId);
+		PageBean pageBean = accountManageService.getMemPeUpdateCnt(page, memberPenaltyId);
+		int upCnt = accountManageService.getMemPeUpdateRealCnt(memberPenaltyId);
+		
+		model.addAttribute("memberPenaltyId",memberPenaltyId);
+		model.addAttribute("memMap",memMap);
+		model.addAttribute("list",list);
+		model.addAttribute("pageBean",pageBean);
+		model.addAttribute("upCnt",upCnt);
+		model.addAttribute("page",page);
+		
+		return "account_manage/penalty_detail";
+		
+	}
+	
+	//맴버 패널티 수정 
+	@RequestMapping("/account_manage/penalty_detail_pro")
+	public String penaltyDetailPro(@RequestParam HashMap<Object,Object> map) {
+		
+		map.put("register",loginManagerBean.getId());
+		
+		accountManageService.updateMemPenalty(map);
+		
+		return "account_manage/member_update";
+		
+	}
+	
+	//가게 패널티
+	@RequestMapping("/account_manage/shop_penalty_list")
+	public String shopPenaltyList(Model model,
+							@ModelAttribute PenaltySearchBean bean,
+							@RequestParam(value="page" , defaultValue = "1") int page,
+							@RequestParam(defaultValue = "10") int selectNum) {
+	
+		//지역정보
+		List<HashMap<Object,Object>> areaList = accountManageService.getAreaList();
+		model.addAttribute("areaList",areaList);
+	
+		//가맹점 정보
+		List<HashMap<Object,Object>> franList = shopService.getFranchiseName();
+		model.addAttribute("franList",franList);
+		
+		//가게 리스트
+		List<HashMap<Object,Object>> list = accountManageService.getShopPenalty(page, bean, selectNum);
+		PageBean pageBean = accountManageService.getShopPenaltyCount(page, bean, selectNum);
+		int peCnt = accountManageService.getShopPenaltyRealCount(bean);
+		
+		
+		model.addAttribute("list",list);
+		model.addAttribute("pageBean",pageBean);
+		model.addAttribute("peCnt",peCnt);
+		
+		model.addAttribute("page",page);
+		model.addAttribute("selectNum",selectNum);
+		model.addAttribute("bean",bean);
+		
+		return "account_manage/shop_penalty_list";
+		
+	}
+	
+	//가게 패널티 상세 
+	@RequestMapping("/account_manage/shop_penalty_detail")
+	public String shopPenaltyDetail(@RequestParam(value="page" , defaultValue = "1") int page,
+									@RequestParam int shopPenaltyId,
+									Model model) {
+		
+		HashMap<Object,Object> memMap = accountManageService.getShopPenaltyInfo(shopPenaltyId);
+		
+		//패널티 수정 이력 
+		List<HashMap<Object,Object>> list = accountManageService.getShopPeUpdate(page, shopPenaltyId);
+		PageBean pageBean = accountManageService.getShopPeUpdateCnt(page, shopPenaltyId);
+		int upCnt = accountManageService.getShopPeUpdateRealCnt(shopPenaltyId);
+		
+		
+		model.addAttribute("shopPenaltyId",shopPenaltyId);
+		model.addAttribute("memMap",memMap);
+		model.addAttribute("list",list);
+		model.addAttribute("pageBean",pageBean);
+		model.addAttribute("upCnt",upCnt);
+		model.addAttribute("page",page);
+		
+		return "account_manage/shop_penalty_detail";
+	}
+	
+	//맴버 패널티 수정 
+	@RequestMapping("/account_manage/shop_penalty_detail_pro")
+	public String shopPenaltyDetailPro(@RequestParam HashMap<Object,Object> map) {
+		
+		map.put("register",loginManagerBean.getId());
+		
+		accountManageService.updateShopPenalty(map);
+		
+		return "account_manage/member_update";
+		
+	}
+	
+	//소식글 관리 페이지 이동
+	@RequestMapping("/account_manage/news_manage")
+	public String newsManage() {
+		
+		
+		return "account_manage/news_manage";
 	}
 
 }

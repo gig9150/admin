@@ -272,8 +272,331 @@
 	
 	</select>
 	
+	<!-- FAQ 등록  -->
+	<insert id="addFAQ" parameterType="hashMap">
 	
-	
+		insert into frequent_question(franchise_manager_id,frequent_question_category_id,title,content,view_status)
+		values(${managerId},${categoryId},#{title},#{content},${viewStatus})
 		
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+	
+	</insert>
+	
+	<!-- 가맹점 별 FAQ 등록  -->
+	<insert id="addFranFAQ" parameterType="list">
+	
+		insert into franchise_and_question(franchise_id,frequent_question_id)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(${item.franchiseId},${item.questionId})
+		</foreach>
+	
+	</insert>
+	
+	<resultMap type="hashMap" id="freQuestionMap">
+		<result column="id" property="id"/>
+		<result column="frequent_question_category_id" property="frequent_question_category_id"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="view_status" property="view_status"/>
+		<result column="frequent_question_id" property="frequent_question_id"/>
+		<result column="regdate" property="regdate"/>
+		<collection property="franList" ofType="int" javaType="list">
+			<result column="franchise_id"/>
+		</collection>
+	</resultMap>
+	
+	<!-- FAQ 수정 input 정보  -->
+	<select id="getFAQInfo" parameterType="int" resultMap="freQuestionMap">
+				
+		select fm.id,fq.frequent_question_category_id,fq.title,fq.content,fq.view_status,
+		fq.frequent_question_id,fq.regdate,faq.franchise_id
+		from frequent_question fq
+		inner join franchise_manager fm
+		on fq.franchise_manager_id = fm.franchise_manager_id
+		left join franchise_and_question faq
+		on fq.frequent_question_id = faq.frequent_question_id
+		where fq.frequent_question_id = ${id}
+
+	</select>
+	
+	<!-- FAQ 수정  -->
+	<update id="updateFAQ" parameterType="hashMap">
+		update frequent_question
+		set frequent_question_category_id = ${categoryId},view_status = ${viewStatus},
+		title = #{title}, content= #{content}
+		where frequent_question_id = ${id}
+	</update>
+	
+	<!-- FAQ 삭제 -->
+	<delete id="deleteFAQ" parameterType="int">
+	
+		delete from frequent_question
+		where frequent_question_id = ${id}
+		
+	</delete>
+	
+	<sql id="FAQSearch">	
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(q.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(q.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(q.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='franchiseId != 0 and franchiseId !=""'>
+				and f.franchise_id = ${franchiseId}
+			</if>
+			<if test='categoryId != 0 and categoryId != ""'>
+				and q.frequent_question_category_id = ${categoryId}
+			</if>
+			<if test='viewStatus == 2'>and q.view_status == 1</if>
+			<if test='viewStatus == 3'>and q.view_status == 2</if>
+			<if test='maSelect == 1'>
+				and m.id LIKE CONCAT('%',#{maKeyword},'%') or
+				m.franchise_manager_id LIKE CONCAT('%',#{maKeyword},'%')
+			</if>
+			<if test='maSelect == 2'>and m.id LIKE CONCAT('%',#{maKeyword},'%')</if>
+			<if test='maSelect == 3'>and m.franchise_manager_id LIKE CONCAT('%',#{maKeyword},'%')</if>
+			<if test='select == 1'>
+				and q.frequent_question_id LIKE CONCAT('%',#{keyword},'%') or
+				q.title LIKE CONCAT('%',#{keyword},'%') or
+				q.content LIKE CONCAT('%',#{keyword},'%')
+			</if>
+			<if test='select == 2'>and q.frequent_question_id LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test='select == 3'>and q.title LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test='select == 4'>and q.content LIKE CONCAT('%',#{keyword},'%')</if>
+		</where>
+	</sql>
+	
+	<select id="getFAQList" parameterType="com.roomio.carret.bean.FAQSearchBean" resultType="hashMap">
+	
+		select q.frequent_question_id , q.regdate, f.franchise_name, q.title,
+		m.id,q.view_status,q.fixed_status
+		from frequent_question q
+		left join franchise_and_question faq
+		on q.frequent_question_id = faq.frequent_question_id 
+		inner join franchise f
+		on faq.franchise_id = f.franchise_id
+		inner join franchise_manager m 
+		on q.franchise_manager_id = m.franchise_manager_id
+		
+		<include refid="FAQSearch"/>
+		
+	</select>
+	
+	<select id="getFAQCnt" parameterType="com.roomio.carret.bean.FAQSearchBean" resultType="int">
+	
+		select count(*)
+		from frequent_question q
+		left join franchise_and_question faq
+		on q.frequent_question_id = faq.frequent_question_id 
+		inner join franchise f
+		on faq.franchise_id = f.franchise_id
+		inner join franchise_manager m 
+		on q.franchise_manager_id = m.franchise_manager_id
+		
+		<include refid="FAQSearch"/>
+	
+	</select>
+	
+	<!-- FAQ 일괄 노출 -->
+	<update id="updateViewStatus1" parameterType="list">
+
+			update frequent_question
+			set view_status = 1
+			where frequent_question_id in
+			<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+				${item}
+			</foreach>
+			
+	</update>
+	
+	<!-- FAQ 일괄 노출 해제 -->
+	<update id="updateViewStatus2" parameterType="list">
+
+			update frequent_question
+			set view_status = 2
+			where frequent_question_id in
+			<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+				${item}
+			</foreach>
+			
+	</update>
+	
+	<!-- 공지사항 등록  -->
+	<insert id="addNotice" parameterType="hashMap">
+	
+		<choose>
+			<when test='fixedStatus.equals("on")'>
+				insert into notice(franchise_manager_id,title,content,view_status,fixed_status)
+				values(${managerId},#{title},#{content},${viewStatus},1)
+			</when>
+			<otherwise>
+				insert into notice(franchise_manager_id,title,content,view_status,fixed_status)
+				values(${managerId},#{title},#{content},${viewStatus},2)
+			</otherwise>
+		</choose>
+	
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+       		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
+	</insert>
+	
+	<!-- 가맹점 별 공지사항 등록  -->
+	<insert id="addNoticeFran" parameterType="list">
+	
+		insert into notice_franchise(notice_id,franchise_id)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(${item.noticeId},${item.franchiseId})
+		</foreach>
+	
+	</insert>
+	
+	<!-- 공지사항 수정 input 정보  -->
+	
+	<resultMap type="hashMap" id="noticeInfoMap">
+		<result column="title" property="title"/>
+		<result column="regdate" property="regdate"/>
+		<result column="notice_id" property="notice_id"/>
+		<result column="id" property="id"/>
+		<result column="fixed_status" property="fixed_status"/>
+		<result column="content" property="content"/>
+		<result column="view_status" property="view_status"/>
+		<collection property="franList" ofType="int" javaType="list">
+			<result column="franchise_id"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getNoticeInfo" parameterType="int" resultMap="noticeInfoMap">
+		
+		select n.title,n.regdate,n.notice_id,fm.id,n.fixed_status,nf.franchise_id,
+		n.view_status,n.content
+		from notice n
+		left join notice_franchise nf
+		on n.notice_id = nf.notice_id
+		inner join franchise_manager fm
+		on n.franchise_manager_id = fm.franchise_manager_id
+		where n.notice_id = ${id}
+		
+		
+	</select>
+	
+	<!-- 공지사항 수정 -->
+	<update id="updateNotice" parameterType="hashMap">
+	
+		<choose>
+			<when test='fixedStatus.equals("on")'>
+				update notice
+				set title = #{title}, content=#{content},
+				view_status = ${viewStatus}, fixed_status = 1
+				where notice_id = ${id}
+			</when>
+			<otherwise>
+				update notice
+				set title = #{title}, content=#{content},
+				view_status = ${viewStatus}, fixed_status = 2
+				where notice_id = ${id}
+			</otherwise>
+		</choose>
+
+	</update>
+	
+	<!-- 공지사항 삭제 -->
+	<delete id="deleteNotice" parameterType="int">
+	
+		delete from notice
+		where notice_id = ${id}
+		
+	</delete>
+	
+	<sql id="noticeSearch">	
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(n.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(n.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(n.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='franchiseId != 0 and franchiseId !=""'>
+				and f.franchise_id = ${franchiseId}
+			</if>
+			<if test='viewStatus == 2'>and n.view_status == 1</if>
+			<if test='viewStatus == 3'>and n.view_status == 2</if>
+			<if test='register != null and !register.equals("")'>and fm.id LIKE CONCAT('%',#{register},'%')</if>
+			<if test='select == 1'>
+				and n.notice_id = ${keyword} or
+				n.title LIKE CONCAT('%',#{keyword},'%') or
+				n.content LIKE CONCAT('%',#{keyword},'%')
+			</if>
+			<if test='select == 2'>and n.notice_id = ${keyword}</if>
+			<if test='select == 3'>and n.title LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test='select == 4'>and n.content LIKE CONCAT('%',#{keyword},'%')</if>
+		</where>
+	</sql>
+	
+	<select id="getNoticeList" parameterType="com.roomio.carret.bean.FAQSearchBean" resultType="hashMap">
+	
+		select n.notice_id,n.regdate,f.franchise_name,n.title,fm.id,n.view_status,n.fixed_status
+		from notice n
+		left join notice_franchise nf
+		on n.notice_id = nf.notice_id
+		inner join franchise f
+		on nf.franchise_id = f.franchise_id
+		inner join franchise_manager fm
+		on n.franchise_manager_id = fm.franchise_manager_id
+		
+		<include refid="noticeSearch"/>
+		
+	</select>
+	
+	<select id="getNoticeCnt" parameterType="com.roomio.carret.bean.FAQSearchBean" resultType="int">
+	
+		select count(*)
+		from notice n
+		left join notice_franchise nf
+		on n.notice_id = nf.notice_id
+		inner join franchise f
+		on nf.franchise_id = f.franchise_id
+		inner join franchise_manager fm
+		on n.franchise_manager_id = fm.franchise_manager_id
+		
+		<include refid="noticeSearch"/>
+	
+	</select>
+	
+	<!-- 공지사항 일괄 노출 -->
+	<update id="updateNoticeViewStatus1" parameterType="list">
+
+		update notice
+		set view_status = 1
+		where notice_id in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			${item}
+		</foreach>
+			
+	</update>
+	
+	<!-- FAQ 일괄 노출 해제 -->
+	<update id="updateNoticeViewStatus2" parameterType="list">
+
+		update notice
+		set view_status = 2
+		where notice_id in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			${item}
+		</foreach>
+			
+	</update>
+	
+	
+	
+	
 	
 </mapper>

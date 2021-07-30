@@ -16,6 +16,7 @@
 <script>
 	$(function(){
 		
+		opener.document.location.reload();
 		window.open('','_self').close(); 
 		
 	});

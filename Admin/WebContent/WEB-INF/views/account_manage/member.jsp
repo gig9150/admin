@@ -179,7 +179,7 @@
                                 </thead>
                                 <tbody>
                                 	<c:forEach items="${list}" var="obj" varStatus="status"> 
-                                		<c:set var="bool" value="true"/>
+                                		<c:set var="bool" value="false"/>
                                 		<c:set var="num" value="0"/>
 	                                	<tr data-member-id = '${obj.member_id}'>
 	                                		<td class="tableTd"><input type="checkbox" class="tableChk"></td>
@@ -189,23 +189,27 @@
 	                                		<td>${obj.name}</td>
 	                                		<td>${obj.member_id}</td>
 	                                		<td>${obj.area_name}</td>
+	                                		<c:if test="${empty obj.peList}">
+                                				<td>-</td>
+                                			</c:if>
 	                                		<c:forEach items="${obj.peList}" var="obj2">
 		                                		<fmt:parseDate value="${obj2.start_date}" var="strPlanDate" pattern="yyyy-MM-dd"/>
-												<fmt:parseNumber value="${strPlanDate.time / (1000*60*60*24)}" integerOnly="true" var="strDate"></fmt:parseNumber>
+												<fmt:parseNumber value="${strPlanDate.time / (1000*60*60*24)}" integerOnly="true" var="strDate"/>
 												<fmt:parseDate value="${obj2.end_date}" var="endPlanDate" pattern="yyyy-MM-dd"/>
-												<fmt:parseNumber value="${(endPlanDate.time / (1000*60*60*24)) + 1}" integerOnly="true" var="endDate"></fmt:parseNumber>
-												<fmt:parseNumber value="${toDay.time / (1000*60*60*24)}" integerOnly="true" var="today_"></fmt:parseNumber>
-	                                			<c:choose>
-	                                				<c:when test="${bool and today_ <= endDate}">
-	                                					<td>Y</td>
-	                                					<c:set var ="bool" value="false"/>
-	                                				</c:when>
-	                                				<c:when test="${bool and today_ > endDate}">
-	                                					<c:set var="num" value="${num + 1}"/>
-	                                				</c:when>
-	                                			</c:choose>
-		                                		<c:if test="${fn:length(obj.peList) eq num}">
-		                                			<td> - </td>
+												<fmt:parseNumber value="${(endPlanDate.time / (1000*60*60*24))}" integerOnly="true" var="endDate"/>
+	                                			<c:if test="${not bool}">
+		                                			<c:choose>
+		                                				<c:when test="${today_ <= endDate}">
+		                                					<td>Y</td>
+		                                					<c:set var ="bool" value="true"/>
+		                                				</c:when>
+		                                				<c:otherwise>
+		                                					<c:set var="num" value="${num + 1}"/>
+		                                				</c:otherwise>
+		                                			</c:choose>
+			                                		<c:if test="${fn:length(obj.peList) eq num}">
+			                                			<td> - </td>
+			                                		</c:if>
 		                                		</c:if>
 	                                		</c:forEach>
 	                                		<td>

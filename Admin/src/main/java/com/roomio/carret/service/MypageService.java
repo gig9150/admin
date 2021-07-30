@@ -291,8 +291,8 @@ public class MypageService {
 		
 	}
 	
-	public List<HashMap<Object,Object>> getReviewList(int shopIdx){
-		return mypageDao.getReviewList(shopIdx);
+	public List<HashMap<Object,Object>> getReviewList(HashMap<Object,Object> map){
+		return mypageDao.getReviewList(map);
 	}
 	
 	public void reviewReply(HashMap<Object,Object> map){
@@ -306,5 +306,17 @@ public class MypageService {
 		}else {
 			return 2;
 		}
+	}
+	
+	public HashMap<Object,Object> getReviewDetail(HashMap<Object,Object> map){
+		return mypageDao.getReviewDetail(map);
+	}
+	
+	public List<HashMap<Object,Object>> getShopWithCategory(){
+		return mypageDao.getShopWithCategory();
+	}
+	
+	public void updateShopStatus(HashMap<Object,Object> map) {
+		mypageDao.updateShopStatus(map);
 	}
 }

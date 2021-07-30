@@ -7,7 +7,7 @@ public class MemberUpdateBean {
 	private int memberId;
 	private String name;
 	private String profileImage;
-	private String address;
+	private int id;
 	
 	//파일 업로드 객체
 	private MultipartFile uploadFile;
@@ -35,13 +35,13 @@ public class MemberUpdateBean {
 	public void setProfileImage(String profileImage) {
 		this.profileImage = profileImage;
 	}
-
-	public String getAddress() {
-		return address;
+	
+	public int getId() {
+		return id;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public MultipartFile getUploadFile() {

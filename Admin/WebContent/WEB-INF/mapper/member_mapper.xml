@@ -144,8 +144,8 @@
 			<if test='name != null  and !name.equals("")'>
 				name = #{name},
 			</if>
-			<if test='address != null  and !address.equals("")'>
-				address = #{address},
+			<if test='id != null  and !id.equals("")'>
+				id = ${id},
 			</if>
 			<if test='profileImage != null and !profileImage.equals("")'>
 				profile_image = #{profileImage},

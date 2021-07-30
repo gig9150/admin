@@ -311,4 +311,12 @@ public class ShopService {
 	public int delNewsLike(HashMap<Object,Object> map) {
 		return shopDao.delNewsLike(map);
 	}
+	
+	public int addReviewLike(HashMap<Object,Object> map) {
+		return shopDao.addReviewLike(map);
+	}
+	
+	public int delReviewLike(HashMap<Object,Object> map) {
+		return shopDao.delReviewLike(map);
+	}
 }

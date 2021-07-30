@@ -37,7 +37,6 @@
 
         <!-- Sidebar -->
         <c:import url="/WEB-INF/views/include/sidebar.jsp"/>
-		<c:import url="/WEB-INF/views/inclide/sidebar.jsp"/>
 		
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">

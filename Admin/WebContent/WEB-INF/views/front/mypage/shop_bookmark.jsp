@@ -20,7 +20,7 @@
 	<!--    101페이지 #BZ002-DG01 가게프로필 - 단골-->
     <section id="BZ002-DG01" class="content">
         <div class="top">
-            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+            <div class="icon_left"><a href="${root}/front/mypage/shop?shopIdx=${shopIdx}"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">단골목록</h1>
         </div>
         <div class="box1"><p>단골<span>${cnt}</span></p></div>

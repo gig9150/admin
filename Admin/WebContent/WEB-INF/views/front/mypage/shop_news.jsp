@@ -52,77 +52,78 @@
 
 	<!--    96페이지(6/30일 파일) #BZ002-TB01-D 가게프로필 탭 - 소개 (소식)-->
     <section id="BZ002-TB01-D" class="content">
-    	<div class="layout1">
-	    	<div class="top">
-	            <div class="icon_left"><a href=""><i class="fas fa-times"></i></a></div>
-	            <h1 class="title">라루체</h1>
-	            <div class="icon_right"><a href=""><i class="fas fa-ellipsis-v"></i></a></div>
-	        </div>
-	        
-	        <div class="profile_top"><img src="" alt="">
-	        <a href="${root}/front/mypage/profile_update?shopIdx=${shopIdx}" style="position: absolute;right: 8px;">수정</a></div>
-	        <div class="profile_bottom">
-	            <ul class="left_box">
-	                <li>라루체</li>
-	                <li>반포면</li>
-	                <li>매일 11:30 ~ 22:00</li>
-	            </ul>
-				<c:choose>
-					<c:when test="${shopChk eq 1}">
-						<ul class="right_box" onclick="javascript:location.href='${root}/front/mypage/shop_bookmark?shopIdx=${shopIdx}'">
-			                <li><a href=""><i class="fas fa-plus"></i></a></li>
-			                <li>단골</li>
-			                <li>0</li>
-			            </ul>
-					</c:when>
-					<c:otherwise>
-						<c:choose>
-		                	<c:when test="${checkNum eq 1}">
-		                		<div class="regular"><a id="regularMember" href="javascript:void(0)"><span><i class="fas fa-check"></i></span>단골<span>${bookmarkCnt}</span></a></div>
-		                	</c:when>
-		                	<c:otherwise>
-		                		<div class="regular" style="background-color:#e78436"><a style="color:#ffffff" id="regularMember" href="javascript:void(0)"><span><i class="fas fa-check"></i></span>단골<span>${bookmarkCnt}</span></a></div>
-		                	</c:otherwise>
-		                </c:choose>
-					</c:otherwise>
-		            
-				
-				
-				</c:choose>
-	        </div>
-	
-	        <div class="call">
-	            <div class="call_left"><a href="">채팅관리</a></div>
-	            <div class="call_right"><a href="">매니저관리</a></div>
-	        </div>
-	        <ul id="gnb">
-	            <li><a href="">소개</a></li>
-	            <li><a href="">소식</a></li>
-	            <li><a href="">상품<span>8</span></a></li>
-	            <li><a href="">후기<span>9</span></a></li>
-	        </ul>
+    	
+    	<div class="top">
+			<div class="icon_left">
+				<a href="${root}/front/myPage"><i class="fas fa-times"></i></a>
+			</div>
+			<h1 class="title">${map.shop_name}</h1>
+			<div class="icon_right">
+				<a href=""><i class="fas fa-ellipsis-v"></i></a>
+			</div>
 		</div>
 		
-        <div class="layout2" style="display:none;">
-	       <div class="top">
-	            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
-	            <h1 class="title">가게프로필명</h1>
-	        </div>
-	        <ul id="gnb">
-	            <li><a href="">소개</a></li>
-	            <li><a href="">소식</a></li>
-	            <li><a href="">상품<span>8</span></a></li>
-	            <li><a href="">후기<span>9</span></a></li>
-	        </ul>
-        </div>
+		<div class="profile_top">
+			<img src="${root}/upload/${map.main_image}"
+				style="width: 100%; height: 100%;position: absolute;top: 0;right: 0;">
+			<div class="img_file">
+                  <label for="file_box"><i class="fas fa-camera"></i></label>
+                  <input type="file" id="file_box">
+            </div>
+            <div class="cancel">
+                <a href="${root}/front/mypage/profile_delete?shopIdx=${shopIdx}"><i class="far fa-times-circle"></i></a>
+            </div>
+		</div>
+		<div class="profile_bottom">
+			<ul class="left_box">
+				<li>${map.shop_name}</li>
+				<li>${map.area_name}</li>
+				<li>${map.start_date}~ ${map.end_date}</li>
+			</ul>
+		
+			<ul class="right_box"
+				onclick="javascript:location.href='${root}/front/mypage/shop_bookmark?shopIdx=${shopIdx}'">
+				<li><a href=""><i class="fas fa-plus"></i></a></li>
+				<li>단골</li>
+				<li>${bookmarkCnt}</li>
+			</ul>
+		</div>
+		
+		<div class="call">
+			<div class="call_left">
+				<a href="">채팅관리</a>
+			</div>
+			<div class="call_right">
+				<a href="">매니저관리</a>
+			</div>
+		</div>
+		<ul id="gnb">
+			<li><a href="${root}/front/mypage/shop?shopIdx=${map.shop_idx}">소개</a></li>
+			<li><a href="${root}/front/mypage/shop_news?shopIdx=${map.shop_idx}">소식</a></li>
+			<li><a href="${root}/front/mypage/shop_review?shopIdx=${map.shop_idx}">후기<span></span></a></li>
+		</ul>
+		<div class="layout2" style="display: none;">
+			<div class="top">
+				<div class="icon_left">
+					<a href=""><i class="fas fa-chevron-left"></i></a>
+				</div>
+				<h1 class="title">가게프로필명</h1>
+			</div>
+			<ul id="gnb">
+				<li><a href="${root}/front/mypage/shop?shopIdx=${map.shop_idx}">소개</a></li>
+				<li><a href="${root}/front/mypage/shop_news?shopIdx=${map.shop_idx}">소식</a></li>
+				<li><a href="${root}/front/mypage/shop_review?shopIdx=${map.shop_idx}">후기<span></span></a></li>
+			</ul>
+		</div>
+    	
         <div class="top_btn"><a href="${root}/front/mypage/news_regi?shopIdx=${shopIdx}">소식 작성하기</a></div>
         <c:forEach items="${list}" var="obj">
 	        <div class="big_box">
 	            <div class="box box_1">
 	                <div class="pic"></div>
 	                <div class="info">
-	                    <div class="sub_box"><p>${shopMap.shop_name}</p></div>
-	                    <div class="sub_box"><p>${shopMap.area_name}<span>/</span>${obj.regdate}</p></div>
+	                    <div class="sub_box"><p>${map.shop_name}</p></div>
+	                    <div class="sub_box"><p>${map.area_name}<span>/</span>${obj.regdate}</p></div>
 	                </div>
 	            </div>    
 	            <ul class="box btn">
@@ -195,7 +196,7 @@
 			
 			//수정 삭제 숨기기 
 			$('.menu').click(function(){
-				$('.none-box').toggle();
+				$(this).parent().next().toggle();
 			});
 			
 			//좋아요
@@ -211,7 +212,7 @@
 							console.log(data);
 						}
 					});
-					$('.like-p').html(parseInt($('.like-p').html()) + 1);
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) + 1);
 					
 				}else{
 					
@@ -223,7 +224,7 @@
 							console.log(data);
 						}
 					});
-					$('.like-p').html(parseInt($('.like-p').html()) - 1);
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) - 1);
 					
 				}
 			});
@@ -234,6 +235,9 @@
 				location.href="${root}/front/mypage/news_detail?shopNewsId="+shopNewsId+"&shopIdx="+shopIdx;
 			});
 			
+			$('.img_file').click(function(){
+				location.href="${root}/front/mypage/profile_update?shopIdx=${shopIdx}";
+			});
 		});
 		
 	</script>

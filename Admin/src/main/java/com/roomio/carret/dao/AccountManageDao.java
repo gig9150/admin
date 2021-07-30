@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.roomio.carret.bean.MemberSearchBean;
+import com.roomio.carret.bean.PenaltySearchBean;
 import com.roomio.carret.bean.ShopUpdateBean;
 
 @Repository
@@ -111,6 +112,82 @@ public class AccountManageDao {
 	public void addShopPenalty(HashMap<Object,Object> map) {
 		sqlSessionTemplate.insert("com.roomio.carret.accountManage.addShopPenalty",map);
 	}
+	
+	public List<HashMap<Object,Object>> getShopApplyList(MemberSearchBean bean,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getShopApplyList",bean);
+	}
+	
+	public int getShopApplyCnt(MemberSearchBean bean) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getShopApplyCnt",bean);
+	}
+	
+	public HashMap<Object,Object> getShopApplyInfo(int shopIdx){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getShopApplyInfo",shopIdx);
+	}
+	
+	public List<HashMap<Object,Object>> getShopHold(int shopIdx){
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getShopHold",shopIdx);
+	}
+	
+	public void updateShopStatus(HashMap<Object,Object> map) {
+		sqlSessionTemplate.update("com.roomio.carret.accountManage.updateShopStatus",map);
+	}
+	
+	public List<HashMap<Object,Object>> getMemPenalty(PenaltySearchBean bean,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getMemPenalty",bean,rowBounds);
+	}
+	
+	public int getMemPenaltyCnt(PenaltySearchBean bean) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getMemPenaltyCnt",bean);
+	}
 
+	public List<HashMap<Object,Object>> getShopPenalty(PenaltySearchBean bean,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getShopPenalty",bean,rowBounds);
+	}
+	
+	public int getShopPenaltyCount(PenaltySearchBean bean) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getShopPenaltyCount",bean);
+	}
+	
+	public HashMap<Object,Object> getMemPenaltyInfo(int memberPenaltyId){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getMemPenaltyInfo",memberPenaltyId);
+	}
+	
+	public List<HashMap<Object,Object>> getMemPeUpdate(int memberPenaltyId,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getMemPeUpdate",memberPenaltyId,rowBounds);
+	}
+	
+	public int getMemPeUpdateCnt(int memberPenaltyId){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getMemPeUpdateCnt",memberPenaltyId);
+	}
+	
+	public void updateMemPenalty(HashMap<Object,Object> map) {
+		sqlSessionTemplate.update("com.roomio.carret.accountManage.updateMemPenalty",map);
+	}
+	
+	public void addMemPenaltyList(HashMap<Object,Object> map) {
+		sqlSessionTemplate.insert("com.roomio.carret.accountManage.addMemPenaltyList",map);
+	}
+	
+	public HashMap<Object,Object> getShopPenaltyInfo(int shopPenaltyId){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getShopPenaltyInfo",shopPenaltyId);
+	}
+	
+	public List<HashMap<Object,Object>> getShopPeUpdate(int shopPenaltyId,RowBounds rowBounds){
+		return sqlSessionTemplate.selectList("com.roomio.carret.accountManage.getShopPeUpdate",shopPenaltyId,rowBounds);
+	}
+	
+	public int getShopPeUpdateCnt(int shopPenaltyId) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.accountManage.getShopPeUpdateCnt",shopPenaltyId);
+	}
+	
+	public void updateShopPenalty(HashMap<Object,Object> map) {
+		sqlSessionTemplate.update("com.roomio.carret.accountManage.updateShopPenalty",map);
+	}
+	
+	public void addShopPenaltyList(HashMap<Object,Object> map) {
+		sqlSessionTemplate.insert("com.roomio.carret.accountManage.addShopPenaltyList",map);
+	}
+	
 	
 }

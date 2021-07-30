@@ -116,7 +116,7 @@
 	<insert id="addFrontMemberQuestionImage" parameterType="java.util.List">
 		insert into question_image(question_id,name)
 		values
-		<foreach item="item" index="index" collection="list">
+		<foreach item="item" separator="," collection="list">
 			(${item.questionId},#{item.name})
 		</foreach>
 	</insert>
@@ -189,6 +189,7 @@
 		inner join area_dong d
 		on s.id = d.id
 		where member_id = ${memberId} 
+		and activity_status = 1
 	
 	</select>
 	
@@ -398,25 +399,74 @@
 		<result column="view_count" property="view_count"/>
 		<result column="reply" property="reply"/>
 		<result column="regdate" property="regdate"/>
+		<result column="profile_image" property="profile_image"/>
 		<result column="likeCnt" property="likeCnt"/>
 		<result column="content" property="content"/>
+		<result column="member_id" property="member_id"/>
 		<collection property="imageList" javaType="list" ofType="string">
 			<result column="name" property="name"/>
 		</collection>
 	</resultMap>
 	
 	<!-- 가게 후기 정보  -->
-	<select id="getReviewList" parameterType="int" resultMap="getReviewMap">
+	<select id="getReviewList" parameterType="hashMap" resultMap="getReviewMap">
+	
 		select m.name as nickName,
 		(select count(*) from shop_review r2 where r2.member_id = m.member_id) as reviewCnt,
-		r.shop_review_id,r.content,r.view_count,r.reply,r.regdate,ri.name,
-		(select count(*) from shop_review_like rl where r.shop_review_id = rl.shop_review_id) as likeCnt
+		r.shop_review_id,r.content,r.view_count,r.reply,r.regdate,ri.name,m.profile_image,
+		(select count(*) from shop_review_like rl where r.shop_review_id = rl.shop_review_id) as likeCnt,
+		(select srl.member_id from shop_review_like srl where srl.member_id = ${memberId} and srl.shop_review_id = r.shop_review_id) AS member_id
 		from shop_review r
 		inner join member m
 		on r.member_id = m.member_id
 		left join shop_review_image ri 
 		on r.shop_review_id = ri.shop_review_id 
-		where r.shop_idx = ${shopIdx}
+		where r.shop_idx = ${shopIdx} 
+		
+	</select> 
+	
+	<resultMap type="hashMap" id="getReviewDeMap">
+		<result column="shop_review_id" property="shop_review_id"/>
+		<result column="nickName" property="nickName"/>
+		<result column="reviewCnt" property="reviewCnt"/>
+		<result column="view_count" property="view_count"/>
+		<result column="reply" property="reply"/>
+		<result column="regdate" property="regdate"/>
+		<result column="likeCnt" property="likeCnt"/>
+		<result column="content" property="content"/>
+		<result column="profile_image" property="profile_image"/>
+		<result column="area_name" property="area_name"/>
+		<result column="member_id" property="member_id"/>
+		<collection property="imageList" javaType="list" ofType="string">
+			<result column="name" property="name"/>
+		</collection>
+		<collection property="keyList" javaType="list" ofType="string">
+			<result column="keyword" property="keyword"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 가게 후기 상세 정보  -->
+	<select id="getReviewDetail" parameterType="hashMap" resultMap="getReviewDeMap">
+	
+		select m.name as nickName,
+		(select count(*) from shop_review r2 where r2.member_id = m.member_id) as reviewCnt,
+		r.shop_review_id,r.content,r.view_count,r.reply,r.regdate,ri.name,m.profile_image,
+		(select count(*) from shop_review_like rl where r.shop_review_id = rl.shop_review_id) as likeCnt,
+		(select srl.member_id from shop_review_like srl where srl.member_id = ${memberId} and srl.shop_review_id = r.shop_review_id) AS member_id,
+		rkc.content as keyword,d.area_name 
+		from shop_review r
+		inner join member m
+		on r.member_id = m.member_id
+		inner join area_dong d
+		on m.id = d.id
+		left join shop_review_image ri 
+		on r.shop_review_id = ri.shop_review_id 
+		left join review_keyword rk
+		on r.shop_review_id = rk.shop_review_id
+		inner join review_keyword_category rkc
+		on rk.review_keyword_category_id = rkc.review_keyword_category_id
+		where r.shop_review_id = ${shopReviewId}
+		
 	</select> 
 	
 	<!-- 가게 후기 답글 등록 -->
@@ -437,5 +487,24 @@
 		and member_id = ${memberId}
 		
 	</select>
+	
+	<!-- 탈퇴 사유 카테고리 -->
+	<select id="getShopWithCategory" resultType="hashMap">
+		
+		select shop_with_category_id,content
+		from shop_with_category
+		
+	</select>
+	
+	<!-- 가게 프로필 탈퇴 -->
+	<update id="updateShopStatus" parameterType="hashMap">
+	
+		update shop
+		set shop_with_category_id = ${id},
+		with_content = #{content},
+		activity_status = 2
+		where shop_idx = ${shopIdx}
+	
+	</update>
 	
 </mapper>

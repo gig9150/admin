@@ -262,7 +262,7 @@
 	
 	<select id="getFrontShopGoods" resultType="hashMap" parameterType="int">
 	
-		select name,price,min_price
+		select name,price,min_price,best,additional_info
 		from goods
 		where shop_idx = ${shopIdx}
 		limit 0,5
@@ -630,7 +630,7 @@
 		
 		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
 		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt,
-		(select member_id from shop_news_like where member_id = ${memberId}) AS member_id
+		(select snl.member_id from shop_news_like snl where snl.member_id = ${memberId} and snl.shop_news_id = sn.shop_news_id) AS member_id
 		from shop_news sn
 		inner join shop_news_category snc
 		on sn.shop_news_category_id = snc.shop_news_category_id
@@ -645,7 +645,7 @@
 	
 		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
 		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt,
-		(select member_id from shop_news_like where member_id = ${memberId}) AS member_id
+		(select snl.member_id from shop_news_like snl where snl.member_id = ${memberId} and snl.shop_news_id = sn.shop_news_id) AS member_id
 		from shop_news sn
 		inner join shop_news_category snc
 		on sn.shop_news_category_id = snc.shop_news_category_id
@@ -676,6 +676,23 @@
 	
 		delete from shop_news_like
 		where shop_news_id = ${shopNewsId}
+		and member_id = ${memberId}
+		
+	</delete>
+	
+	<!-- 가게 후기 좋아요 추가 -->
+	<insert id="addReviewLike" parameterType="hashMap">
+	
+		insert into shop_review_like(member_id,shop_review_id)
+		values(${memberId},${shopReviewId})
+		
+	</insert>
+	
+	<!-- 가게 후기 좋아요 삭제 -->
+	<delete id="delReviewLike" parameterType="hashMap">
+	
+		delete from shop_review_like
+		where shop_review_id = ${shopReviewId}
 		and member_id = ${memberId}
 		
 	</delete>

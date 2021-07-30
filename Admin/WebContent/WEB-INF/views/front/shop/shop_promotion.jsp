@@ -106,94 +106,10 @@
 	            </div>
        	</c:forEach>
 
-<!--         <div class="swiper-container box_5"> -->
-<!--             <div class="sub_title_box"> -->
-               
-<!--                     <h2 class="sub_title">우리가게 이벤트 소식</h2> -->
-                    
-<!--                 <ul class="view_more"> -->
-<!--                     <li><a href="">더보기</a></li> -->
-<!--                     <li><a href=""><i class="fas fa-chevron-right"></i></a></li> -->
-<!--                 </ul> -->
-<!--             </div> -->
-<!-- 			<div class="swiper-wrapper"> -->
-<!--                 <div class="swiper-slide"> -->
-<!--                     <div class="sub_box"> -->
-<!--                         <div class="pic"></div> -->
-<!--                         <div class="info"> -->
-<!--                             <ul class="sub_info sub_info_1"> -->
-<!--                                 <li>휘연</li> -->
-<!--                                 <li>반포면</li> -->
-<!--                                 <li>영업중</li> -->
-<!--                             </ul> -->
-<!--                             <ul class="sub_info sub_info_2"> -->
-<!--                                 <li>까페/매일</li><br> -->
-
-<!--                                 <li>11&#58;00&#126;21&#58;00</li> -->
-<!--                             </ul> -->
-<!--                             <ul class="sub_info sub_info_3"> -->
-<!--                                 <li><i class="far fa-comment"></i></li> -->
-<!--                                 <li>2</li><br> -->
-<!--                                 <li><i class="fas fa-heart"></i></li> -->
-<!--                                 <li>0</li> -->
-<!--                             </ul> -->
-<!--                         </div> -->
-<!--                     </div> -->
-<!--                 </div> -->
-<!--                 <div class="swiper-slide"> -->
-<!--                     <div class="sub_box"> -->
-<!--                         <div class="pic"></div> -->
-<!--                         <div class="info"> -->
-<!--                             <ul class="sub_info sub_info_1"> -->
-<!--                                 <li>휘연</li> -->
-<!--                                 <li>반포면</li> -->
-<!--                                 <li>영업중</li> -->
-<!--                             </ul> -->
-<!--                             <ul class="sub_info sub_info_2"> -->
-<!--                                 <li>까페/매일</li><br> -->
-
-<!--                                 <li>11&#58;00&#126;21&#58;00</li> -->
-<!--                             </ul> -->
-<!--                             <ul class="sub_info sub_info_3"> -->
-<!--                                 <li><i class="far fa-comment"></i></li> -->
-<!--                                 <li>2</li><br> -->
-<!--                                 <li><i class="fas fa-heart"></i></li> -->
-<!--                                 <li>0</li> -->
-<!--                             </ul> -->
-<!--                         </div> -->
-<!--                     </div> -->
-<!--                 </div> -->
-<!--                 <div class="swiper-slide"> -->
-<!--                     <div class="sub_box"> -->
-<!--                         <div class="pic"></div> -->
-<!--                         <div class="info"> -->
-<!--                             <ul class="sub_info sub_info_1"> -->
-<!--                                 <li>휘연</li> -->
-<!--                                 <li>반포면</li> -->
-<!--                                 <li>영업중</li> -->
-<!--                             </ul> -->
-<!--                             <ul class="sub_info sub_info_2"> -->
-<!--                                 <li>까페/매일</li><br> -->
-
-<!--                                 <li>11&#58;00&#126;21&#58;00</li> -->
-<!--                             </ul> -->
-<!--                             <ul class="sub_info sub_info_3"> -->
-<!--                                 <li><i class="far fa-comment"></i></li> -->
-<!--                                 <li>2</li><br> -->
-<!--                                 <li><i class="fas fa-heart"></i></li> -->
-<!--                                 <li>0</li> -->
-<!--                             </ul> -->
-<!--                         </div> -->
-<!--                     </div> -->
-<!--                 </div> -->
-<!--             </div> -->
-<!--         </div> -->
-
-
-        <div class="bottom_box">
+       <div class="box bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
-                <div class="info"><a href="${root}/front/home">홈</a></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-heart"></i></div>
@@ -218,28 +134,12 @@
 		    <div class="box">
 		       <div class="top_box">
 		            <h1 class="title">지역선택 <span><a class="closeAreaSelect" href="javascript:void(0)"><i class="fas fa-times"></i></a></span></h1>
-		               
 		       </div>
-		        
-		        <ul>
-		            <li><a href="${root}/front/shop/shop_promotion_area">공주시 전체</a></li>
-		            <li><a href="">유구읍</a></li>
-		            <li><a href="">이인면</a></li>
-		            <li><a href="">탄천면</a></li>
-		            <li><a href="">계룡면</a></li>
-		            <li><a href="">반포면</a></li>
-		            <li><a href="">의당면</a></li>
-		            <li><a href="">정안면</a></li>
-		            <li><a href="">우성면</a></li>
-		            <li><a href="">사곡면</a></li>
-		            <li><a href="">신풍면</a></li>
-		            <li><a href="">중학동</a></li>
-		            <li><a href="">웅진동</a></li>
-		            <li><a href="">금학동</a></li>
-		            <li><a href="">옥룡동</a></li>
-		            <li><a href="">신관동</a></li>
-		            <li><a href="">월송동</a></li>
-		            <li><a href="">월송동</a></li>
+		        <ul class="area-ul">
+		        	<li><a class="all-a">지역 전체</a></li>
+		            <c:forEach items="${areaList}" var="obj">
+		            	<li><a data-id="${obj.id}">${obj.area_name}</a></li>
+		            </c:forEach>
 		        </ul>
 		    </div>
 		</section>
@@ -252,6 +152,17 @@
 <script src="${root}/js/main.js"></script>
 <script>
 	$(function(){
+		
+		$('.area-ul li a').not('all-a').on('click',function(){
+			
+			let id = $(this).data('id');
+			location.href="${root}/front/shop/shop_promotion_area?area="+id;
+	
+		});
+		
+		$('.all-a').on('click',function(){
+			location.href="${root}/front/shop/shop_promotion_area";
+		});
 		
 		//지역 선택창 ON
 		$('.place').on('click',function(){

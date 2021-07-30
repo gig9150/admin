@@ -26,7 +26,7 @@
 	<form action="${root}/front/mypage/withdrawal_pro" type="post" id="withRegiForm">
 	   <section id="withdraw" class="content">
 	       <div class="top">
-	            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+	            <div class="icon_left"><a href="${root}/front/myPage"><i class="fas fa-chevron-left"></i></a></div>
 	            <h1 class="title">회원 탈퇴</h1>
 	        </div>
 	        <p class="txt">

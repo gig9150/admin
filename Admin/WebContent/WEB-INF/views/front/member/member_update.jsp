@@ -15,34 +15,73 @@
 <title>Document</title>
 </head>    
 <body>
-	<!--MY002 마이페이지 - 회원정보수정 -프로필수정 -->
-	<form action="${root}/front/member/member_update_pro" method="Post" id="memberInfoUpdate" enctype="multipart/form-data">
-	    <section id="MY002_2" class="content">
-	    
-	        <div class="box top">
-	            <div class="icon_left"><a href="${root}/front/member/myPage"><i class="fas fa-times"></i></a></div>
-	            <h1 class="title">프로필 수정</h1>
-	        </div>
-	        
-	        <div class="pic">	
-	            <label for="file_box"><i class="fas fa-camera"></i></label>
-	            <input type="file" id="file_box" name="uploadFile">
-	        </div>
-	        
-	        <div class="inner">
-	        	<h6>닉네임을 설정해주세요.</h6><br>
-	            <div class="btn"><input type="text" id="updateName" name="name" ></div>
-	        </div>
-	        
-	        <div class="inner">
-	        	<h6>지역을 설정해주세요.</h6><br>
-	            <div class="btn"><input type="text" id="updateArea" name="address" ></div>
-	        </div>
-	        
-	        <div class="bottom_btn"><button type="submit">완료</button></div>
-	        
-	    </section>
-	</form>
+
+	<!--54페이지 #MY001-PI01 마이페이지-회원정보수정-->
+	<section id="MY001-PI01" class="content">
+    	<div class="top">
+            <div class="icon"><a href="javascript:void(0)"></a></div>
+            <h1 class="profile">회원 가입</h1>
+        </div>
+ 	<form action="${root}/front/member/member_update_pro" method="Post" id="memberInfoUpdate" enctype="multipart/form-data">
+        <div class="inner">
+            <div class="pic">
+                <label for="file_box"><i class="fas fa-camera"></i></label>
+                <input type="file" id="file_box" name="uploadFile">
+            </div>
+                <fieldset>
+                    <label for="updateName">닉네임을 설정해주세요.</label>
+                    <input type="text" id="updateName" name="name" placeholder="닉네임을 입력하세요">
+                </fieldset>
+
+                <fieldset>
+                    <label for="place">지역을 설정해주세요.</label>
+                    <select>
+                        <option>강북구</option>
+                    </select>
+                    <div class="search_box">
+                        <input type="text" class="search_input" placeholder="군/구" id="updateArea" readonly="readonly">
+                        <span class="search"><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span>
+                        <input type="hidden" name="id" id="updateAreaHid">
+                    </div>    
+                </fieldset>
+                
+                <button>프로필 수정하기</button>
+			</div>
+        </form>
+
+       <div class="inner2">
+            <p>현재 사용중인 닉네임입니다.<br>닉네임을 다시 설정해주세요</p>
+            <button>확인</button>
+        </div>
+ 
+       <div class="inner3">
+            <p>닉네임 변경 시<br>30일동안 닉네임 변경 불가합니다.<br>정보를 변경하시겠습니까?</p>
+            <div class="btn_box">
+                <div class="btn cancel"><a href="">취소</a></div>
+                <div class="btn sure"><a href="javascript:void(0)">확인</a></div>
+            </div>
+        </div>
+
+       <div class="inner4">
+            <p>정보 수정이 완료되었습니다.</p>
+            <button>확인</button>
+        </div>
+        
+        <div class="box">
+	       <div class="top_box">
+	            <h1 class="title">지역선택 <span><a class="closeAreaSelect" href="javascript:void(0)"><i class="fas fa-times"></i></a></span></h1>   
+	       </div>
+	        <ul class="area-ul">
+	            <c:forEach items="${areaList}" var="obj">
+	            	<li><a data-id="${obj.id}">${obj.area_name}</a></li>
+	            </c:forEach>
+	        </ul>
+	    </div>
+		
+    
+	</section>
+	
+
     <script src="${root}/vendor/jquery/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
@@ -53,18 +92,33 @@
 		    	$('.pic img').remove();
 	            var reader = new FileReader();
 	            reader.onload = function (e) {
-	                $('.pic').append('<img src="'+e.target.result+'">');
+	                $('.pic').append('<img src="'+e.target.result+'" style="width:100%;height:100%;border-radius:inherit">');
 	            }
 	            reader.readAsDataURL(input.files[0]);
 	        }
 	    }
 	     
 		$(function(){
-			//회원 이미지가 존재하면 이미지 등록
 			
-// 			if(){
-// 				$('.pic').append('<img src="'++'">');
-// 			}
+			$('.search').click(function(){
+				$('#MY001-PI01').addClass('on4');
+			});
+			
+			$('.area-ul li a').click(function(){
+				let id = $(this).data('id');
+				$('#updateAreaHid').val(id);
+				$('#updateArea').val($(this).html());
+				$('#MY001-PI01').removeClass('on4');
+			});
+				
+			
+			
+			//클릭시 등록된 파일 삭제
+			$('.pic').on('click',function(){
+				$(this).find('img').remove();
+				console.log($('#file_box').val());
+				$('#file_box').val('');
+			})
 			
 			//파일 수정시 미리보기 
 		    $("#file_box").on('change', function(){
@@ -77,58 +131,48 @@
 				
 				// 중복 닉네임 확인
 				const updateName = $('#updateName').val();
+				
 
 				$.ajax({
 					url:'${root}/front/member/GetMemberName/'+updateName,
 					type:'get',
+					async: false,
 					success:function(data){
-						e.preventDefault();
 						if(data.trim() == updateName){
-							swal({
-								title : "fail!",
-								text : "현재 사용중인 닉네임입니다." +
-										"닉네임을 다시 설정해주세요",
-								buttons: ["확인", "취소"],
-						    	closeOnClickOutside : false
-						 	});
+							
+							$('#MY001-PI01').addClass('on1');
 							e.preventDefault();
+							
 						}
 					}
 				});
 				
-				//닉네임 변경 or 닉네임 + 지역 변경할 경우
-				
-				if(updateName != null){
-					
+				if(updateName != '' && $('#updateArea').val() != ''){
+					$('#MY001-PI01').addClass('on2');
 					e.preventDefault();
-					
-					swal({
-						title : "fail!",
-						text : "닉네임 변경 시 \n 30일동안 닉네임 변경 불가합니다 \n 정보를 변경 하시겠습니까?",
-						buttons: {
-							cancel : "취소",
-							defeat : "확인" 
-						},
-				    	closeOnClickOutside : false
-				 	}).then(function(value){
-				 		switch(value){
-				 			case "defeat" :
-				 				swal("회원 정보가 변경되었습니다.").then(function(){
-				 					$('#memberInfoUpdate')[0].submit();
-				 				})
-				 			break;
-				 			default :
-				 				e.preventDefault();
-				 		}
-				 	});
+				}else if($('#updateArea').val() != ''){
+					$('#MY001-PI01').addClass('on3');
+					e.preventDefault();
+				}else if(updateName != ''){
+					$('#MY001-PI01').addClass('on2');
+					e.preventDefault();
 				}
+
 				
-				//회원 정보 변경 완료
-				swal("회원 정보가 변경되었습니다.").then(function(){
- 					$('#memberInfoUpdate')[0].submit();
- 				});
+			});
 			
-			})
+			$('.inner2 button').click(function(){
+				$('#MY001-PI01').removeClass('on1');
+			});
+			
+			$('.inner3 .sure').click(function(){
+				$('#memberInfoUpdate')[0].submit();
+			});
+			
+			$('.inner4 button').click(function(){
+				$('#memberInfoUpdate')[0].submit();
+			});
+			
 		});
    
     </script>

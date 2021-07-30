@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.roomio.carret.bean.MemberSearchBean;
 import com.roomio.carret.bean.PageBean;
+import com.roomio.carret.bean.PenaltySearchBean;
 import com.roomio.carret.bean.ShopUpdateBean;
 import com.roomio.carret.dao.AccountManageDao;
 
@@ -154,6 +155,124 @@ public class AccountManageService {
 	
 	public void addShopPenalty(HashMap<Object,Object> map) {
 		accountManageDao.addShopPenalty(map);
+	}
+	
+	public List<HashMap<Object,Object>> getShopApplyList(int page,MemberSearchBean bean,int selectNum){
+		int start = (page - 1) * selectNum;
+		RowBounds rowBounds = new RowBounds(start,selectNum);
+		return accountManageDao.getShopApplyList(bean,rowBounds);
+	}
+	
+	public PageBean getShopApplyCnt(int page,MemberSearchBean bean,int selectNum) {
+		int shopCnt = accountManageDao.getShopApplyCnt(bean);
+		PageBean pageBean = new PageBean(page,shopCnt,selectNum,paginationCnt);
+		return pageBean;
+	}
+	
+	public int getShopApplyRealCnt(MemberSearchBean bean) {
+		int shopCnt = accountManageDao.getShopApplyCnt(bean);
+		return shopCnt;
+	}
+	
+	public HashMap<Object,Object> getShopApplyInfo(int shopIdx){
+		return accountManageDao.getShopApplyInfo(shopIdx);
+	}
+	
+	public List<HashMap<Object,Object>> getShopHold(int shopIdx){
+		return accountManageDao.getShopHold(shopIdx);
+	}
+	
+	public void updateShopStatus(HashMap<Object,Object> map) {
+		accountManageDao.updateShopStatus(map);
+	}
+	
+	public List<HashMap<Object,Object>> getMemPenalty(int page,PenaltySearchBean bean,int selectNum){
+		int start = (page - 1) * selectNum;
+		RowBounds rowBounds = new RowBounds(start,selectNum);
+		return accountManageDao.getMemPenalty(bean,rowBounds);
+	}
+	
+	public PageBean getMemPenaltyCnt(int page,PenaltySearchBean bean,int selectNum) {
+		int shopCnt = accountManageDao.getMemPenaltyCnt(bean);
+		PageBean pageBean = new PageBean(page,shopCnt,selectNum,paginationCnt);
+		return pageBean;
+	}
+	
+	public int getMemPenaltyRealCnt(PenaltySearchBean bean) {
+		int shopCnt = accountManageDao.getMemPenaltyCnt(bean);
+		return shopCnt;
+	}
+	
+	public List<HashMap<Object,Object>> getShopPenalty(int page,PenaltySearchBean bean,int selectNum){
+		int start = (page - 1) * selectNum;
+		RowBounds rowBounds = new RowBounds(start,selectNum);
+		return accountManageDao.getShopPenalty(bean,rowBounds);
+	}
+	
+	public PageBean getShopPenaltyCount(int page,PenaltySearchBean bean,int selectNum) {
+		int shopCnt = accountManageDao.getShopPenaltyCount(bean);
+		PageBean pageBean = new PageBean(page,shopCnt,selectNum,paginationCnt);
+		return pageBean;
+	}
+	
+	public int getShopPenaltyRealCount(PenaltySearchBean bean) {
+		int shopCnt = accountManageDao.getShopPenaltyCount(bean);
+		return shopCnt;
+	}
+	
+	public HashMap<Object,Object> getMemPenaltyInfo(int memberPenaltyId){
+		return accountManageDao.getMemPenaltyInfo(memberPenaltyId);
+	}
+	
+	public List<HashMap<Object,Object>> getMemPeUpdate(int page,int memberPenaltyId){
+		int start = (page - 1) * listCnt;
+		RowBounds rowBounds = new RowBounds(start,listCnt);
+		return accountManageDao.getMemPeUpdate(memberPenaltyId,rowBounds);
+	}
+	
+	public PageBean getMemPeUpdateCnt(int page,int memberPenaltyId) {
+		int shopCnt = accountManageDao.getMemPeUpdateCnt(memberPenaltyId);
+		PageBean pageBean = new PageBean(page,shopCnt,listCnt,paginationCnt);
+		return pageBean;
+	}
+	
+	public int getMemPeUpdateRealCnt(int memberPenaltyId) {
+		int shopCnt = accountManageDao.getMemPeUpdateCnt(memberPenaltyId);
+		return shopCnt;
+	}
+	
+	public void updateMemPenalty(HashMap<Object,Object> map) {
+		
+		accountManageDao.updateMemPenalty(map);
+		accountManageDao.addMemPenaltyList(map);
+	}
+	
+	public HashMap<Object,Object> getShopPenaltyInfo(int shopPenaltyId){
+		return accountManageDao.getShopPenaltyInfo(shopPenaltyId);
+	}
+	
+	public List<HashMap<Object,Object>> getShopPeUpdate(int page,int shopPenaltyId){
+		int start = (page - 1) * listCnt;
+		RowBounds rowBounds = new RowBounds(start,listCnt);
+		return accountManageDao.getShopPeUpdate(shopPenaltyId,rowBounds);
+	}
+	
+	public PageBean getShopPeUpdateCnt(int page,int shopPenaltyId) {
+		int shopCnt = accountManageDao.getShopPeUpdateCnt(shopPenaltyId);
+		PageBean pageBean = new PageBean(page,shopCnt,listCnt,paginationCnt);
+		return pageBean;
+	}
+	
+	public int getShopPeUpdateRealCnt(int shopPenaltyId) {
+		int shopCnt = accountManageDao.getShopPeUpdateCnt(shopPenaltyId);
+		return shopCnt;
+	}
+	
+	public void updateShopPenalty(HashMap<Object,Object> map) {
+		
+		accountManageDao.updateShopPenalty(map);
+		accountManageDao.addShopPenaltyList(map);
+		
 	}
 	
 	

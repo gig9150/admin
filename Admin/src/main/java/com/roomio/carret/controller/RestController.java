@@ -21,6 +21,7 @@ import com.roomio.carret.service.ManagerAccountService;
 import com.roomio.carret.service.ManagerService;
 import com.roomio.carret.service.MemberService;
 import com.roomio.carret.service.MypageService;
+import com.roomio.carret.service.OperationService;
 import com.roomio.carret.service.ShopService;
 
 @org.springframework.web.bind.annotation.RestController
@@ -43,6 +44,9 @@ public class RestController {
 	
 	@Autowired
 	private MypageService mypageService;
+	
+	@Autowired
+	private OperationService operationService;
 	
 	@Resource(name = "loginMemberBean")
 	@Lazy
@@ -222,7 +226,88 @@ public class RestController {
 			return "fail";
 		}
 	}
+	
+	//가게 후기 좋아요 추가 
+	@RequestMapping("/front/shop/reviewLikeAdd/{shopReviewId}")
+	public String reviewLikeAdd(@PathVariable int shopReviewId) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		
+		map.put("shopReviewId",shopReviewId);
+		//나중에 수정해주기 ★★
+		map.put("memberId",loginMemberBean.getMember_id());
+		
+		int num = shopService.addReviewLike(map);
+		
+		if(num >= 1) {
+			return "success";
+		}else {
+			return "fail";			
+		}
+	}
+	
+	//가게 후기 좋아요 삭제
+	@RequestMapping("/front/shop/reviewLikeDel/{shopReviewId}")
+	public String reviewLikeDel(@PathVariable int shopReviewId) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopReviewId",shopReviewId);
+		
+		//나중에 수정해주기 ★★
+		map.put("memberId",loginMemberBean.getMember_id());
+		
+		int num = shopService.delReviewLike(map);
+		
+		if(num >= 1) {
+			return "success";
+		}else {
+			return "fail";
+		}
+	}
+	
+	//노출상태 일괄 변경
+	@RequestMapping("/operation/view_status_change")
+	public String viewStatusChange(@RequestParam int set,
+									@RequestParam List<Integer> id) {
+		
+		int num = 0;
+		
+		if(set == 1) {
+			num = operationService.updateViewStatus1(id);
+		}else {
+			num = operationService.updateViewStatus2(id);
+		}
+		
+		if(num >= 1) {
+			return "success";
+		}else {
+			return "fail";
+		}
+		
+		
+	}
 
+	//공지사항 노출상태 일괄 변경
+	@RequestMapping("/operation/notice_view_status_change")
+	public String noiceViewStatusChange(@RequestParam int set,
+									@RequestParam List<Integer> id) {
+		
+		int num = 0;
+		
+		if(set == 1) {
+			num = operationService.updateNoticeViewStatus1(id);
+		}else {
+			num = operationService.updateNoticeViewStatus2(id);
+		}
+		
+		if(num >= 1) {
+			return "success";
+		}else {
+			return "fail";
+		}
+		
+		
+	}
 	
 	
 	

@@ -25,7 +25,7 @@
 	<!--56페이지 - #MY001-RV00 - 마이페이지_후기목록-->
     <section id="MY001-RV00" class="content">
         <div class="top">
-            <div class="icon"><a href=""><img src="./img/left.png" alt=""></a></div>
+            <div class="icon"><a href="${root}/front/myPage"><img src="${root}/img/left.png" alt=""></a></div>
             <h1 class="profile">후기 목록</h1>
         </div>
         
@@ -77,7 +77,7 @@
         <div class="box bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
-                <div class="info"><a href="">홈</a></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-heart"></i></div>
@@ -93,7 +93,7 @@
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-user"></i></div>
-                <div class="info"><a href="">MY</a></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
             </div>
         </div>
     </section>

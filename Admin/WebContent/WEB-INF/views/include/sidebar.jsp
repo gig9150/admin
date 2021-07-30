@@ -46,14 +46,14 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-folder"></i>
                     <span>전시관리</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">메인 홈페이지 관리</a>
-                        <a class="collapse-item" href="cards.html">가게홍보페이지 관리</a>
-                        <a class="collapse-item" href="${root}/exhibition/curation_list">기획전 등록 관리</a>
+                        <a class="collapse-item" href="buttons.html">추천 메인페이지 관리</a>
+                        <a class="collapse-item" href="${root}/exhibition/promotion_account">가게홍보 큐레이션 관리</a>
+                        <a class="collapse-item" href="${root}/exhibition/curation_list">전시 등록 관리</a>
                     </div>
                 </div>
             </li>
@@ -62,7 +62,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
+                    <i class="fas fa-fw fa-folder"></i>
                     <span>관리자계정 관리</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
@@ -89,8 +89,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                     	<a class="collapse-item" href="${root}/account_manage/member">일반회원 관리</a>
                         <a class="collapse-item" href="${root}/account_manage/shop_list">가게 리스트</a>
-                        <a class="collapse-item" href="${root}/shop/apply">가게 신청 심사</a>
-                        <a class="collapse-item" href="${root}/member/manage_penalty">패널티관리</a>
+                        <a class="collapse-item" href="${root}/account_manage/shop_apply_list">가게 신청 심사</a>
+                        <a class="collapse-item" href="${root}/account_manage/penalty">패널티관리</a>
                     </div>
                 </div>
             </li>
@@ -118,17 +118,16 @@
                 </a>
                 <div id="d" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="login.html">가게 콘텐츠 관리</a>
+                        <a class="collapse-item" href="${root}/account_manage/news_manage">가게 콘텐츠 관리</a>
                         <a class="collapse-item" href="register.html">회원 콘텐츠 관리</a>
                         <a class="collapse-item two-collapse" href="javascript:void(0);">거래관리<span></span></i></a>
                         <a class="collapse-item two-collapse-item" style="display:none;padding-left: 35px;" href="">거래내역</a>
                         <a class="collapse-item two-collapse-item" style="display:none;padding-left: 35px;" href="">후기내역</a>
-                        <a class="collapse-item" href="forgot-password.html">금지어 관리</a>
+                        <a class="collapse-item" href="${root}/content/prohibited_word">금지어 관리</a>
                     </div>
                 </div>
             </li>
-      
-            
+
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -142,7 +141,7 @@
                         <a class="collapse-item" href="${root}/operation/question">1:1문의 관리</a>
                         <a class="collapse-item" href="${root}/operation/report">신고문의 관리</a>
                         <a class="collapse-item" href="${root}/operation/FAQ">FAQ 관리</a>
-                        <a class="collapse-item" href="${root}/operation">공지사항 관리</a>
+                        <a class="collapse-item" href="${root}/operation/notice">공지사항 관리</a>
                     </div>
                 </div>
             </li>

@@ -15,6 +15,31 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 <script src="${root}/vendor/jquery/jquery.min.js"></script>
+<style>
+	select[name="startDate"],select[name="endDate"]{
+		float: left;
+	    padding: 0 10px;
+	    width: 100%;
+	    height: 100%;
+	    border: 1px solid #bbb;
+	    border-radius: 5px;
+	
+	}
+	
+	.box7 .txt{
+		border:none;
+	}
+	
+	.box .txt textarea{
+	    width: 100%;
+	    height: 180px;
+	    border-radius: 5px;
+	    border: 1px solid #bbb;
+	
+	}
+
+
+</style>
 </head>
 <body>
 <form action="${root}/front/mypage/shop_update_pro" id="updateShopForm">

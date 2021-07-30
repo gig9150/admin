@@ -44,7 +44,9 @@
 	                    <label for="place">지역을 설정해주세요.</label>
 	                    <input type="text" value="순천시" id="place" disabled="disabled">
 	                    <select name ="id" id="address">
-	                    	<option value="1">군/구</option>
+	                    	<c:forEach items="${list}" var="obj">
+	                    		<option value="${obj.id}">${obj.area_name}</option>
+	                    	</c:forEach>
 	                    </select>
 	                </fieldset>
 	                <button type="submit">가입하기</button>

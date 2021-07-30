@@ -7,8 +7,9 @@
 	<!-- 지역 정보 -->
 	<select id="getAreaList" resultType="hashMap">
 			
-		select id,area_name
-		from area_dong	
+		select distinct id,area_name
+		from area_dong
+		GROUP BY area_name
 	
 	</select>
 	
@@ -297,7 +298,7 @@
 		<result column="responsibility_memo" property="responsibility_memo"/>
 		<result column="buisness_name" property="buisness_name"/>
 		<result column="buisness_num" property="buisness_num"/>
-		<result column="buisess_image_name" property="buisess_image_name"/>
+		<result column="buisness_image_name" property="buisness_image_name"/>
 		<result column="sector_content" property="sector_content"/>
 		<result column="sector_id" property="sector_id"/>
 		<result column="name" property="name"/>
@@ -318,7 +319,7 @@
 	
 		select f.franchise_name,s.shop_name,s.shop_idx,d.area_name,s.regdate,s.approve_date,
 		s.activity_status,s.recent_access,s.register,k.keyword,s.responsibility_memo,s.buisness_name,s.buisness_num,
-		s.buisess_image_name,se.sector_id,se.sector_content,m.name,m.member_id,
+		s.buisness_image_name,se.sector_id,se.sector_content,m.name,m.member_id,
 		(select count(*) from member_and_shop ms where ms.member_id = m.member_id) as bookCnt,
 		(select count(*) from shop_news n where s.shop_idx = n.shop_idx) as newsCnt,
 		(select count(*) from direct_transaction dt where s.shop_idx = dt.shop_idx) as directCnt,
@@ -335,6 +336,7 @@
 		on s.sector_id = se.sector_id
 		inner join member m 
 		on s.member_id = m.member_id
+		where s.shop_idx = ${shopIdx}
 		
 	</select>
 	
@@ -416,7 +418,463 @@
 		
 	</insert>
 	
-
+	<!-- 가게 신청 심사 검색 조건 -->
+	
+	<sql id="shopApplySearch">
+		<choose>
+			<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+				and date_format(s.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+			</when>
+			<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(s.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+			<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(s.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+		</choose>
+		<if test='keyWord != null and !keyWord.equals("") and select == 100 '>
+			and s.shop_name LIKE CONCAT('%',#{keyWord},'%') or
+			m.name LIKE CONCAT('%',#{keyWord},'%') or
+			sk.keyword LIKE CONCAT('%',#{keyWord},'%')
+		</if>
+		<if test="select == 1">and s.shop_name LIKE CONCAT('%',#{keyWord},'%')</if>
+		<if test="select == 2">and m.name LIKE CONCAT('%',#{keyWord},'%')</if>
+		<if test="select == 3">and sk.keyword LIKE CONCAT('%',#{keyWord},'%')</if>
+		<if test="franchiseId != 0">
+			and f.franchise_id = ${franchiseId}
+		</if>
+		<if test='id != null and id != 0'>and a.id = ${id}</if>
+		<if test='sectorId != null and sectorId != 0'>and se.sector_id = ${sectorId}</if>
+		<if test='penalty != null and penalty.equals("on")'>
+			and TO_DAYS(p.endDate) - TO_DAYS(p.startDate) >= 0
+		</if>
+		<if test='activityStatus == 2'>and s.status = 2</if>
+		<if test='activityStatus == 3'>and s.status = 3</if>
+		<if test='activityStatus == 4'>and s.status = 4</if>
+	</sql>
+	
+	<resultMap type="hashMap" id="getShopApplyMap">
+		<result column="shop_idx" property="shop_idx"/>
+		<result column="regdate" property="regdate"/>
+		<result column="franchise_name" property="franchise_name"/>
+		<result column="shop_name" property="shop_name"/>
+		<result column="area_name" property="area_name"/>
+		<result column="sector_content" property="sector_content"/>
+		<result column="member_id" property="member_id"/>
+		<result column="name" property="name"/>
+		<result column="status" property="status"/>
+		<result column="representative" property="representative"/>
+		<collection property="peList" javaType="list" ofType="hashMap">
+			<result column="state" property="state"/>
+			<result column="start_date" property="start_date"/>
+			<result column="end_date" property="end_date"/>
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 가게 신청 심사 리스트 -->
+	<select id="getShopApplyList" resultMap="getShopApplyMap" parameterType="com.roomio.carret.bean.MemberSearchBean">
+		
+		select s.shop_idx,s.regdate,f.franchise_name,s.shop_name,d.area_name,se.sector_content,
+		m.member_id , m.name ,s.status, p.state ,date_format(p.startDate,'%Y-%m-%d') as start_date,
+		date_format(p.endDate,'%Y-%m-%d') as end_date,s.representative
+		from shop s 
+		inner join member m 
+		on s.member_id = m.member_id
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong d 
+		on s.id = d.id
+		inner join sector se
+		on s.sector_id = se.sector_id
+		left join shop_penalty p
+		on s.shop_idx = p.shop_idx
+		left join shop_keyword sk
+		on s.shop_idx = sk.shop_idx
+		where s.status != 1
+		<include refid="shopApplySearch"/>
+		
+	</select>
+	
+	<!-- 가게 신청 심사 글 갯수 -->
+	<select id="getShopApplyCnt" parameterType="com.roomio.carret.bean.MemberSearchBean" resultType="int">
+	
+		select count(*)
+		from shop s 
+		inner join member m 
+		on s.member_id = m.member_id
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong d 
+		on s.id = d.id
+		inner join sector se
+		on s.sector_id = se.sector_id
+		left join shop_penalty p
+		on s.shop_idx = p.shop_idx
+		where s.status != 1
+		<include refid="shopApplySearch"/>
+		
+	</select>
+	
+	<!-- 가게 신청 심사 처리 페이지 필요한 정보 -->
+	<select id="getShopApplyInfo" parameterType="int" resultType="hashMap">
+		
+		select s.regdate,f.franchise_name,s.shop_name,d.area_name,m.name,date_format(s.date_of_birth,'%Y-%m-%d') as birth,
+		s.phone,m.member_id,s.buisness_name,s.buisness_num,s.representative,se.sector_content,s.buisness_address,s.buisness_image_name
+		from shop s
+		inner join member m
+		on s.member_id = m.member_id
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong d
+		on s.id = d.id
+		inner join sector se
+		on s.sector_id =  se.sector_id
+		where shop_idx = ${shopIdx}
+	
+	</select>
+	
+	<select id="getShopHold" parameterType="int" resultType="hashMap">
+		
+		select shop_hold_id,reason,register,regdate
+		from shop_hold
+		where shop_idx = ${shopIdx}
+	
+	</select>
+	
+	<!-- 가게 심사 처리  -->
+	<update id="updateShopStatus" parameterType="hashMap">
+		update shop
+		<set>
+			<if test="status == 1">
+				status = 1
+			</if>
+			<if test="status == 2">
+				status = 3,
+				return_reason = #{reason}
+			</if>
+			<if test="status == 3">
+				status = 4,
+				return_reason = #{reason}
+			</if>
+		</set> 
+		,responsibility_memo = #{memo}
+		where shop_idx = ${shopIdx}
+	</update>
+	
+	<!-- 회원 패널티 검색 -->
+	<sql id="PenaltySearch">
+		<where>
+			<choose>
+				<when test='dateSelete == 1'>
+					<choose>
+						<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+							and date_format(p.startDate,'%Y-%m-%d') between #{startDate} and #{endDate}
+						</when>
+						<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(p.startDate,'%Y-%m-%d') > #{startDate}]]></when>
+						<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(p.startDate,'%Y-%m-%d') < #{endDate}]]></when>
+					</choose>		
+				</when>
+				<otherwise>
+					<choose>
+						<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+							and date_format(p.endDate,'%Y-%m-%d') between #{startDate} and #{endDate}
+						</when>
+						<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(p.endDate,'%Y-%m-%d') > #{startDate}]]></when>
+						<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(p.endDate,'%Y-%m-%d') < #{endDate}]]></when>
+					</choose>	
+				</otherwise>
+			</choose>
+			<if test="franchiseId != 0">
+				and f.franchise_id = ${franchiseId}
+			</if>	
+			<if test='id != null and id != 0'>and a.id = ${id}</if>
+			<if test='penaltyName == 2'>and p.penalty_name = ${penaltyName}</if>
+			<if test='penaltyName == 3'>and p.penalty_name = ${penaltyName}</if>
+			<if test='penaltyName == 4'>and p.penalty_name = ${penaltyName}</if>
+			<if test='path == 1'>and p.discovery_path = ${path}</if>
+			<if test='path == 2'>and p.discovery_path = ${path}</if>
+			<if test='state == 1'><![CDATA[ and TO_DAYS(p.endDate) - TO_DAYS(p.startDate) >= 0 ]]></if>
+			<if test='state == 2'><![CDATA[ and TO_DAYS(p.endDate) - TO_DAYS(p.startDate) < 0 ]]></if>
+			<if test='register != null and !register.equals("")'>and p.register LIKE CONCAT('%',#{register},'%')</if>
+			<if test='select == 1 and keyword != null and !keyword.equals("")'>and m.name LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test='select == 2 and keyword != null and !keyword.equals("")'>and m.member_id LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test='select == 100 and keyword != null and !keyword.equals("")'>
+				and m.name LIKE CONCAT('%',#{keyword},'%') or
+				m.member_id LIKE CONCAT('%',#{keyword},'%')
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 회원 계정 패널티 -->
+	
+	<select id="getMemPenalty" parameterType="com.roomio.carret.bean.PenaltySearchBean" resultType="hashMap">
+	
+		select p.member_penalty_id,p.startDate,p.endDate,p.tmp_endDate,f.franchise_name,m.member_id,
+		m.name,p.discovery_path,p.penalty_name,p.delete_state,p.register
+		from member_penalty p
+		inner join member m
+		on p.member_id = m.member_id
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		inner join area_dong a
+		on m.id = a.id
+		
+		<include refid="PenaltySearch"/>
+		
+	</select>
+	
+	<!-- 회원 계정 패널티 글 갯수 -->
+	<select id="getMemPenaltyCnt" parameterType="com.roomio.carret.bean.PenaltySearchBean" resultType="int">
+	
+		select count(*)
+		from member_penalty p
+		inner join member m
+		on p.member_id = m.member_id
+		inner join franchise f
+		on m.franchise_id = f.franchise_id
+		inner join area_dong a
+		on m.id = a.id
+		
+		<include refid="PenaltySearch"/>
+		
+	</select>
+	
+	<!-- 가게 패널티 검색 -->
+	<sql id="shopPenaltySearch">
+		<where>
+			<choose>
+				<when test='dateSelete == 1'>
+					<choose>
+						<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+							and date_format(p.startDate,'%Y-%m-%d') between #{startDate} and #{endDate}
+						</when>
+						<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(p.startDate,'%Y-%m-%d') > #{startDate}]]></when>
+						<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(p.startDate,'%Y-%m-%d') < #{endDate}]]></when>
+					</choose>		
+				</when>
+				<otherwise>
+					<choose>
+						<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+							and date_format(p.endDate,'%Y-%m-%d') between #{startDate} and #{endDate}
+						</when>
+						<when test='startDate != null and !startDate.equals("")'><![CDATA[and date_format(p.endDate,'%Y-%m-%d') > #{startDate}]]></when>
+						<when test='endDate != null and !endDate.equals("")'><![CDATA[and date_format(p.endDate,'%Y-%m-%d') < #{endDate}]]></when>
+					</choose>	
+				</otherwise>
+			</choose>
+			<if test="franchiseId != 0">
+				and f.franchise_id = ${franchiseId}
+			</if>	
+			<if test='id != null and id != 0'>and a.id = ${id}</if>
+			<if test='penaltyName == 2'>and p.penalty_name = ${penaltyName}</if>
+			<if test='penaltyName == 3'>and p.penalty_name = ${penaltyName}</if>
+			<if test='penaltyName == 4'>and p.penalty_name = ${penaltyName}</if>
+			<if test='path == 1'>and p.discovery_path = ${path}</if>
+			<if test='path == 2'>and p.discovery_path = ${path}</if>
+			<if test='state == 1'><![CDATA[ and TO_DAYS(p.endDate) - TO_DAYS(p.startDate) >= 0 ]]></if>
+			<if test='state == 2'><![CDATA[ and TO_DAYS(p.endDate) - TO_DAYS(p.startDate) < 0 ]]></if>
+			<if test='register != null and !register.equals("")'>and p.register LIKE CONCAT('%',#{register},'%')</if>
+			<if test='select == 1 and keyword != null and !keyword.equals("")'>and s.shop_name LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test='select == 2 and keyword != null and !keyword.equals("")'>and s.shop_idx LIKE CONCAT('%',#{keyword},'%')</if>
+			<if test='select == 100 and keyword != null and !keyword.equals("")'>
+				and s.shop_name CONCAT('%',#{keyword},'%') or
+				s.shop_idx LIKE CONCAT('%',#{keyword},'%')
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 가게 패널티 -->
+	
+	<select id="getShopPenalty" parameterType="com.roomio.carret.bean.PenaltySearchBean" resultType="hashMap">
+	
+		select p.shop_penalty_id,p.startDate,p.endDate,p.tmp_endDate,f.franchise_name,s.shop_idx,
+		s.shop_name,p.discovery_path,p.penalty_name,p.delete_state,p.register
+		from shop_penalty p
+		inner join shop s
+		on p.shop_idx = s.shop_idx
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong a
+		on s.id = a.id
+		
+		<include refid="shopPenaltySearch"/>
+		
+	</select>
+	
+	<!-- 가게 패널티 글 갯수 -->
+	<select id="getShopPenaltyCount" parameterType="com.roomio.carret.bean.PenaltySearchBean" resultType="int">
+	
+		select count(*)
+		from shop_penalty p
+		inner join shop s
+		on p.shop_idx = s.shop_idx
+		inner join franchise f
+		on s.franchise_id = f.franchise_id
+		inner join area_dong a
+		on s.id = a.id
+		
+		<include refid="shopPenaltySearch"/>
+		
+	</select>
+	
+	<!-- 회원 패널티 정보 -->
+	<select id="getMemPenaltyInfo" parameterType="int" resultType="hashMap">
+		
+		select m.profile_image,f.franchise_name,p.member_penalty_id,m.name,m.member_id,date_format(p.regdate,'%Y-%m-%d') as regdate,p.register,
+		p.discovery_path,p.penalty_name,p.penalty_sort,date_format(p.startDate,'%Y-%m-%d') as startDate,
+		date_format(p.endDate,'%Y-%m-%d') as endDate,date_format(p.tmp_endDate,'%Y-%m-%d') as tmp_endDate,p.reason
+		from member_penalty p
+		inner join member m 
+		on p.member_id = m.member_id
+		inner join franchise f 
+		on m.franchise_id = f.franchise_id 
+		where p.member_penalty_id = ${memberPenaltyId}
+		
+		
+	</select>
+	
+	<!-- 회원 패널티 수정 이력  -->
+	<select id="getMemPeUpdate" parameterType="int" resultType="hashMap">
+		
+		select member_penalty_update_id,regdate,penalty_name,startDate,endDate,reason,state,register
+		from member_penalty_update
+		where member_penalty_id = ${memberPenaltyId}
+	
+	</select>
+	
+	<select id="getMemPeUpdateCnt" parameterType="int" resultType="int">
+		
+		select count(*)
+		from member_penalty_update
+		where member_penalty_id = ${memberPenaltyId}
+	
+	</select>
+	
+	<!-- 회원 패널티 수정 -->
+	<update id="updateMemPenalty" parameterType="hashMap">
+	
+		<choose>
+		
+			<when test="state == 1">
+			
+				update member_penalty
+				set register = #{register},discovery_path = ${discoveryPath},penalty_sort=${penaltySort},
+				penalty_name=${penaltyName}
+				<if test='startDate != null and !startDate.equals("")'>
+					,startDate=#{startDate}
+				</if>
+				<if test='endDate != null and !endDate.equals("")'>
+					,endDate=#{endDate},tmp_endDate=#{endDate}
+				</if>
+				where member_penalty_id = ${memberPenaltyId}				
+			</when>
+			
+			<otherwise>
+				
+				update member_penalty
+				set register = #{register},discovery_path = ${discoveryPath},penalty_sort=${penaltySort},
+				penalty_name=${penaltyName}
+				<if test='startDate != null and !startDate.equals("")'>
+					,startDate=#{startDate}
+				</if>
+				<if test='endDate != null and !endDate.equals("")'>
+					,endDate = endDate - 300000000000,tmp_endDate=#{endDate}
+				</if>
+				where member_penalty_id = ${memberPenaltyId}
+				
+			</otherwise>
+			
+		</choose>
+		
+	
+	</update>
+	
+	<!-- 회원 패널티 수정이력 업데이트 -->
+	<insert id="addMemPenaltyList" parameterType="hashMap">
+	
+		insert into member_penalty_update(member_penalty_id,penalty_name,startDate,endDate,reason,state,register)
+		values(${memberPenaltyId},${penaltyName},#{startDate},#{endDate},#{reason},${state},#{register})
+	
+	</insert>
+	
+	<!-- 가게 패널티 정보 -->
+	<select id="getShopPenaltyInfo" parameterType="int" resultType="hashMap">
+		
+		select s.main_image,f.franchise_name,p.shop_penalty_id,s.shop_name,s.shop_idx,
+		date_format(p.regdate,'%Y-%m-%d') as regdate,p.register,
+		p.discovery_path,p.penalty_name,p.penalty_sort,date_format(p.startDate,'%Y-%m-%d') as startDate,
+		date_format(p.endDate,'%Y-%m-%d') as endDate,date_format(p.tmp_endDate,'%Y-%m-%d') as tmp_endDate,p.reason
+		from shop_penalty p
+		inner join shop s
+		on p.shop_idx = s.shop_idx
+		inner join franchise f
+		on s.franchise_id = f.franchise_id 
+		where p.shop_penalty_id = ${shopPenaltyId}
+		
+	</select>
+	
+	<!-- 가게 패널티 수정 이력  -->
+	<select id="getShopPeUpdate" parameterType="int" resultType="hashMap">
+		
+		select shop_penalty_update_id,regdate,penalty_name,startDate,endDate,reason,state,register
+		from shop_penalty_update
+		where shop_penalty_id = ${shopPenaltyId}
+	
+	</select>
+	
+	<select id="getShopPeUpdateCnt" parameterType="int" resultType="int">
+		
+		select count(*)
+		from shop_penalty_update
+		where shop_penalty_id = ${shopPenaltyId}
+	
+	</select>
+	
+	<!-- 회원 패널티 수정 -->
+	<update id="updateShopPenalty" parameterType="hashMap">
+	
+		<choose>
+		
+			<when test="state == 1">
+			
+				update shop_penalty
+				set register = #{register},discovery_path = ${discoveryPath},penalty_sort=${penaltySort},
+				penalty_name=${penaltyName}
+				<if test='startDate != null and !startDate.equals("")'>
+					,startDate=#{startDate}
+				</if>
+				<if test='endDate != null and !endDate.equals("")'>
+					,endDate=#{endDate},tmp_endDate=#{endDate}
+				</if>
+				where shop_penalty_id = ${shopPenaltyId}				
+			</when>
+			
+			<otherwise>
+				
+				update shop_penalty
+				set register = #{register},discovery_path = ${discoveryPath},penalty_sort=${penaltySort},
+				penalty_name=${penaltyName}
+				<if test='startDate != null and !startDate.equals("")'>
+					,startDate=#{startDate}
+				</if>
+				<if test='endDate != null and !endDate.equals("")'>
+					,endDate = endDate - 300000000000,tmp_endDate=#{endDate}
+				</if>
+				where shop_penalty_id = ${shopPenaltyId}
+				
+			</otherwise>
+			
+		</choose>
+		
+	
+	</update>
+	
+	<!-- 회원 패널티 수정이력 업데이트 -->
+	<insert id="addShopPenaltyList" parameterType="hashMap">
+	
+		insert into shop_penalty_update(shop_penalty_id,penalty_name,startDate,endDate,reason,state,register)
+		values(${shopPenaltyId},${penaltyName},#{startDate},#{endDate},#{reason},${state},#{register})
+	
+	</insert>
+	
+	
 	
 	
 </mapper>

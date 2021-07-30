@@ -43,7 +43,7 @@
 	<input type="hidden" name="shopIdx" value="${shopIdx}">
     <section id="BZ002-TB01-B-2" class="content">
         <div class="top">
-            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+            <div class="icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">가격표 생성하기</h1>
         </div>
         <div class="box box1">
@@ -63,10 +63,10 @@
             </ul>
             <input type="text"  id="price-in" name="price" placeholder="가격입력( 00,000원 )">
         </div>
-        <div class="box box4" style="padding:0;">
+        <div class="box box4">
             <label for="">추가설명(선택)</label>
-            <div class="txt"><textarea name="additionalInfo" rows="" cols="" placeholder="판매제품에 대한 설명을 작성해주세요." 
-            style="width: 100%;height: 100%;padding: 10px;border: none;border-radius: 5px;"></textarea></div>
+            <div class="txt" style="padding:0;border:none;"><textarea name="additionalInfo" rows="" cols="" placeholder="판매제품에 대한 설명을 작성해주세요." 
+            style="padding: 10px;width: 100%;height: 230px;border: 1px solid #bbb;border-radius: 5px;font-size: 14px;color: #777;">${map.additional_info }</textarea></div>
         </div>
         <div class="btn regi-btn"><a href="javascript:void(0)">가격표 등록하기</a></div>
     </section>

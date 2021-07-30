@@ -12,6 +12,18 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="${root}/css/style.css">
 <link rel="stylesheet" href="${root}/css/wo.css">
+<style>
+	#CH001-05 .check_box{padding: 0 20px 10px; position:relative;}
+	#CH001-05 .check_box input{position: absolute;top: 10px;left: 25px;opacity: 0; outline: none; line-height: 40px}
+	
+	#CH001-05 .check_box input + label em{display: inline-block;  margin-right: 10px;
+	    width: 22.4px; height: 23px; background-image: url(${root}/img/check_blue.png); background-size: cover;
+	    transform: translateY(5px)
+	}
+	
+	#CH001-05 .check_box label{font-size:15px;}
+
+</style>
 <title>Document</title>
 </head>
 <body>
@@ -31,7 +43,8 @@
 			
 				<c:forEach items="${categoryList}" var="obj">
 					<div class="check_box">
-						 <label><input type="checkbox" name="reviewKeywordCategoryId" value="${obj.review_keyword_category_id}" >&nbsp;${obj.content}</label>
+						 <input type="checkbox" id="box2" name="reviewKeywordCategoryId" value="${obj.review_keyword_category_id}">
+            			 <label for="box2"><em></em>${obj.content}</label>
 					</div>
 				</c:forEach>
 			</div>
@@ -69,6 +82,23 @@
 	
 		$(function(){
 			$("#input_imgs").on("change",handleImgsFilesSelect);
+			
+			//베스트 제품 checkbox
+			$('em').click(function(){
+				
+				if($(this).css('background-position-x') == '100%'){
+					
+					$(this).css('background-position','left');
+					$('input[name="reviewKeywordCategoryId"]').prop("checked",false);
+					
+				}else{
+					
+					$(this).css('background-position','right');
+					$('input[name="reviewKeywordCategoryId"]').prop("checked",true);
+					
+				}
+				
+			});
 		});
 		
 		function handleImgsFilesSelect(e){
@@ -89,7 +119,7 @@
 				sel_files.push(f);
 				var reader = new FileReader();
 				reader.onload = function(e){
-					var img_html = '<img src="' + e.target.result + '" style="width:100px;"/>';
+					var img_html = '<img src="' + e.target.result + '" style="width:100px;height: 100px;"/>';
 					$('.imgs_wrap').append(img_html);
 				}
 				reader.readAsDataURL(f);

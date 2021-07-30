@@ -23,7 +23,7 @@
 
 	<section id="BZ001-TB02-DT01" class="content">
 	    <div class="box title_box">
-	            <div class="icon icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+	            <div class="icon icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
 	            <div class="icon icon_right"><a href=""><i class="fas fa-ellipsis-v"></i></a></div>
 	    </div>
 	    <div class="box box_1">
@@ -52,7 +52,7 @@
 	    
 	    <ul class="box thumb_box">
 	        <c:choose>
-				<c:when test="${not empty obj.member_id}">
+				<c:when test="${not empty map.member_id}">
 					<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a></li>
 				</c:when>
 				<c:otherwise>
@@ -60,7 +60,7 @@
 				</c:otherwise>
 			</c:choose>
 	        <li><p>좋아요</p></li>
-	        <li><p>${map.likeCnt }</p></li>
+	        <li><p class="like-p">${map.likeCnt}</p></li>
 	        <li class="slash"><p>/</p></li>
 	    
 	        <li><p>조회</p></li>

@@ -92,48 +92,28 @@
 				</div>
 			</c:forEach>
 		</div>
-		<div class="box bottom_box">
-			<div class="box">
-				<div class="pic">
-					<i class="fas fa-home"></i>
-				</div>
-				<div class="info">
-					<a href="${root}/front/home">홈</a>
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<i class="far fa-heart"></i>
-				</div>
-				<div class="info">
-					<a href="">찜</a>
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<i class="far fa-edit"></i>
-				</div>
-				<div class="info">
-					<a href="">글쓰기</a>
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<i class="far fa-comment-dots"></i>
-				</div>
-				<div class="info">
-					<a href="">채팅</a>
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<i class="far fa-user"></i>
-				</div>
-				<div class="info">
-					<a href="">MY</a>
-				</div>
-			</div>
-		</div>
+		<div class="bottom_box">
+            <div class="box">
+                <div class="pic"><a href=""><i class="fas fa-home"></i></a></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><a href=""><i class="far fa-file-alt"></i></a></div>
+                <div class="info"><a href="">동네현황</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><a href=""><i class="far fa-edit"></i></a></div>
+                <div class="info"><a href="">내 근처</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><a href=""><i class="fas fa-map-marker-alt"></i></a></div>
+                <div class="info"><a href="">채팅</a></div>
+            </div>
+            <div class="box">
+                <div class="pic"><a href=""><i class="far fa-user"></i></a></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
+            </div>
+        </div>
 
 
 	</section>

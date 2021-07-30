@@ -24,12 +24,6 @@
             <h1 class="title">${detailMap.shop_name}</h1>
             <div class="icon_right"><a href="javascript:void(0)" id="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
         </div>
-        <ul id="gnb">
-            <li><a href="">소개</a></li>
-            <li><a href="">소식</a></li>
-            <li><a href="">상품<span>8</span></a></li>
-            <li><a href="">후기<span>9</span></a></li>
-        </ul>
         <div class="profile_top"><img src="${root}/upload/${detailMap.main_image}" style="width:100%;height:100%"></div>
         <div class="profile_bottom">
             <ul class="left_box">
@@ -66,8 +60,20 @@
         <ul class="tab">
             <li><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}">홈</a></li>
             <li><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}">소식</a></li>
-            <li><a href="${root}/front/shop/shop_review2?shopIdx=${detailMap.shop_idx}">후기1</a></li>
+            <li><a href="${root}/front/shop/shop_review2?shopIdx=${detailMap.shop_idx}">후기</a></li>
         </ul>
+        
+        <div class="layout2">
+	       <div class="top">
+	            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+	            <h1 class="title">가게프로필명</h1>
+	        </div>
+	        <ul id="gnb">
+	            <li><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}">소개</a></li>
+	            <li><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}">소식</a></li>
+	            <li><a href="${root}/front/shop/shop_review2?shopIdx=${detailMap.shop_idx}">후기<span></span></a></li>
+	        </ul>
+        </div>
 
         <div class="box notice">
             <p><span><i class="fas fa-bullhorn"></i></span>알림 없어용</p>
@@ -78,7 +84,7 @@
             <p class="icon"><i class="far fa-smile-wink"></i><i class="far fa-grin-stars"></i><i class="far fa-grin-stars"></i><i class="far fa-grin-stars"></i><i class="far fa-grin-stars"></i>${detailMap.introduce_shop}<a href="">더보기</a></p>
             <p class="place"><span><i class="fas fa-map-marker-alt">${detailMap.address}</i></span></p>
             <p class="time"><span><i class="far fa-clock"></i></span>${detailMap.start_date} - ${detailMap.end_date}<span>${detailMap.holiy }</span></p>
-
+            
 
             <p class="ex">${detailMap.to_benefit}</p>
         </div>
@@ -102,7 +108,7 @@
             <h3 class="box_title">소식</h3>
             <c:forEach items="${newsList}" var="obj" varStatus="status">
             	<c:if test="${not newsLoop}">
-		            <div class="sub_box">
+		            <div class="sub_box" style="margin-bottom: 20px;">
 		                <div class="pic">
 		                	<img src="${root}/upload/${obj.imageList[0]}" style="width: 100%;height: 100%;">
 		                </div>
@@ -116,7 +122,7 @@
 		            </div>
 		       </c:if>
 	        </c:forEach>
-            <div class="btn"><a href="">소식 더보기</a></div>
+            <div class="btn"><a href="${root}/front/shop/shop_news2?shopIdx=${shopIdx}">소식 더보기</a></div>
         </div>
 		<c:set var="reviewLoop" value="false"/>
         <div class="box review">
@@ -151,13 +157,13 @@
 				</c:if>
 	        </c:if>
 	        </c:forEach>
-            <div class="btn"><a href="">소식 더보기</a></div>
+            <div class="btn"><a href="${root}/front/shop/shop_review2?shopIdx=${shopIdx}">소식 더보기</a></div>
         </div>
         
         <div class="box bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
-                <div class="info"><a href="">홈</a></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-heart"></i></div>
@@ -173,7 +179,7 @@
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-user"></i></div>
-                <div class="info"><a href="">MY</a></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
             </div>
         </div>
         
@@ -218,6 +224,16 @@
 	
 	<script>
 		$(function() {
+			
+			$(window).scroll(function(){
+				var num = $(this).scrollTop();
+				console.log(num);
+				if(num > 420){
+					$(".layout2").css("display","block");
+				}else{
+					$(".layout2").css("display","none");
+				}
+			});
 			
 			
 			$('#reportTriger').on('click',function(){ 

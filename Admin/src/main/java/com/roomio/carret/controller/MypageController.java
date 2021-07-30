@@ -3,7 +3,10 @@ package com.roomio.carret.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,10 @@ import com.roomio.carret.service.ShopService;
 @Controller
 public class MypageController {
 	
+	@Resource(name = "loginMemberBean")
+	@Lazy
+	private LoginMemberBean loginMemberBean;
+	
 	@Autowired
 	private MypageService mypageService;
 	
@@ -47,6 +54,11 @@ public class MypageController {
 		List<HashMap<Object,Object>> shopList = mypageService.getMyShop(1);
 		model.addAttribute("shopList",shopList);
 		
+		model.addAttribute("name",loginMemberBean.getName());
+		model.addAttribute("mainImage",loginMemberBean.getMain_image());
+		model.addAttribute("areaName",loginMemberBean.getArea_name());
+		model.addAttribute("memberCode",loginMemberBean.getMember_code());
+		
 		return "front/mypage/mypage";
 	}
 	
@@ -60,6 +72,31 @@ public class MypageController {
 		HashMap<Object,Object> map = shopService.getFrontShopDetail(shopIdx);
 		model.addAttribute("map",map);
 		
+		// 가게 상품정보
+		List<HashMap<Object, Object>> goodsList = mypageService.getGoodsList(shopIdx);
+		model.addAttribute("goodsList", goodsList);
+		
+		HashMap<Object,Object> paramMap = new HashMap<Object,Object>();
+		paramMap.put("shopIdx",shopIdx);
+		//나중에 로그인 객체에서 값 대체해주기 ★★
+		paramMap.put("memberId",1);
+		
+		//가게 소식 
+		List<HashMap<Object,Object>> newsList = shopService.getNewsList(paramMap);
+		model.addAttribute("newsList",newsList);
+		
+		HashMap<Object,Object> reMap = new HashMap<Object,Object>();
+		reMap.put("shopIdx",shopIdx);
+		reMap.put("memberId",loginMemberBean.getMember_id());
+		
+		//후기 정보
+		List<HashMap<Object,Object>> reviewList = mypageService.getReviewList(reMap);
+		model.addAttribute("reviewList",reviewList);
+		
+		//단골 회원 수
+		int bookmarkCnt = shopService.getBookmarkShopCnt(shopIdx);
+		model.addAttribute("bookmarkCnt",bookmarkCnt);
+
 		
 		return "front/mypage/shop";
 		
@@ -200,7 +237,12 @@ public class MypageController {
 	
 	//프로필 수정 이동
 	@GetMapping("/front/member/member_update")
-	public String memberUpdate() {
+	public String memberUpdate(Model model) {
+		
+		//지역정보
+		//나중에 받은 우편번호로 대체해주기 ★★
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		model.addAttribute("areaList",areaList);
 		
 		return "front/member/member_update";
 	}
@@ -214,7 +256,7 @@ public class MypageController {
 		//update 쿼리 실행하기 
 		memberService.frontMemberInfoUpdate(memberUpdateBean);
 		
-		return "redirect:/front/member/myPage";
+		return "redirect:/front/myPage";
 	}	
 	
 	//단골 페이지 이동
@@ -485,27 +527,11 @@ public class MypageController {
 		int cnt = mypageService.getShopBookmarkCnt(shopIdx);
 		model.addAttribute("cnt",cnt);
 		
-		return "front/mypage/shop_bookmark";
-	}
-	
-	//소식 요약 페이지 이동
-	@RequestMapping("/front/mypage/news_summ")
-	public String newsSumm(@RequestParam int shopIdx,
-							Model model) {
-		
-		HashMap<Object,Object> map = new HashMap<Object,Object>();
-		map.put("shopIdx",shopIdx);
-		//나중에 로그인 객체에서 값 대체해주기 ★★
-		map.put("memberId",1);
-		
-		//가게 소식 
-		List<HashMap<Object,Object>> list = shopService.getNewsList(map);
-		model.addAttribute("list",list);
-		
 		model.addAttribute("shopIdx",shopIdx);
 		
-		return "front/mypage/news_summ";
+		return "front/mypage/shop_bookmark";
 	}
+
 		
 	//관리자 소식 페이지 이동
 	@RequestMapping("/front/mypage/shop_news")
@@ -513,42 +539,25 @@ public class MypageController {
 							Model model) {
 		
 		
-		HashMap<Object,Object> map = new HashMap<Object,Object>();
-		map.put("shopIdx",shopIdx);
+		HashMap<Object,Object> paramMap = new HashMap<Object,Object>();
+		paramMap.put("shopIdx",shopIdx);
 		//나중에 로그인 객체에서 값 대체해주기 ★★
-		map.put("memberId",1);
+		paramMap.put("memberId",1);
 		
 		//가게 소식 
-		List<HashMap<Object,Object>> list = shopService.getNewsList(map);
+		List<HashMap<Object,Object>> list = shopService.getNewsList(paramMap);
 		model.addAttribute("list",list);
 		
 		//가게 정보 
-		HashMap<Object,Object> shopMap = shopService.getFrontShopDetail(shopIdx);
-		model.addAttribute("shopMap",shopMap);
+		HashMap<Object,Object> map = shopService.getFrontShopDetail(shopIdx);
+		model.addAttribute("map",map);
 		
+		
+		//단골 회원 수
+		int bookmarkCnt = shopService.getBookmarkShopCnt(shopIdx);
+		model.addAttribute("bookmarkCnt",bookmarkCnt);
+
 		model.addAttribute("shopIdx",shopIdx);
-		
-//		HashMap<Object, Object> checkMap = new HashMap<Object, Object>();
-//		checkMap.put("shopIdx", shopIdx);
-//		// 나중에는 member 객체에 담긴 정보 넣어주기 ★★
-//		checkMap.put("memberId", 1);
-//
-//		// 가게 단골 체크 : 1은 단골아님 2는 단골
-//		if (shopService.checkFrontShopMember(checkMap) == null) {
-//			model.addAttribute("checkNum", 1);
-//		} else {
-//			model.addAttribute("checkNum", 2);
-//		}
-//
-//		//본인 가게인지 확인 
-//		int shopChk = mypageService.chkMemShop(checkMap);
-//		model.addAttribute("shopChk",shopChk);
-//		model.addAttribute("shopChk",2);
-//		
-//		// 단골가게 회원 수
-//		int bookmarkCnt = shopService.getBookmarkShopCnt(shopIdx);
-//		model.addAttribute("bookmarkCnt", bookmarkCnt);
-		
 		
 		return "front/mypage/shop_news";
 	}
@@ -624,8 +633,12 @@ public class MypageController {
 		HashMap<Object,Object> map = shopService.getFrontShopDetail(shopIdx);
 		model.addAttribute("map",map);
 		
+		HashMap<Object,Object> reMap = new HashMap<Object,Object>();
+		reMap.put("shopIdx",shopIdx);
+		reMap.put("memberId",loginMemberBean.getMember_id());
+		
 		//후기 정보
-		List<HashMap<Object,Object>> list = mypageService.getReviewList(shopIdx);
+		List<HashMap<Object,Object>> list = mypageService.getReviewList(reMap);
 		model.addAttribute("list",list);
 		
 		model.addAttribute("shopIdx",shopIdx);
@@ -652,5 +665,52 @@ public class MypageController {
 		return "redirect:/front/mypage/shop_review";
 	}
 	
+	// 후기 상세 페이지 이동
+	@RequestMapping("/front/mypage/review_detail")
+	public String reviewDetail(@RequestParam int shopReviewId,
+							Model model) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopReviewId",shopReviewId);
+		map.put("memberId",loginMemberBean.getMember_id());
+						
+		HashMap<Object,Object> reMap = mypageService.getReviewDetail(map);
+		model.addAttribute("reMap",reMap);
+		
+		
+		return "front/mypage/review_detail";
+	}
 	
+	//가게 프로필 삭제
+	@RequestMapping("/front/mypage/profile_delete")
+	public String profileDelete(@RequestParam int shopIdx,
+								Model model) {
+		
+		//가게 정보 
+		HashMap<Object,Object> map = shopService.getFrontShopDetail(shopIdx);
+		model.addAttribute("map",map);
+		
+		//가게 탈퇴사유 카테고리
+		List<HashMap<Object,Object>> list = mypageService.getShopWithCategory();
+		model.addAttribute("list",list);
+		
+		
+		return "front/mypage/profile_delete";
+		
+	}
+	
+	//가게 프로필 삭제 진행
+	@RequestMapping("/front/mypage/profile_delete_pro")
+	public String profileDeletePro(RedirectAttributes attr,
+									@RequestParam HashMap<Object,Object> map) {
+		
+		attr.addAttribute("shopIdx",map.get("shopIdx"));
+		
+		//상태 변경 (탈퇴)
+		mypageService.updateShopStatus(map);
+		
+		
+		return "redirect:/front/myPage";
+		
+	}
 }

@@ -182,4 +182,12 @@ public class ShopDao {
 	public int delNewsLike(HashMap<Object,Object> map) {
 		return sqlSessionTemplate.delete("com.roomio.carret.shop.delNewsLike",map);
 	}
+	
+	public int addReviewLike(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.insert("com.roomio.carret.shop.addReviewLike",map);
+	}
+	
+	public int delReviewLike(HashMap<Object,Object> map) {
+		return sqlSessionTemplate.delete("com.roomio.carret.shop.delReviewLike",map);
+	}
 }

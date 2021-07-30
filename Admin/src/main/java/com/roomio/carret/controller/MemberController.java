@@ -22,6 +22,7 @@ import com.roomio.carret.bean.MemberRegisterBean;
 import com.roomio.carret.bean.MemberUpdateBean;
 import com.roomio.carret.bean.PageBean;
 import com.roomio.carret.service.MemberService;
+import com.roomio.carret.service.MypageService;
 import com.roomio.carret.service.ShopService;
 
 @Controller
@@ -32,6 +33,9 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private MypageService mypageService;
 	
 	Logger Logger = LoggerFactory.getLogger(MemberController.class);
 
@@ -104,11 +108,14 @@ public class MemberController {
 		return "member/manage_penalty";
 	}
 	
+	
+	
 	//일반 회원 가입 
 	@GetMapping("/front/member/member_join")
 	public String memberJoin(Model model) {
 		
 		//가맹사 코드 받으면 값 뽑아서 메인페이지로 이동
+		model.addAttribute("list",mypageService.getAreaList("01"));
 		
 		return "front/member/member_join";
 	}

@@ -161,8 +161,8 @@ public class MypageDao {
 		sqlSessionTemplate.insert("com.roomio.carret.mypage.addShopNewsImg",list);
 	}
 	
-	public List<HashMap<Object,Object>> getReviewList(int shopIdx){
-		return sqlSessionTemplate.selectList("com.roomio.carret.mypage.getReviewList",shopIdx);
+	public List<HashMap<Object,Object>> getReviewList(HashMap<Object,Object> map){
+		return sqlSessionTemplate.selectList("com.roomio.carret.mypage.getReviewList",map);
 	}
 	
 	public void reviewReply(HashMap<Object,Object> map) {
@@ -171,6 +171,18 @@ public class MypageDao {
 	
 	public String chkMemShop(HashMap<Object,Object> map) {
 		return sqlSessionTemplate.selectOne("com.roomio.carret.mypage.chkMemShop",map);
+	}
+	
+	public HashMap<Object,Object> getReviewDetail(HashMap<Object,Object> map){
+		return sqlSessionTemplate.selectOne("com.roomio.carret.mypage.getReviewDetail",map);
+	}
+	
+	public List<HashMap<Object,Object>> getShopWithCategory(){
+		return sqlSessionTemplate.selectList("com.roomio.carret.mypage.getShopWithCategory");
+	}
+	
+	public void updateShopStatus(HashMap<Object,Object> map) {
+		sqlSessionTemplate.update("com.roomio.carret.mypage.updateShopStatus",map);
 	}
 	
 	

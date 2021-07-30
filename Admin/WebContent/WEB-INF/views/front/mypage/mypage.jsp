@@ -14,6 +14,12 @@
 <link rel="stylesheet" href="${root}/css/style.css">
 <link rel="stylesheet" href="${root}/css/wo.css">
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<style>
+	#MY001 .box a{
+		color:#000;
+	}
+
+</style>
 <title>Document</title>
 </head>
 <body>
@@ -25,13 +31,14 @@
         </div>
         <div class="box box_1">
             <div class="pic">
+            	<img src="${root}/upload/${mainImage}" style="width:100%;height:100%;border-radius:inherit;">
                 <label for="file_box"><i class="fas fa-camera"></i></label>
                 <input type="file" id="file_box">
             </div>
             <div class="info">
-                <p class="name">남깐느</p>
+                <p class="name">${name}</p>
                 <p class="txt_box">
-                    <span>동촌동</span><span>&#35;0502231</span>
+                    <span>${areaName}</span><span>&#35;${memberCode}</span>
                 </p>
             </div>
         </div>
@@ -144,32 +151,6 @@
                 </div>
             </div>
         </div>
-        <div class="box box_9">
-            <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-headphones"></i></a>
-                </div>
-                <div class="info">
-                    <a href="${root}/front/mypage/question_category"><p>1:1문의</p></a>
-                </div>
-            </div>
-            <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-microphone"></i></a>
-                </div>
-                <div class="info">
-                    <a href="${root}/front/mypage/frequent_question_category"><p>자주묻는 질문</p></a>
-                </div>
-            </div>
-            <div class="small_box">
-                <div class="pic">
-                    <a href="${root}/front/mypage/notice"><i class="fas fa-headphones"></i>
-                </div>
-                <div class="info">
-                    <a href="${root}/front/mypage/notice"><p>공지사항</p></a>
-                </div>
-            </div>
-        </div>
         <div class="box box_10">    
             <div class="small_box">
                 <div class="pic">
@@ -180,26 +161,26 @@
                 </div>
             </div>
         </div>
-        <div class="bottom_box">
+         <div class="box bottom_box">
             <div class="box">
-                <div class="pic"><a href=""><i class="fas fa-home"></i></a></div>
-                <div class="info"><a href="">홈</a></div>
+                <div class="pic"><i class="fas fa-home"></i></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
             </div>
             <div class="box">
-                <div class="pic"><a href=""><i class="far fa-file-alt"></i></a></div>
-                <div class="info"><a href="">동네현황</a></div>
+                <div class="pic"><i class="far fa-heart"></i></div>
+                <div class="info"><a href="">찜</a></div>
             </div>
             <div class="box">
-                <div class="pic"><a href=""><i class="far fa-edit"></i></a></div>
-                <div class="info"><a href="">내 근처</a></div>
+                <div class="pic"><i class="far fa-edit"></i></div>
+                <div class="info"><a href="">글쓰기</a></div>
             </div>
             <div class="box">
-                <div class="pic"><a href=""><i class="fas fa-map-marker-alt"></i></a></div>
+                <div class="pic"><i class="far fa-comment-dots"></i></div>
                 <div class="info"><a href="">채팅</a></div>
             </div>
             <div class="box">
-                <div class="pic"><a href=""><i class="far fa-user"></i></a></div>
-                <div class="info"><a href="">MY</a></div>
+                <div class="pic"><i class="far fa-user"></i></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
             </div>
         </div>
         

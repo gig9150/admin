@@ -22,3 +22,34 @@
 				e.preventDefault();
 		}
 	});
+	
+3.날짜 비교
+
+	<fmt:parseDate value="${obj.startDate}" var="strPlanDate" pattern="yyyy-MM-dd"/>
+	<fmt:parseNumber value="${strPlanDate.time / (1000*60*60*24)}" integerOnly="true" var="strDate"/>
+	<fmt:parseDate value="${obj.endDate}" var="endPlanDate" pattern="yyyy-MM-dd"/>
+	<fmt:parseNumber value="${(endPlanDate.time / (1000*60*60*24))}" integerOnly="true" var="endDate"/>
+	
+	
+4. 맴버 매니저 로그인 객체 주입
+	@Resource(name = "loginManagerBean")
+	@Lazy
+	private LoginManagerBean loginManagerBean;
+	
+	
+5. 수정페이지 체크박스 체크
+
+		<c:forEach items="${map.franList}" var="obj">
+		
+			let num = '${obj}';
+		
+			$.each($('.chk'),function(i,v){
+				if($(this).val() == num){
+					
+					$(this).prop('checked',true);
+					console.log('true');
+					
+				}
+			});
+		
+		</c:forEach>

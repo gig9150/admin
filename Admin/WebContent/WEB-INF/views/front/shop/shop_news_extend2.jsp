@@ -19,8 +19,8 @@
 <body>
 <section id="BZ001-TB02-DT01" class="content">
     <div class="box title_box">
-            <div class="icon icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
-            <div class="icon icon_right"><a href="javascript:void(0)" id="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
+       <div class="icon icon_left"><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}"><i class="fas fa-chevron-left"></i></a></div>
+       <div class="icon icon_right"><a href="javascript:void(0)" id="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
     </div>
     <div class="box box_1">
         <div class="pic"></div>
@@ -54,7 +54,14 @@
     </div>
     
     <ul class="box thumb_box">
-        <li><a href=""><i class="far fa-thumbs-up"></i></a></li>
+        <c:choose>
+			<c:when test="${not empty map.member_id}">
+				<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a></li>
+			</c:when>
+			<c:otherwise>
+				<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-down"></i></a></li>
+			</c:otherwise>
+		</c:choose>
         <li><p>좋아요</p></li>
         <li><p>${map.likeCnt}</p></li>
         <li class="slash"><p>/</p></li>
@@ -120,14 +127,36 @@
 				}
 			});
 			
-			//카카오맵 
-			var container = document.getElementById('map');
-			var options = {
-				center: new kakao.maps.LatLng(33.450701, 126.570667),
-				level: 3
-			};
-
-			var map = new kakao.maps.Map(container, options);
+			//좋아요
+			$('.thumb-li').click(function(){
+				
+				let shopNewsId = $(this).data('id');
+				if($(this).find('i').hasClass('fa-thumbs-down')){
+					
+					$(this).find('i').removeClass('fa-thumbs-down').addClass('fa-thumbs-up');
+					$.ajax({
+						url:'${root}/front/shop/newsLikeAdd/'+shopNewsId,
+						type:'get',
+						success:function(data){
+							console.log(data);
+						}
+					});
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) + 1);
+					
+				}else{
+					
+					$(this).find('i').removeClass('fa-thumbs-up').addClass('fa-thumbs-down');
+					$.ajax({
+						url:'${root}/front/shop/newsLikeDel/'+shopNewsId,
+						type:'get',
+						success:function(data){
+							console.log(data);
+						}
+					});
+					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) - 1);
+					
+				}
+			});
 			
 		});
 		

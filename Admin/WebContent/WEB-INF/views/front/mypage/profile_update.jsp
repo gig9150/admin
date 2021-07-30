@@ -22,9 +22,9 @@
 	<!--    99페이지(6/30파일) #BZ002-PF01 가게프로필 – 가게 프로필 수정-->
     <section id="BZ002-PF01" class="content">
         <div class="top">
-            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+            <div class="icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">가게프로필 수정</h1>
-            <div class="icon_right"><a href=""><i class="fas fa-times"></i></a></div>
+            <div class="icon_right"><a href="javascript:history.back();"><i class="fas fa-times"></i></a></div>
         </div>
         <div class="pic">
         	<img src="${root}/upload/${map.main_image}" style="width: 100%;height: 100%;border-radius: 50%;">

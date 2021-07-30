@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.roomio.carret.bean.LoginManagerBean;
+import com.roomio.carret.bean.LoginMemberBean;
 import com.roomio.carret.service.ManagerService;
 
 @Controller
@@ -34,19 +35,36 @@ public class HomeController {
 	@Resource(name = "loginManagerBean")
 	@Lazy
 	private LoginManagerBean loginManagerBean;
+	
+	@Resource(name = "loginMemberBean")
+	@Lazy
+	private LoginMemberBean loginMemberBean;
 
 	
 	@GetMapping("/")
 	public String home(HttpSession session,Locale locale) {
-	
-//		if(loginManagerBean.isIslogin() == true) {
-//			return "home";
-//		}else {
-//			return "redirect:/manager/login";			
-//		}
 		
-		return "redirect:/front/shop/shop_promotion";
-
+		//나중에 연동 보구 바꾸기
+		loginMemberBean.setLogin(true);
+		loginMemberBean.setArea_name("사당동");
+		loginMemberBean.setFranchise_id(1);
+		loginMemberBean.setMain_image("2.jpg");
+		loginMemberBean.setMember_id(1);
+		loginMemberBean.setName("다파는남자");
+		loginMemberBean.setStatus(1);
+		loginMemberBean.setMember_code("58995483");
+	
+		if(loginManagerBean.isIslogin() == true) {
+			return "home";
+		}else {
+			return "redirect:/manager/login";			
+		}
+		
+//		return "redirect:/front/shop/shop_promotion";
+//		
+//
+//		return "front/member/member_join_before";
+		
 	}
 	
 	@RequestMapping("/endpoint")

@@ -22,11 +22,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.roomio.carret.bean.LoginManagerBean;
+import com.roomio.carret.bean.LoginMemberBean;
 import com.roomio.carret.bean.PageBean;
 import com.roomio.carret.bean.ShopApplySearchBean;
 import com.roomio.carret.bean.ShopCurationBean;
 import com.roomio.carret.bean.ShopRegisterBean;
 import com.roomio.carret.bean.ShopSearchBean;
+import com.roomio.carret.service.MypageService;
 import com.roomio.carret.service.ShopService;
 
 @Controller
@@ -34,6 +36,13 @@ public class ShopController {
 
 	@Autowired
 	private ShopService shopService;
+	
+	@Autowired
+	private MypageService mypageService;
+	
+	@Resource(name = "loginMemberBean")
+	@Lazy
+	private LoginMemberBean loginMemberBean;
 
 	Logger logger = LoggerFactory.getLogger(ShopController.class);
 
@@ -151,6 +160,11 @@ public class ShopController {
 		// 가맹점 코드넣어주기 파라미터로 ★★
 		List<ShopCurationBean> curationList = shopService.getFrontShopPromotion(1);
 		model.addAttribute("curationList", curationList);
+		
+		//지역정보
+		//나중에 받은 우편번호로 대체해주기 ★★
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		model.addAttribute("areaList",areaList);
 
 		return "front/shop/shop_promotion";
 	}
@@ -206,36 +220,7 @@ public class ShopController {
 
 	}
 
-	// 가게 소식 페이지 이동
-	@GetMapping("/front/shop/shop_news")
-	public String shopNews(@RequestParam("shopIdx") String shopIdx, Model model) {
-
-		// 가게 정보
-		HashMap<Object, Object> detailMap = shopService.getFrontShopDetail(Integer.parseInt(shopIdx));
-		model.addAttribute("detailMap", detailMap);
-
-		// 가게 소식
-		List<HashMap<Object, Object>> newsList = shopService.getFrontShopNews(Integer.parseInt(shopIdx));
-		model.addAttribute("newsList", newsList);
-
-		HashMap<Object, Object> checkMap = new HashMap<Object, Object>();
-		checkMap.put("shopIdx", shopIdx);
-		// 나중에는 member 객체에 담긴 정보 넣어주기 ★★
-		checkMap.put("memberId", 1);
-
-		// 가게 단골 체크 : 1은 단골아님 2는 단골
-		if (shopService.checkFrontShopMember(checkMap) == null) {
-			model.addAttribute("checkNum", 1);
-		} else {
-			model.addAttribute("checkNum", 2);
-		}
-
-		// 단골가게 회원 수
-		int bookmarkCnt = shopService.getBookmarkShopCnt(Integer.parseInt(shopIdx));
-		model.addAttribute("bookmarkCnt", bookmarkCnt);
-
-		return "front/shop/shop_news";
-	}
+	
 	
 	// 가게 소식 페이지 이동
 	@GetMapping("/front/shop/shop_news2")
@@ -254,39 +239,20 @@ public class ShopController {
 		List<HashMap<Object, Object>> list = shopService.getNewsList(map);
 		model.addAttribute("list", list);
 
-//		HashMap<Object,Object> checkMap = new HashMap<Object,Object>();
-//		checkMap.put("shopIdx", shopIdx);
-//		//나중에는 member 객체에 담긴 정보 넣어주기 ★★
-//		checkMap.put("memberId",1);
-
-//		//가게 단골 체크 : 1은 단골아님 2는 단골 
-//		if(shopService.checkFrontShopMember(checkMap) == null) {
-//			model.addAttribute("checkNum",1);
-//		}else {
-//			model.addAttribute("checkNum",2);
-//		}
-//		
-//		//단골가게 회원 수 
-//		int bookmarkCnt = shopService.getBookmarkShopCnt(Integer.parseInt(shopIdx));
-//		model.addAttribute("bookmarkCnt",bookmarkCnt);
+		//가게 단골 체크 : 1은 단골아님 2는 단골 
+		if(shopService.checkFrontShopMember(map) == null) {
+			model.addAttribute("checkNum",1);
+		}else {
+			model.addAttribute("checkNum",2);
+		}
+		
+		//단골가게 회원 수 
+		int bookmarkCnt = shopService.getBookmarkShopCnt(Integer.parseInt(shopIdx));
+		model.addAttribute("bookmarkCnt",bookmarkCnt);
 
 		return "front/shop/shop_news2";
 	}
 
-	// 가게 소식 상세 페이지
-	@GetMapping("/front/shop/shop_news_extend")
-	public String shopNewsExtend(@RequestParam("shopNewsId") String shopNewsId, Model model) {
-
-		// 소식 정보
-		HashMap<Object, Object> detailMap = shopService.getFrontShopNewsDetail(Integer.parseInt(shopNewsId));
-		model.addAttribute("detailMap", detailMap);
-
-		// 댓글
-		List<HashMap<Object, Object>> commentsList = shopService.getShopNewsComments(Integer.parseInt(shopNewsId));
-		model.addAttribute("commentsList", commentsList);
-
-		return "front/shop/shop_news_extend";
-	}
 
 	// 가게 소식 상세 페이지
 	@GetMapping("/front/shop/shop_news_extend2")
@@ -324,49 +290,7 @@ public class ShopController {
 
 		return "front/shop/shop_news_extend2";
 	}
-
-	@GetMapping("/front/shop/shop_review")
-	public String shopReview(@RequestParam("shopIdx") String shopIdx, Model model,
-			@RequestParam(required = false, defaultValue = "latest") String sort) {
-
-		// 가게 정보
-		HashMap<Object, Object> detailMap = shopService.getFrontShopDetail(Integer.parseInt(shopIdx));
-		model.addAttribute("detailMap", detailMap);
-
-		HashMap<Object, Object> reviewMap = new HashMap<Object, Object>();
-		reviewMap.put("shopIdx", Integer.parseInt(shopIdx));
-		reviewMap.put("sort", sort);
-
-		// 가게 리뷰
-		List<HashMap<Object, Object>> reviewList = shopService.getFrontShopReviews(reviewMap);
-		model.addAttribute("reviewList", reviewList);
-
-		HashMap<Object, Object> checkMap = new HashMap<Object, Object>();
-		checkMap.put("shopIdx", shopIdx);
-		// 나중에는 member 객체에 담긴 정보 넣어주기 ★★
-		checkMap.put("memberId", 1);
-
-		// 가게 단골 체크 : 1은 단골아님 2는 단골
-		if (shopService.checkFrontShopMember(checkMap) == null) {
-			model.addAttribute("checkNum", 1);
-		} else {
-			model.addAttribute("checkNum", 2);
-		}
-
-		// 가게 후기
-		int reviewCnt = shopService.getFrontShopReviewCnt();
-		model.addAttribute("reviewCnt", reviewCnt);
-
-		// 단골가게 회원 수
-		int bookmarkCnt = shopService.getBookmarkShopCnt(Integer.parseInt(shopIdx));
-		model.addAttribute("bookmarkCnt", bookmarkCnt);
-
-		model.addAttribute("sort", sort);
-
-		return "front/shop/shop_review";
-
-	}
-
+	
 	@GetMapping("/front/shop/shop_review2")
 	public String shopReview2(@RequestParam("shopIdx") String shopIdx, Model model,
 			@RequestParam(required = false, defaultValue = "latest") String sort) {
@@ -374,14 +298,14 @@ public class ShopController {
 		// 가게 정보
 		HashMap<Object, Object> detailMap = shopService.getFrontShopDetail(Integer.parseInt(shopIdx));
 		model.addAttribute("detailMap", detailMap);
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopIdx",Integer.parseInt(shopIdx));
+		map.put("memberId",loginMemberBean.getMember_id());
 
-		HashMap<Object, Object> reviewMap = new HashMap<Object, Object>();
-		reviewMap.put("shopIdx", Integer.parseInt(shopIdx));
-		reviewMap.put("sort", sort);
-
-		// 가게 리뷰
-		List<HashMap<Object, Object>> reviewList = shopService.getFrontShopReviews(reviewMap);
-		model.addAttribute("reviewList", reviewList);
+		//후기 정보
+		List<HashMap<Object,Object>> list = mypageService.getReviewList(map);
+		model.addAttribute("list",list);
 
 		HashMap<Object, Object> checkMap = new HashMap<Object, Object>();
 		checkMap.put("shopIdx", shopIdx);
@@ -407,6 +331,20 @@ public class ShopController {
 
 		return "front/shop/shop_review2";
 
+	}
+	
+	@GetMapping("/front/shop/review_detail")
+	public String reviewDetail(@RequestParam int shopReviewId,
+							Model model) {
+		
+		HashMap<Object,Object> map = new HashMap<Object,Object>();
+		map.put("shopReviewId",shopReviewId);
+		map.put("memberId",loginMemberBean.getMember_id());
+		
+		HashMap<Object,Object> reMap = mypageService.getReviewDetail(map);
+		model.addAttribute("reMap",reMap);
+		
+		return "front/shop/review_detail";
 	}
 
 	// 리뷰 페이지 이동
@@ -471,7 +409,7 @@ public class ShopController {
 	public String shopAreaSearch() {
 
 		return "front/shop/shop_area_search";
-
+		
 	}
 
 	// 큐레이션 페이지 이동
@@ -492,6 +430,11 @@ public class ShopController {
 		model.addAttribute("status", status);
 		model.addAttribute("shopIdx", shopIdx);
 		model.addAttribute("categoryList", categoryList);
+		
+		model.addAttribute("image",loginMemberBean.getMain_image());
+		model.addAttribute("name",loginMemberBean.getName());
+		model.addAttribute("areaName",loginMemberBean.getArea_name());
+		
 
 		return "front/shop/shop_report_category";
 	}
@@ -597,6 +540,11 @@ public class ShopController {
 	@GetMapping("/front/shop/shop_promotion_area")
 	public String shopPromotionArea(@RequestParam(required = false, defaultValue = "999") int area, Model model) {
 
+		//지역정보
+		//나중에 받은 우편번호로 대체해주기 ★★
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		model.addAttribute("areaList",areaList);
+		
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 
 		// 나중에 가맹점 값 넣어주기 ★★

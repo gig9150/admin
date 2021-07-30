@@ -33,21 +33,21 @@ public class ExhibitionController {
 							@ModelAttribute CurationSearchBean curationSearchBean
 							) {
 		
-		//가맹사 정보
-		List<HashMap<Object,Object>> franchiseList = shopService.getFranchiseName();
-		model.addAttribute("franchiseList",franchiseList);
-		
-		//기획전 리스트
-		List<HashMap<Object,Object>> curationList = exhibitionService.getCurationList(page, curationSearchBean);
-		model.addAttribute("curationList",curationList);
-		
-		//기획전 페이징 처리 
-		PageBean pageBean = exhibitionService.getCurationCnt(page, curationSearchBean);
-		model.addAttribute("pageBean",pageBean);
-		
-		//리스트 갯수
-		int curationCnt = exhibitionService.getCurationRealCnt(page, curationSearchBean);
-		model.addAttribute("curationCnt",curationCnt);
+//		//가맹사 정보
+//		List<HashMap<Object,Object>> franchiseList = shopService.getFranchiseName();
+//		model.addAttribute("franchiseList",franchiseList);
+//		
+//		//기획전 리스트
+//		List<HashMap<Object,Object>> curationList = exhibitionService.getCurationList(page, curationSearchBean);
+//		model.addAttribute("curationList",curationList);
+//		
+//		//기획전 페이징 처리 
+//		PageBean pageBean = exhibitionService.getCurationCnt(page, curationSearchBean);
+//		model.addAttribute("pageBean",pageBean);
+//		
+//		//리스트 갯수
+//		int curationCnt = exhibitionService.getCurationRealCnt(page, curationSearchBean);
+//		model.addAttribute("curationCnt",curationCnt);
 		
 		
 		return "exhibition/curation_list";

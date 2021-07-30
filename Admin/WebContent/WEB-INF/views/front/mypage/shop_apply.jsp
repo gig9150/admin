@@ -20,13 +20,13 @@
 <form id="shopRegi" method="post" action="${root}/front/mypage/shop_apply_pro" enctype="multipart/form-data">
 <section id="MY001-BZRG" class="content">
         <div class="box top">
-            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+            <div class="icon_left"><a href="${root}/front/myPage"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">가게프로필 신청하기</h1>
         </div>
         <div class="inner">
             <div class="big_box btn_box">
                <h2 class="title">본인인증</h2>
-                <div class="btn"><a href="">본인 인증하기</a></div>   
+                <div class="btn"><a href="javascript:void(0)">본인 인증하기</a></div>   
             </div>
             
             <div class="big_box middle_box">

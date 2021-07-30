@@ -25,20 +25,20 @@
 	<!--BZ001-DC01_2 - 소식 - 게시글 신고하기 - 신고하는 이유(2)-->
     <section id="BZ001-DC01_2" class="content">
         <div class="box top">
-            <div class="icon_left"><a href=""><i class="fas fa-times"></i></a></div>
+            <div class="icon_left"><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}"><i class="fas fa-times"></i></a></div>
             <h1 class="title">가게프로필 신고</h1>
         </div>
         
            <div class="box box_1">
-                <div class="pic"></div>
+                <div class="pic"><img src="${root}/upload/${image}" style="width:100%;height:100%;border-radius:inherit;"></div>
                 <div class="info">
-                    <div class="sub_box"><p>호빵맨</p></div>
-                    <div class="sub_box"><p>공주시 신관동</p></div>
+                    <div class="sub_box"><p>${name}</p></div>
+                    <div class="sub_box"><p>${areaName}</p></div>
                 </div>
 
             </div>
            <div class="box box_1">
-                <div class="pic"></div>
+                <div class="pic"><img src="${root}/upload/${detailMap.main_image}" style="width:100%;height:100%;border-radius:inherit;"></div>
                 <div class="info">
                     <div class="sub_box"><p>${detailMap.shop_name}</p></div>
                     <div class="sub_box"><p>${detailMap.area_name}</p></div>
@@ -57,12 +57,12 @@
             </div>
             <div class="small_box btn"><button style="width: 100%;
 											    height: 100%;
-											    background: #78a6d8;">카달로그 서비스팀에게 보내기</button></div>
+											    background: #78a6d8;border: none;color: #ffffff;">카달로그 서비스팀에게 보내기</button></div>
         </div>
-        <div class="bottom_box">
+        <div class="box bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
-                <div class="info"><a href="">홈</a></div>
+                <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
             </div>
             <div class="box">
                 <div class="pic"><i class="far fa-heart"></i></div>
@@ -75,10 +75,10 @@
             <div class="box">
                 <div class="pic"><i class="far fa-comment-dots"></i></div>
                 <div class="info"><a href="">채팅</a></div>
-            </div>-
+            </div>
             <div class="box">
                 <div class="pic"><i class="far fa-user"></i></div>
-                <div class="info"><a href="">MY</a></div>
+                <div class="info"><a href="${root}/front/myPage">MY</a></div>
             </div>
         </div>
     </section>
