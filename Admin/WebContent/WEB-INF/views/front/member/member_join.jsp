@@ -47,6 +47,9 @@
 	                    	<c:forEach items="${list}" var="obj">
 	                    		<option value="${obj.id}">${obj.area_name}</option>
 	                    	</c:forEach>
+	                    	<c:forEach items="${list2}" var="obj">
+	                    		<option value="${obj.id}">${obj.area_name}</option>
+	                    	</c:forEach>
 	                    </select>
 	                </fieldset>
 	                <button type="submit">가입하기</button>

@@ -18,7 +18,7 @@
 <body>
 <!--MY012 -마이페이지 -가게프로필 신청하기(2)-->
 <form id="shopRegi" method="post" action="${root}/front/mypage/shop_apply_pro" enctype="multipart/form-data">
-<section id="MY001-BZRG" class="content">
+	<section id="MY001-BZRG" class="content">
         <div class="box top">
             <div class="icon_left"><a href="${root}/front/myPage"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">가게프로필 신청하기</h1>
@@ -78,11 +78,12 @@
                 </div>
                 <div class="small_box box_11">
                     <div class="sub_box">
-                       <label for="keyword">키워드 등록</label>
-                        <input id="keyword"  type="text" placeholder="키워드를 입력해주세요.">
-                        <button type="button" id="keywordBtn">등록</button>
+	                    <label for="keyword">키워드 등록</label>
+	                    <input id="keyword"  type="text" placeholder="키워드를 입력해주세요.">
+	                    <button type="button" id="keywordBtn">등록</button>
                     </div>
                     <ul class="sub_box_2">
+                    
                     </ul>
                 </div>
                 <div class="btn box_12"><button>신청하기</button></div>
@@ -147,7 +148,9 @@
    				//필수 정보 입력 안하면 submit 불가 
    				if($('#sbox_4').val() == '' || $('#sbox_5').val() == '' || $('#sbox_6').val() == '' || $('#sbox_7').val() == '' || 
 				$('#sbox_8').val() == '' || $('#sbox_9').val() == '' || $('#sbox_10').val() == '' || $('#regiFile').val() == ''){
- 					$('#MY001-BZRG').addClass("bre");
+   					
+ 					$('#MY001-BZRG').toggleClass("bre");
+ 					$('.break-inner').css('display','block');
 					e.preventDefault();
 					return;
 				}
@@ -158,9 +161,17 @@
    			});
    			
    			//입력 내용 부족 모달
-   			$(document).on('click','.break-inner .sure',function(){
-   				$('#MY001-BZRG').removeClass("bre");
+//    			$(document).on('click','.break-inner button',function(){		
+//    				$('#MY001-BZRG').toggleClass("bre");			
+//    			});
+   			
+   			$('.break-inner button').click(function(){
+   				
+   				$('.break-inner').css('display','none');
+   				$('#MY001-BZRG').toggleClass("bre");
+   				
    			});
+   			
    			
    			//가게 신청 완료 모달 
    			$('.complete-inner button').click(function(){
@@ -190,14 +201,19 @@
    			//키워드 등록 
    			$('#keywordBtn').on('click',function(){
    				
+   				if($('#keyword').val() == ''){
+   					alert('키워드를 입력해주세요.');
+   					return;
+   				}
+   				
    				//최대 다섯개
-   				if($('.small_box.box_11 .sub_box_2 li').length >= 5){
+   				if($('.sub_box_2 div').length >= 5){
    					alert('키워드는 5개까지 등록 가능합니다');
    					return;
    				}
    				
    				let keyword = $('#keyword').val();
-   				$('.small_box.box_11 .sub_box_2').append('<div ><input name="keyword" readonly value="'+keyword+'"><span class="shopKeyword"><i class="fas fa-times"></i></span></div>');
+   				$('.small_box.box_11 .sub_box_2').append('<div><input name="keyword" readonly value="'+keyword+'"><span class="shopKeyword"><i class="fas fa-times"></i></span></div>');
    				$('#keyword').val('');
    				
    			});
@@ -208,8 +224,6 @@
    			});
    			
    			
-   			
-
 			//업종 자동완성 
 			var jsonArraySec = new Array();	
    			

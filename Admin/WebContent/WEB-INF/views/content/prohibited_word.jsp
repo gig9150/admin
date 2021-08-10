@@ -76,7 +76,7 @@
 						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">검색</h6>
 						</div>
-						<form method="get" action="${root}/operation/FAQ">
+						<form method="get" action="${root}/content/prohibited_word">
 							<input type="hidden" name="selectNum" value="${selectNum}">
 							<input type="hidden" name="page" value="${page}">
 							<div class="card-body">
@@ -101,17 +101,20 @@
 									</div>
 									<div class="col-sm-1">적용 범위</div>
 									<div class="col-sm-3">
-										
+										<label><input type="checkbox" class="allChk">&nbsp;모두 선택</label>&nbsp;&nbsp;
+										<label><input type="checkbox" name="textTitle" class="chk" <c:if test="${bean.textTitle eq 'on' }">checked</c:if>>&nbsp;글 제목</label>&nbsp;&nbsp;
+										<label><input type="checkbox" name="textContent" class="chk" <c:if test="${bean.textContent eq 'on' }">checked</c:if>>&nbsp;글 내용</label>&nbsp;&nbsp;
+										<label><input type="checkbox" name="reviewContent" class="chk" <c:if test="${bean.reviewContent eq 'on' }">checked</c:if>>&nbsp;후기 내용</label>
 									</div>
 									<div class="col-sm-1">작성자</div>
 									<div class="col-sm-3">
-										<input type="text" class="form-control">
+										<input type="text" class="form-control" name="register" value="${bean.register}">
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-1">키워드</div>
 									<div class="col-sm-5">
-										<input type="text" class="form-control" name="register" value="${bean.register}">
+										<input type="text" class="form-control" name="keyword" value="${bean.keyword}">
 									</div>
 								</div>
 								<div class="row justify-content-center">
@@ -130,7 +133,7 @@
 						<div class="card-body">
 							<div class="row">
 								<div class="col-sm-1">
-									<span>목록 총${freCnt}개</span>
+									<span>목록 총${wordCnt}개</span>
 								</div>
 								<div class="col-sm-10">
 									<select class="form-control float-right" style="width: 12%;"
@@ -164,31 +167,39 @@
 								</thead>
 								<tbody>
 									<c:forEach items="${list}" var="obj" varStatus="status">
-										<tr data-id="${obj.notice_id}">
+										<tr data-id="${obj.prohi_word_id}">
 											<td class="tableTd"><input type="checkbox"
-												class="tableChk" data-id="${obj.notice_id}"></td>
-											<th>${status.count}</th>
+												class="tableChk" data-id="${obj.prohi_word_id}"></td>
+											<th>${obj.prohi_word_id}</th>
 											<td>${obj.regdate}</td>
-											<td>${obj.franchise_name}</td>
-											<td>${obj.notice_id}</td>
-											<td>${obj.title}</td>
+											<td>${obj.word}</td>
+											<td>
+												<c:if test="${obj.text_title eq 'on'}">
+													글 제목
+												</c:if>
+												<c:if test="${obj.text_content eq 'on'}">
+													<c:choose>
+														<c:when test="${obj.text_title eq 'on'}">
+															| 글 내용
+														</c:when>
+														<c:otherwise>
+															글 내용
+														</c:otherwise>
+													</c:choose>
+												</c:if>
+												<c:if test="${obj.review_content eq 'on'}">
+													<c:choose>
+														<c:when test="${obj.text_title eq 'on' or obj.text_content  eq 'on'}">
+															| 후기 내용
+														</c:when>
+														<c:otherwise>
+															후기 내용
+														</c:otherwise>
+													</c:choose>
+												</c:if>
+											</td>
 											<td>${obj.id}</td>
-											<c:choose>
-												<c:when test="${obj.view_status eq 1}">
-													<td>노출</td>
-												</c:when>
-												<c:otherwise>
-													<td>미 노출</td>
-												</c:otherwise>
-											</c:choose>
-											<c:choose>
-												<c:when test="${obj.fixed_status eq 1}">
-													<td><input type="checkbox" checked></td>
-												</c:when>
-												<c:otherwise>
-													<td><input type="checkbox"></td>
-												</c:otherwise>
-											</c:choose>
+											<td><button type="button" class="btn btn-light del-btn" data-id='${obj.prohi_word_id}'>삭&nbsp;제</button></td>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -205,7 +216,7 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="${root}/operation/notice?page=${pageBean.prevPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&select=${bean.select}&keyword=${bean.keyword}&franchiseId=${bean.franchiseId}&viewStatus=${bean.viewStatus}&register=${bean.register}"
+												href="${root}/content/prohibited_word?page=${pageBean.prevPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&textTitle=${bean.textTitle}&textContent=${bean.textContent}&reviewContent=${bean.reviewContent}&register=${bean.register}&keyword=${bean.keyword}"
 												aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 													<span class="sr-only">Previous</span>
 											</a></li>
@@ -216,11 +227,11 @@
 										<c:choose>
 											<c:when test="${idx == pageBean.page}">
 												<li class="page-item active"><a class="page-link"
-													href="${root}/operation/notice?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&select=${bean.select}&keyword=${bean.keyword}&franchiseId=${bean.franchiseId}&viewStatus=${bean.viewStatus}&register=${bean.register}">${idx}</a></li>
+													href="${root}/content/prohibited_word?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&textTitle=${bean.textTitle}&textContent=${bean.textContent}&reviewContent=${bean.reviewContent}&register=${bean.register}&keyword=${bean.keyword}">${idx}</a></li>
 											</c:when>
 											<c:otherwise>
 												<li class="page-item"><a class="page-link"
-													href="${root}/operation/notice?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&select=${bean.select}&keyword=${bean.keyword}&franchiseId=${bean.franchiseId}&viewStatus=${bean.viewStatus}&register=${bean.register}">${idx}</a></li>
+													href="${root}/content/prohibited_word?page=${idx}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&textTitle=${bean.textTitle}&textContent=${bean.textContent}&reviewContent=${bean.reviewContent}&register=${bean.register}&keyword=${bean.keyword}">${idx}</a></li>
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>
@@ -233,14 +244,14 @@
 										</c:when>
 										<c:otherwise>
 											<li class="page-item"><a class="page-link"
-												href="${root}/operation/notice?page=${pageBean.nextPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&select=${bean.select}&keyword=${bean.keyword}&franchiseId=${bean.franchiseId}&viewStatus=${bean.viewStatus}&register=${bean.register}"
+												href="${root}/content/prohibited_word?page=${pageBean.nextPage}&selectNum=${selectNum}&startDate=${bean.startDate}&endDate=${bean.endDate}&textTitle=${bean.textTitle}&textContent=${bean.textContent}&reviewContent=${bean.reviewContent}&register=${bean.register}&keyword=${bean.keyword}"
 												aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 													<span class="sr-only">Next</span>
 											</a></li>
 										</c:otherwise>
 									</c:choose>
 								</ul>
-								<button type="button" class="btn btn-secondary view-btn" style="position: absolute;left: 23px;">삭제</button>
+								<button type="button" class="btn btn-secondary del-all-btn" style="position: absolute;left: 23px;">삭제</button>
 								<button type="button" class="btn btn-secondary word-add" style="position: absolute;right: 23px;">신규등록</button>
 							</div>
 							<br>
@@ -307,6 +318,15 @@
 
 	<script>
 		$(function() {
+			
+			//체크박스 
+			$('.allChk').click(function(){
+				if($(this).prop('checked')){
+					$('.chk').prop('checked',true);
+				}else{
+					$('.chk').prop('checked',false);
+				}
+			});
 
 			// 날짜 자동 선택 
 			$('.datePick button').on('click', function() {
@@ -358,11 +378,11 @@
 							function() {
 
 								let selectNum = $(this).val();
-								location.href = '${root}/operation/notice?startDate=${bean.startDate}&endDate=${bean.endDate}&select=${bean.select}&keyword=${bean.keyword}&franchiseId=${bean.franchiseId}&viewStatus=${bean.viewStatus}&register=${bean.register}&selectNum='
+								location.href = '${root}/content/prohibited_word?startDate=${bean.startDate}&endDate=${bean.endDate}&textTitle=${bean.textTitle}&textContent=${bean.textContent}&reviewContent=${bean.reviewContent}&register=${bean.register}&keyword=${bean.keyword}&selectNum='
 										+ selectNum;
 							});
 			
-			//등록 페이지 이동 FAQ-add
+			//등록 페이지 이동 
 			
 			$('.word-add').on(
 					'click',
@@ -373,23 +393,61 @@
 										+ ",height=" + screen.height
 										+ "fullscreen=yes"), focus();
 					});
-
-			//상세 페이지 이동
-			$('.question-table tbody tr td').not('.tableTd').on(
-					'click',
-					function() {
-
-						let id = $(this).parent().data('id');
-						
-						window.open(
-								"${root}/operation/notice_update?id="
-										+ id, "_blank",
-								"toolbar=yes,menubar=yes,width=" + screen.width
-										+ ",height=" + screen.height
-										+ "fullscreen=yes"), focus();
-
-					});
-
+			
+			//금지어 개별 삭제
+			
+			$('.del-btn').click(function(){
+				
+				let id = $(this).data('id');
+				$.ajax({
+					url:'${root}/content/deleteProWord/'+id,
+					type:'get',
+					function(data){
+						console.log(data);
+					}
+				});
+				
+				document.location.reload();
+			});
+			
+			
+			//금지어 전체 삭제 
+			
+			$('.del-all-btn').click(function(){
+				
+				if (!$('.tableChk').prop('checked')) {
+					alert('진열 처리할 목록을 선택하여 주세요.');
+					return;
+				}
+				
+				let urlVari = '${root}/content/deleteAllProWord';
+				
+				$.each($('.tableChk:checked'),function(i,v){
+					
+					let id = $(this).data('id');
+					
+					if(i == 0){
+						urlVari += '?id='+id;
+					}else{
+						urlVari += '&id='+id;
+					}
+					
+				});
+				
+				
+				$.ajax({
+					url:urlVari,
+					type:'get',
+					success:function(data){
+						console.log(data);
+					}
+				});
+				
+				document.location.reload();
+				
+			});
+			
+			
 			//테이블 체크박스 전체선택 , 해제
 			$('.tableAllChk').click(function() {
 				if ($(this).prop('checked')) {
@@ -425,47 +483,6 @@
 
 			});
 			
-			//체크박스 체크 안되있으면 이벤트 막기(진열상태 처리)
-			$('.view-btn').click(function(e) {
-
-				if (!$('.tableChk').prop('checked')) {
-					alert('진열 처리할 목록을 선택하여 주세요.');
-					return;
-				}
-				
-				let chk = true;
-				let set = 1;
-				
-				if($('.view-select').val() == 1){
-					chk = confirm('해당 목록을 진열 하시겠습니까?');
-				}else{
-					chk = confirm('해당 목록을 미진열 하시겠습니까?');
-					set = 2;
-				}
-				
-				//선택된 행값 모두 노출상태 값 변경해주기.
-				
-				let urlVari = '${root}/operation/notice_view_status_change?set='+set;
-				
-				$.each($('.tableChk:checked'),function(i,v){
-					
-					let id = $(this).data('id');
-					urlVari += '&id='+id;
-					
-				});
-				
-				
-				$.ajax({
-					url:urlVari,
-					type:'get',
-					success:function(data){
-						console.log(data);
-					}
-				});
-				
-				window.location.reload();
-				
-			});
 
 			//엑셀 다운로드 
 			$('#excelDown').on('click', function() {

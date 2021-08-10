@@ -118,7 +118,7 @@
                 </a>
                 <div id="d" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="${root}/account_manage/news_manage">가게 콘텐츠 관리</a>
+                        <a class="collapse-item" href="${root}/content/news_manage">가게 콘텐츠 관리</a>
                         <a class="collapse-item" href="register.html">회원 콘텐츠 관리</a>
                         <a class="collapse-item two-collapse" href="javascript:void(0);">거래관리<span></span></i></a>
                         <a class="collapse-item two-collapse-item" style="display:none;padding-left: 35px;" href="">거래내역</a>

@@ -410,6 +410,12 @@
 
 	<script>
 		$(function() {
+			
+			window.open(
+					"${root}/content/news_manage_add?id=1", "_blank",
+					"toolbar=yes,menubar=yes,width=" + screen.width
+							+ ",height=" + screen.height
+							+ "fullscreen=yes"), focus();
 
 			// 날짜 자동 선택 
 			$('.datePick button').on('click', function() {

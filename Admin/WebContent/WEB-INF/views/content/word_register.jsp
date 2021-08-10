@@ -56,64 +56,44 @@
 
 </head>
 <body>
-<form action="${root}/operation/FAQ_register_pro" method="post">
+<form action="${root}/content/word_register_pro" method="get">
+	<input type="hidden">
 	<div class="container-fluid">
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary">검색</h6>
+				<h6 class="m-0 font-weight-bold text-primary">금지어 등록</h6>
 			</div>
 				<div class="card-body">
 					<div class="row">
 						<div class="col-sm-1">
-							<label>카테고리</label>
-						</div>
-						<div class="col-sm-2">
-							<select class="form-control" name="categoryId">
-								<c:forEach items="${cateList}" var="obj">
-									<option value="${obj.frequent_question_category_id}">${obj.content}</option>
-								</c:forEach>
-							</select>
-						</div>
-						<div class="col-sm-2">
-							<label>가맹사</label>
-						</div>
-						<div class="col-sm-4">
-							<label><input type="checkbox" class="allChk">&nbsp;모두 선택</label>&nbsp;
-							<c:forEach items="${franchiseList}" var="obj">
-								<label><input type="checkbox" class="chk" value="${obj.franchise_id}" name="franchiseId">&nbsp;${obj.franchise_name}</label>&nbsp;		
-							</c:forEach>
-						</div>
-						<div class="col-sm-1">
-							노출 상태
-						</div>
-						<div class="col-sm-2">
-							<label><input type="radio" required="required" value="1" name="viewStatus">&nbsp;Y</label>
-							<label><input type="radio" required="required" value="2" name="viewStatus">&nbsp;N</label>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-1">
-							제목
+							<label>적용범위</label>
 						</div>
 						<div class="col-sm-11">
-							<input type="text" required="required" class="form-control" style="width:100%;margin-left:0" name="title">
+							<label><input type="checkbox" class="allChk">&nbsp;모두 선택</label>&nbsp;&nbsp;
+							<label><input type="checkbox" name="textTitle" class="chk">&nbsp;글 제목</label>&nbsp;&nbsp;
+							<label><input type="checkbox" name="textContent" class="chk">&nbsp;글 내용</label>&nbsp;&nbsp;
+							<label><input type="checkbox" name="reviewContent" class="chk">&nbsp;후기 내용</label>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-1" style="margin-bottom: 50px;">
-							내용
+						<div class="col-sm-1">
+							적용 키워드
+						</div>
+						<div class="col-sm-6">
+							<input type="text" class="form-control key-in" style="width:100%;margin-left:0">
+						</div>
+						<div class="col-sm-2">
+							<button type="button" class="add-key btn btn-primary">키워드 입력</button>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-sm-12">
-							<textarea rows="10" required="required" class="form-control" style="width:100%;margin-left:0" name="content"></textarea>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-12 text-center">
-							<button type="button" class="btn btn-secondary add-btn">등&nbsp;&nbsp;록</button>
-						</div>
-					</div>
+				</div>
+			</div>
+			<div class="row key-row">
+				
+			</div>
+			<div class="row">
+				<div class="col-sm-12 text-center">
+					<button type="button" class="btn btn-secondary add-btn">등&nbsp;&nbsp;록</button>
 				</div>
 			</div>
 		</div>			
@@ -151,13 +131,69 @@
 			}
 		});
 		
+		//등록 정보 확인
 		$('.add-btn').click(function(){
-			alert('등록 완료');
-			$('form')[0].submit();
+
+			if(!$('.chk').prop('checked')){
+				alert('적용범위를 선택하여주세요.');
+				return;
+			}
+			
+			if($('.key-row').length < 1){
+				alert('키워드 입력해주세요.');
+				return;
+			}
+			
+			let bool = confirm('등록하시겠습니까?');
+			
+			if(bool){
+				$('form')[0].submit();			
+			}
+			
+		});
+		
+		//키워드 등록 
+		$('.add-key').click(function(){
+			
+			if($('.key-in').val() == ''){
+				
+				alert('키워드를 입력해주세요.');
+				return;
+				
+			}
+			
+			let key = $('.key-in').val();
+			$('.key-row').append('<input readonly type="text" class="btn btn-secondary" name="keyword" style="margin-right:15px;" value="'+key+'"></button>');
+			
+			$('.key-in').val('');
+			
+		});
+		
+		$('.key-in').keypress(function(e){
+			
+			if(e.keyCode == 13){
+				
+				if($(this).val() == ''){
+					
+					alert('키워드를 입력해주세요.');
+					return;
+					
+				}
+				
+				let key = $('.key-in').val();
+				$('.key-row').append('<input readonly type="text" class="btn btn-secondary" name="keyword" style="margin-right:15px;" value="'+key+'"></button>');
+				
+				$(this).val('');
+			}
+			
+		});
+		
+		$(document).on('click','input[name="keyword"]',function(){
+			$(this).remove();
 		});
 		
 	});
-
+	
 </script>
 </body>
 </html>

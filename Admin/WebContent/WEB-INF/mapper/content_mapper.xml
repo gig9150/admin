@@ -3,6 +3,140 @@
 					    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.roomio.carret.content">
 	
+	<!-- 금지어 추가 -->
+	<insert id="addProWord" parameterType="hashMap">
 	
+		insert into prohi_word(franchise_manager_id,text_title,text_content,review_content,word)
+		values
+		<foreach collection="keyword" item="item" separator=",">
+			(${id},#{textTitle},#{textContent},#{reviewContent},#{item})
+		</foreach>
+	
+	</insert>
+	
+	<!-- 금지어 조건 검색 -->
+	<sql id="wordSearch">	
+		<where>
+			<choose>
+				<when test='startDate != null and !startDate.equals("") and endDate != null and !endDate.equals("")'>
+					date_format(w.regdate,'%Y-%m-%d') between #{startDate} and #{endDate}
+				</when>
+				<when test='startDate != null and !startDate.equals("")'><![CDATA[date_format(w.regdate,'%Y-%m-%d') > #{startDate}]]></when>
+				<when test='endDate != null and !endDate.equals("")'><![CDATA[date_format(w.regdate,'%Y-%m-%d') < #{endDate}]]></when>
+			</choose>
+			<if test='textTitle != null and textTitle.equals("on")'>and w.text_title = 'on'</if>
+			<if test='textContent != null and textContent.equals("on")'>and w.text_content = 'on'</if>
+			<if test='reviewContent != null and reviewContent.equals("on")'>and w.review_content = 'on'</if>
+			<if test='register != null and !register.equals("")'>and m.id LIKE CONCAT('%',#{register},'%')</if>
+			<if test='keyword != null and !keyword.equals("")'>and w.word LIKE CONCAT('%',#{keyword},'%')</if>
+		</where>
+	</sql>
+	
+	<!-- 금지어 리스트 -->
+	<select id="getProWord" parameterType="com.roomio.carret.bean.WordSearchBean" resultType="hashMap">
+		
+		select w.prohi_word_id,w.text_title,w.text_content,w.review_content,w.word,m.id,w.regdate
+		from prohi_word w
+		inner join franchise_manager m
+		on w.franchise_manager_id = m.franchise_manager_id
+		
+		<include refid="wordSearch"/>
+		
+	</select>
+	
+	<!-- 금지어 글 갯수  -->
+	<select id="getProWordCnt" parameterType="int" resultType="int">
+	
+		select count(*)
+		from prohi_word w
+		inner join franchise_manager m
+		on w.franchise_manager_id = m.franchise_manager_id
+		
+		<include refid="wordSearch"/>
+	
+	</select>
+	
+	<!-- 금지어 개별 삭제 -->
+	<delete id="deleteProword" parameterType="int">
+	
+		delete from prohi_word
+		where prohi_word_id = ${id}
+	
+	</delete>
+	
+	<!-- 금지어 복수 삭제 -->
+	<delete id="deleteAllProword" parameterType="list">
+		
+		delete from prohi_word 
+		where prohi_word_id in 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			${item}
+		</foreach>
+	
+	</delete>
+	
+	<!-- 소식글 관리 상세정보 map -->
+	<resultMap type="hashMap" id="newsManageMap">
+		<result column="main_image" property="main_image"/>
+		<result column="franchise_name" property="franchise_name"/>
+		<result column="shop_name" property="shop_name"/>
+		<result column="shop_idx" property="shop_idx"/>
+		<result column="nick_name" property="nick_name"/>
+		<result column="post_status" property="post_status"/>
+		<result column="manager_del" property="manager_del"/>
+		<result column="status" property="status"/>
+		<result column="del_regdate" property="del_regdate"/>
+		<result column="responsibility_memo" property="responsibility_memo"/>
+		<result column="shop_news_id" property="shop_news_id"/>
+		<result column="regdate" property="regdate"/>
+		<result column="update_date" property="update_date"/>
+		<result column="title" property="title"/>
+		<result column="view_count" property="view_count"/>
+		<result column="like_count" property="like_count"/>
+		<result column="report_id" property="report_id"/>
+		<result column="content" property="content"/>
+		<result column="post_stage" property="post_stage"/>
+		<collection property="imageList" ofType="string" javaType="list">
+			<result column="name"/>
+		</collection>
+		<collection property="keywordList" ofType="string" javaType="list">
+			<result column="keyword"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 소식글 관리 상세정보 -->
+	<select id="getNewsInfo" parameterType="int" resultMap="newsManageMap">
+		
+		select s.main_image,f.franchise_name,s.shop_name,s.shop_idx,m.name as nick_name,sn.post_status,sn.manager_del,
+		s.status,sn.del_regdate,s.responsibility_memo,sn.shop_news_id,sni.name,sn.regdate,
+		(select update_date from news_update_list where shop_news_id = sn.shop_news_id order by update_date desc limit 0,1) as update_date,
+		sn.title,sn.view_count,sn.post_stage,
+		(select count(*) from shop_news_like snl where shop_news_id = sn.shop_news_id) as like_count,
+		(select report_id from report where report_to = '소식' and report_to_num = sn.shop_news_id) as report_id,
+		sk.keyword,sn.content
+		from shop_news sn
+		inner join shop s
+		on sn.shop_idx = s.shop_idx
+		inner join franchise f 
+		on s.franchise_id = f.franchise_id
+		inner join member m 
+		on s.member_id = m.member_id
+		left join shop_news_image sni
+		on sn.shop_news_id = sni.shop_news_id
+		left join shop_keyword sk
+		on s.shop_idx = sk.shop_idx
+		where sn.shop_news_id = ${id}
+		
+	</select>
+	
+	<!-- 소식글 관리 수정이력 -->
+	<select id="getNewsUpdateList" parameterType="int" resultType="hashMap">
+		
+		select news_update_list_id,update_date,update_category,update_before,update_after,post_status,
+		manager_del,handler
+		from news_update_list
+		where shop_news_id = ${id}
+	
+	</select>
 	
 </mapper>

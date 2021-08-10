@@ -115,7 +115,8 @@ public class MemberController {
 	public String memberJoin(Model model) {
 		
 		//가맹사 코드 받으면 값 뽑아서 메인페이지로 이동
-		model.addAttribute("list",mypageService.getAreaList("01"));
+		model.addAttribute("list",mypageService.getAreaList("325"));
+		model.addAttribute("list2",mypageService.getAreaList("326"));
 		
 		return "front/member/member_join";
 	}

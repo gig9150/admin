@@ -478,13 +478,5 @@ public class AccountManageController {
 		return "account_manage/member_update";
 		
 	}
-	
-	//소식글 관리 페이지 이동
-	@RequestMapping("/account_manage/news_manage")
-	public String newsManage() {
-		
-		
-		return "account_manage/news_manage";
-	}
 
 }

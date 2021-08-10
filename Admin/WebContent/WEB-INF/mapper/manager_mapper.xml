@@ -133,8 +133,8 @@
 		<![CDATA[
 			select count(*)
 			from franchise f
-			left join franchise_manager m 
-			on f.franchise_id = m.franchise_id
+			left join franchise_domain d
+			on f.franchise_id = d.franchise_id
 		]]>
 		
 		<where>
@@ -189,14 +189,12 @@
 			from franchise f
 			left join franchise_domain d
 			on f.franchise_id = d.franchise_id
-			LEFT join franchise_manager m
-			ON f.franchise_id = m.franchise_id
 			
 		]]>
 		
 		<where>
 			<if test='select != null and select.equals("1")'>
-				f.franchise_name LIKE CONCAT('%',#{keyWord},'%') or
+				and f.franchise_name LIKE CONCAT('%',#{keyWord},'%') or
 				f.franchise_id LIKE CONCAT('%',#{keyWord},'%') or
 				f.service_name LIKE CONCAT('%',#{keyWord},'%')
 			</if>

@@ -176,7 +176,7 @@
 	
 		select distinct id,area_name
 		from area_dong 
-		where LEFT(zip_code,2) = #{zipCode}
+		where LEFT(zip_code,3) = #{zipCode}
 		GROUP BY area_name
 		
 	</select>

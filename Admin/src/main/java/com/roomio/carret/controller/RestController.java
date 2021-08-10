@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.roomio.carret.bean.FranchiseRegisterBean;
 import com.roomio.carret.bean.LoginMemberBean;
+import com.roomio.carret.service.ContentService;
 import com.roomio.carret.service.ExhibitionService;
 import com.roomio.carret.service.ManagerAccountService;
 import com.roomio.carret.service.ManagerService;
@@ -47,6 +48,9 @@ public class RestController {
 	
 	@Autowired
 	private OperationService operationService;
+	
+	@Autowired
+	private ContentService contentService;
 	
 	@Resource(name = "loginMemberBean")
 	@Lazy
@@ -307,6 +311,37 @@ public class RestController {
 		}
 		
 		
+	}
+	
+	//금지어 개별 삭제
+	@RequestMapping("/content/deleteProWord/{id}")
+	public String deleteProWord(@PathVariable int id) {
+		
+		int num = contentService.deleteProword(id);
+		
+		if(num >= 1) {
+			
+			return "success";
+			
+		}else {
+			
+			return "fail";
+			
+		}
+		
+	}
+	
+	//금지어 전체 삭제
+	@RequestMapping("/content/deleteAllProWord")
+	public String deleteAllProWord(@RequestParam(name = "id") List<Integer> list) {
+		
+		int num = contentService.deleteAllProword(list);
+		
+		if(num >= 1) {
+			return "success";
+		}else {
+			return "fail";
+		}
 	}
 	
 	

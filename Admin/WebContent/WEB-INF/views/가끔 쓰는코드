@@ -53,3 +53,7 @@
 			});
 		
 		</c:forEach>
+		
+6. 팝업창 종료 url
+
+	"account_manage/member_update"

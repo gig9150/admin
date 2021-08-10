@@ -54,16 +54,16 @@ public class HomeController {
 		loginMemberBean.setStatus(1);
 		loginMemberBean.setMember_code("58995483");
 	
-		if(loginManagerBean.isIslogin() == true) {
-			return "home";
-		}else {
-			return "redirect:/manager/login";			
-		}
+//		if(loginManagerBean.isIslogin() == true) {
+//			return "home";
+//		}else {
+//			return "redirect:/manager/login";			
+//		}
 		
 //		return "redirect:/front/shop/shop_promotion";
 //		
 //
-//		return "front/member/member_join_before";
+		return "front/member/member_join_before";
 		
 	}
 	
