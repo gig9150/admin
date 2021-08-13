@@ -56,7 +56,7 @@ public class ManagerService {
 		String file_name = System.currentTimeMillis() + "_" + upload_file.getOriginalFilename();
 		
 		try {
-			upload_file.transferTo(new File("C:\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\RoomioAdmin\\resources\\upload" + "/" + file_name));
+			upload_file.transferTo(new File("C:\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\Admin\\resources\\upload" + "/" + file_name));
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

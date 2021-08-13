@@ -25,12 +25,13 @@
 </style>
 </head>
 <body>
-<!--#GNB001   GNB탭 - 가게홍보 큐레이션 페이지-->
-    <section id="GNB001" class="content">
+    
+     <section id="GNB001" class="content">
         <div class="top">
             <div class="top_left">
+                <a class="search_left" href=""><img src="${root}/img/group_1434.png" alt=""></a>
                 <input type="text" placeholder="검색어를 입력해주세요">
-                <a href=""><i class="fas fa-search"></i></a>
+                <a class="search_right" href=""><i class="fas fa-search"></i></a>
             </div>
             <div class="top_right">
                 <a href="" class="bell_1"><i class="far fa-bell"></i></a>
@@ -39,74 +40,72 @@
         </div>
 
         <ul id="gnb">
-            <li><a href="${root}/front/home">홈</a></li>
+            <li><a href="${root}/front/home">추천</a></li>
             <li><a href="${root}/front/shop/shop_promotion">가게홍보</a></li>
             <li><a href="">산지직거래</a></li>
             <li><a href="">중고장터</a></li>
             <li><a href="">일상</a></li>
         </ul>
-        
+
         <div class="box_3">
             <div class="place"><a href="javascript:void(0)">지역<span><i class="fas fa-chevron-down"></i></span></a></div>
         </div>
-        
-        
-        	
-       	<c:forEach items="${curationList}" var="obj" varStatus="status">
-       		<div class="swiper-container box_4">
-	            <div class="sub_title_box">
-	               <div class="top_box">
-	                    <h2 class="sub_title">${obj.exhiName}</h2>
-	                    <ul class="list">
-	                        <li><p># ${obj.exhiSub}</p></li>
-	                    </ul>
-	                </div>
-	                <ul class="view_more">
-	                    <li><a href="${root}/front/shop/shop_promotion_curation?exhiId=${obj.exhiId}">더보기</a></li>
-	                    <li><a href="${root}/front/shop/shop_promotion_curation?exhiId=${obj.exhiId}"><i class="fas fa-chevron-right"></i></a></li>
-	                </ul>
-	            </div>
-	            <div class="swiper-wrapper">
-	            	<c:forEach items="${obj.curationList}" var="obj2">
-		                <div class="swiper-slide">
-		                    <div class="sub_box">
-		                        <div class="pic">
-		                        	<a href="${root}/front/shop/shop_detail?shopIdx=${obj2.shopIdx}"><img style="width:100%;height:100%;" src="${root}/upload/${obj2.mainImage}"></a>
-		                        </div>
-		                        <div class="info">
-		                            <ul class="sub_info sub_info_1">
-		                                <li>${obj2.shopName}</li>
-		                                <li>${obj2.areaName}</li>
-		                                <fmt:parseNumber var="startDate_N" value="${obj2.startDate}" integerOnly="false"/>
-		                                <fmt:parseNumber var="endDate_N"  value="${obj2.endDate}" integerOnly="false" />
-		                               	<c:choose>
-		                               		<c:when test="${date_N > startDate_N and date_N < endDate_N and obj2.holiday != day}">
-		                               			<li>영업중 </li>
-		                               		</c:when>
-		                               		<c:otherwise>
-		                               			<li>영업종료</li>
-		                               		</c:otherwise>
-		                               	</c:choose>
-		                            </ul>
-		                            <ul class="sub_info sub_info_2">
-		                                <li>${obj2.sector }/${obj2.holiday} 휴무 </li><br>
-		                                <li>${fn:substring(startDate_N,0,2)}:${fn:substring(startDate_N,2,4)} ~ ${fn:substring(endDate_N,0,2)}:${fn:substring(endDate_N,2,4)}</li>
-		                            </ul>
-		                            <ul class="sub_info sub_info_3">
-		                                <li><i class="far fa-comment"></i></li>
-		                                <li>${obj2.reviewCount}</li><br>
-		                                <li><i class="fas fa-heart"></i></li>
-		                                <li>${obj2.bookmarkCount}</li>
-		                            </ul>
-		                        </div>
-		                    </div>
-		                </div>
-	            	</c:forEach>
-	                </div>
-	            </div>
-       	</c:forEach>
 
-       <div class="box bottom_box">
+	<c:forEach items="${curationList}" var="obj" varStatus="status">
+        <div class="swiper-container box_4">
+            <div class="sub_title_box">
+            	<div class="top_box">
+	                <h2 class="sub_title">${obj.exhiName}</h2>
+	                <ul class="list">
+	                	<li><p># ${obj.exhiSub}</p></li>
+	                </ul>
+                </div>
+                <ul class="view_more">
+                    <li><a href="${root}/front/shop/shop_promotion_curation?exhiId=${obj.exhiId}">더보기</a></li>
+                    <li><a href="${root}/front/shop/shop_promotion_curation?exhiId=${obj.exhiId}"><i class="fas fa-chevron-right"></i></a></li>
+                </ul>
+            </div>
+            <div class="swiper-wrapper">
+            	<c:forEach items="${obj.curationList}" var="obj2">
+	                <div class="swiper-slide">
+	                    <div class="sub_box">
+	                        <div class="pic">
+	                        	<a href="${root}/front/shop/shop_detail?shopIdx=${obj2.shopIdx}"><img style="width:100%;height:100%;" src="${root}/upload/${obj2.mainImage}"></a>
+	                        </div>
+	                        <div class="info">
+	                            <ul class="sub_info sub_info_1">
+	                                <li>${obj2.shopName}</li>
+	                                <li>${obj2.areaName}</li>
+                                 	<fmt:parseNumber var="startDate_N" value="${obj2.startDate}" integerOnly="false"/>
+	                                <fmt:parseNumber var="endDate_N"  value="${obj2.endDate}" integerOnly="false" />
+	                                <c:choose>
+	                               		<c:when test="${date_N > startDate_N and date_N < endDate_N and obj2.holiday != day}">
+	                               			<li>영업중 </li>
+	                               		</c:when>
+	                               		<c:otherwise>
+	                               			<li>영업종료</li>
+	                               		</c:otherwise>
+	                               	</c:choose>
+	                            </ul>
+	                            <ul class="sub_info sub_info_2">
+	                                <li>${obj2.sector}/${obj2.holiday} 휴무 </li><br>
+		                            <li>${fn:substring(startDate_N,0,2)}:${fn:substring(startDate_N,2,4)} ~ ${fn:substring(endDate_N,0,2)}:${fn:substring(endDate_N,2,4)}</li>
+	                            </ul>
+	                            <ul class="sub_info sub_info_3">
+	                                <li><i class="far fa-comment"></i></li>
+	                                <li>${obj2.reviewCount}</li><br>
+	                                <li><i class="fas fa-heart"></i></li>
+	                                <li>${obj2.bookmarkCount}</li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	        	</c:forEach>
+            </div>
+        </div>
+	</c:forEach>
+
+        <div class="bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
                 <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
@@ -129,8 +128,7 @@
             </div>
         </div>
         
-        <!-- 지역선택 modal -->
-	    <section id="GNB001-JY01" class="content" style="display:none;">
+        <section id="GNB001-JY01" class="content" style="display:none;">
 		    <div class="box">
 		       <div class="top_box">
 		            <h1 class="title">지역선택 <span><a class="closeAreaSelect" href="javascript:void(0)"><i class="fas fa-times"></i></a></span></h1>

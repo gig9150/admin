@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="${root}/css/wo.css">
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 <style>
+
 	#MY001 .box a{
 		color:#000;
 	}
@@ -23,78 +24,59 @@
 <title>Document</title>
 </head>
 <body>
-	<!--#MY001 (하단바)마이페이지-->
+	 <!--#MY001 (하단바)마이페이지-->
     <section id="MY001" class="content">
         <div class="box top">
-            <div class="icon_right"><a href=""><i class="fas fa-cog"></i></a></div>
+            <div class="icon_left"><a href="${root}/front/shop/shop_promotion"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">마이페이지</h1>
         </div>
         <div class="box box_1">
-            <div class="pic">
-            	<img src="${root}/upload/${mainImage}" style="width:100%;height:100%;border-radius:inherit;">
-                <label for="file_box"><i class="fas fa-camera"></i></label>
-                <input type="file" id="file_box">
+            <div class="left">
+                <div class="pic">
+                    <img src="${root}/upload/${mainImage}" style="width:100%;height:100%;border-radius:inherit;">
+                </div>
+                <div class="info">
+                    <p class="name">${name}</p>
+                    <p class="txt_box">
+                        <span>${areaName}</span><span>&#35;${memberCode}</span>
+                    </p>
+                </div>
             </div>
-            <div class="info">
-                <p class="name">${name}</p>
-                <p class="txt_box">
-                    <span>${areaName}</span><span>&#35;${memberCode}</span>
-                </p>
-            </div>
+            <div class="right"><a href=""><i class="fas fa-chevron-right"></i></a></div>
         </div>
         <div class="inner">
             <div class="box box_2">
-                <a href="${root}/front/member/member_update">회 원 정 보 수 정</a>
+                <a href="${root}/front/member/member_update">회원 정보 수정</a>
             </div>
         </div>
         <div class="box box_3">
             <div class="box_3_box">
-                <div class="pic">
-                    <a href=""><i class="fab fa-sellcast"></i></a>
-                </div>
-                <div class="info">
-                    <p>찜목록</p>
-                </div>
+                <div class="pic"><a href=""><img src="${root}/img/heart.png" alt=""></a></div>
+                <div class="info"><p>찜 목록</p></div>
             </div>
             <div class="box_3_box">
-                <div class="pic">
-                    <a href="${root}/front/mypage/bookmark"><i class="fab fa-sellcast"></i></a>
+                <div class="pic"><a href="${root}/front/mypage/bookmark"><img src="${root}/img/tack.png" alt=""></a>
                 </div>
-                <div class="info">
-                    <p>단골목록</p>
-                </div>
+                <div class="info"><p>단골 목록</p></div>
             </div>
             <div class="box_3_box">
-                <div class="pic">
-                    <a href="${root}/front/mypage/my_review"><i class="fas fa-shopping-basket"></i></a>
-                </div>
-                <div class="info">
-                    <p>후기목록</p>
-                </div>
+                <div class="pic"><a href="${root}/front/mypage/my_review"><img src="${root}/img/star.png" alt=""></a></div>
+                <div class="info"><p>후기 목록</p></div>
             </div>
             <div class="box_3_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-heart"></i></a>
-                </div>
-                <div class="info">
-                    <p>찜목록</p>
-                </div>
+                <div class="pic"><a href=""><img src="${root}/img/coupon.png" alt=""></a></div>
+                <div class="info"><p>내 쿠폰함</p></div>
             </div>
         </div>
 
         <div class="box box_4">
             <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-house-user"></i></a>
-                </div>
                 <div class="info">
                     <p>나의 판매내역</p>
                 </div>
             </div>
             <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-bullhorn"></i></a>
-                </div>
+                
                 <div class="info">
                     <p>나의 구매내역</p>
                 </div>
@@ -104,37 +86,25 @@
 
         <div class="box box_5">
             <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-map-marker-alt"></i></a>
-                </div>
                 <div class="info">
                     <p>나의 일상글목록</p>
                 </div>
             </div>
             <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-crosshairs"></i></a>
-                </div>
                 <div class="info">
                     <p>나의 댓글 목록</p>
                 </div>
             </div>
-       </div>
+        </div>
 
 
         <div class="box box_7">
             <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fab fa-sellcast"></i></a>
-                </div>
                 <div class="info">
-                	<a href="${root}/front/mypage/shop_apply"><p>가게프로필 신청하기</p></a>
+                    <a href="${root}/front/mypage/shop_apply"><p>가게프로필 신청하기</p></a>
                 </div>
             </div>
             <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="far fa-edit"></i></a>
-                </div>
                 <div class="info">
                     <p id="shop-btn">가게프로필 입장하기</p>
                 </div>
@@ -143,25 +113,36 @@
 
         <div class="box box_8">
             <div class="small_box">
-                <div class="pic">
-                    <a href=""><i class="fas fa-tag"></i></a>
-                </div>
                 <div class="info">
                     <p>키워드알림 등록</p>
                 </div>
             </div>
         </div>
-        <div class="box box_10">    
+        <div class="box box_9">
             <div class="small_box">
-                <div class="pic">
-                    <i class="fas fa-cog"></i>
+                <div class="info">
+                    <a href="${root}/front/mypage/question_category"><p>1:1문의</p></a>
                 </div>
+            </div>
+            <div class="small_box">
+                <div class="info">
+                    <a href="${root}/front/mypage/frequent_question_category"><p>자주묻는 질문</p></a>
+                </div>
+            </div>
+            <div class="small_box">
+                <div class="info">
+                    <a href="${root}/front/mypage/notice"><p>공지사항</p></a>
+                </div>
+            </div>
+        </div>
+        <div class="box box_10">
+            <div class="small_box">
                 <div class="info">
                     <a href="${root}/front/mypage/withdrawal"><p>회원탈퇴</p></a>
                 </div>
             </div>
         </div>
-         <div class="box bottom_box">
+        <div class="bottom_box">
             <div class="box">
                 <div class="pic"><i class="fas fa-home"></i></div>
                 <div class="info"><a href="${root}/front/shop/shop_promotion">홈</a></div>
@@ -184,7 +165,7 @@
             </div>
         </div>
         
-         <div class="profile">
+        <div class="profile">
            	<c:forEach items="${shopList}" var="obj">	
 	           	<div class="box" data-id="${obj.shop_idx}">
 	             	<div class="pic">
@@ -197,6 +178,7 @@
 	           	</div>
            	</c:forEach>
         </div>
+        
     </section>
     
     

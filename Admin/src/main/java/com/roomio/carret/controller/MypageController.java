@@ -81,17 +81,6 @@ public class MypageController {
 		//나중에 로그인 객체에서 값 대체해주기 ★★
 		paramMap.put("memberId",1);
 		
-		//가게 소식 
-		List<HashMap<Object,Object>> newsList = shopService.getNewsList(paramMap);
-		model.addAttribute("newsList",newsList);
-		
-		HashMap<Object,Object> reMap = new HashMap<Object,Object>();
-		reMap.put("shopIdx",shopIdx);
-		reMap.put("memberId",loginMemberBean.getMember_id());
-		
-		//후기 정보
-		List<HashMap<Object,Object>> reviewList = mypageService.getReviewList(reMap);
-		model.addAttribute("reviewList",reviewList);
 		
 		//단골 회원 수
 		int bookmarkCnt = shopService.getBookmarkShopCnt(shopIdx);
@@ -241,7 +230,7 @@ public class MypageController {
 		
 		//지역정보
 		//나중에 받은 우편번호로 대체해주기 ★★
-		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("325");
 		model.addAttribute("areaList",areaList);
 		
 		return "front/member/member_update";
@@ -341,7 +330,7 @@ public class MypageController {
 		
 		//나의 문의 페이지 list
 		//나중에 로그인 객체에서 값 받아와서 파라미터로 넘겨주기★★
-		List<HashMap<Object,Object>> questionList = mypageService.getFrontMemberQuestion(1);
+		List<HashMap<Object,Object>> questionList = mypageService.getFrontMemberQuestion(loginMemberBean.getMember_id());
 		model.addAttribute("questionList",questionList);
 		
 		
@@ -446,7 +435,7 @@ public class MypageController {
 		
 		//지역정보
 		//나중에 받은 우편번호로 대체해주기 ★★
-		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("325");
 		model.addAttribute("areaList",areaList);
 		
 		return "front/mypage/shop_apply";
@@ -490,7 +479,7 @@ public class MypageController {
 		model.addAttribute("keyList",keyList);
 		
 		//지역 정보
-		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("325");
 		model.addAttribute("areaList",areaList);
 		
 		model.addAttribute("shopIdx",shopIdx);
@@ -581,6 +570,10 @@ public class MypageController {
 		HashMap<Object,Object> map = shopService.getNewsDetailInfo(paramMap);
 		model.addAttribute("map",map);
 		
+		//단골 회원 수
+		int bookmarkCnt = shopService.getBookmarkShopCnt(shopIdx);
+		model.addAttribute("bookmarkCnt",bookmarkCnt);
+		
 		return "front/mypage/news_detail";
 	}
 	
@@ -627,6 +620,7 @@ public class MypageController {
 	// 후기 페이지 이동
 	@RequestMapping("/front/mypage/shop_review")
 	public String shopReview(@RequestParam int shopIdx,
+							@RequestParam(defaultValue = "latest") String sort,
 							Model model) {
 		
 		//가게 정보 
@@ -636,6 +630,7 @@ public class MypageController {
 		HashMap<Object,Object> reMap = new HashMap<Object,Object>();
 		reMap.put("shopIdx",shopIdx);
 		reMap.put("memberId",loginMemberBean.getMember_id());
+		reMap.put("sort",sort);
 		
 		//후기 정보
 		List<HashMap<Object,Object>> list = mypageService.getReviewList(reMap);
@@ -643,6 +638,7 @@ public class MypageController {
 		
 		model.addAttribute("shopIdx",shopIdx);
 		
+		model.addAttribute("sort",sort);
 		
 		return "front/mypage/shop_review";
 	}

@@ -14,150 +14,177 @@
 <link rel="stylesheet" href="${root}/css/style.css">
 <link rel="stylesheet" href="${root}/css/wo.css">
  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+ 
+<style>
+	.tab.on{
+	
+		position:fixed;
+		width:100%;
+		top:50px;
+		background:#ffffff;
+		z-index: 999;
+		
+	}
+	
+	.tab_div{
+	
+		background:#ffffff;
+		text-align: center;
+		position: fixed;
+	    width: 100%;
+	    top: 0px;
+	    height: 50px;
+	    font-size: 20px;
+	    font-weight: bold;
+	    line-height: 50px;
+	    padding: 0 20px;
+	
+	}
+	
+	.tab_div div{
+	
+	    float: left;
+    	line-height: 50px;
+		
+	}
+	
+	.tab_div i{
+	
+		color: #000000;
+		
+	}
+	
+	.box.infomation div.icon{
+	    text-overflow: ellipsis;
+	    overflow: hidden;
+	    width: 100px;
+	    white-space: nowrap;
+	}
+	
+	#intro_expend{
+		color:#aaa;
+		margin-bottom:15px;
+	}
+	
+</style>
 <title>Document</title>
 </head>
 <body>
- <!-- 27페이지 - #BZ001-TB01 - 가게 프로필 (일반 회원 진입 시)-->
+     <!-- 27페이지 - #BZ001-TB01 - 가게 프로필 (일반 회원 진입 시)-->
     <section id="BZ001-TB01" class="content">
         <div class="box top">
             <div class="icon_left"><a href="${root}/front/shop/shop_promotion"><i class="fas fa-times"></i></a></div>
             <h1 class="title">${detailMap.shop_name}</h1>
-            <div class="icon_right"><a href="javascript:void(0)" id="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
+            <div class="icon_right"><a href="javascript:void(0)" class="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
         </div>
         <div class="profile_top"><img src="${root}/upload/${detailMap.main_image}" style="width:100%;height:100%"></div>
         <div class="profile_bottom">
-            <ul class="left_box">
-                <li>${detailMap.shop_name}</li>
-                <li>${detailMap.area_name}</li>
-                <li>${detailMap.start_date} ~ ${detailMap.end_date}</li>
-            </ul>
-			<c:choose>
+        
+        	<c:choose>
             	<c:when test="${checkNum eq 1}">
-            		<ul class="right_box" id="regularMember">
-		                <li><a href="javascript:void(0)"><i class="fas fa-plus"></i></a></li>
-		                <li>단골</li>
-		                <li >${bookmarkCnt}</li>
+            		<ul class="left_box" id="regularMember" >
+		                <li><img src="${root}/img/group_2058.png" alt=""></li>
+		                <li class="regular regular1" style="display:none;"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+		                <li class="regular regular2" style="display:block"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
 		            </ul>
             	</c:when>
             	<c:otherwise>
-            		<ul class="right_box" id="regularMember" style="background-color:#ffffff;border: 1px solid #7aa4d7;">
-		                <li><a href="javascript:void(0)"><i style="color:#78a6d8" class="fas fa-plus"></i></a></li>
-		                <li style="color:#78a6d8">단골</li>
-		                <li style="color:#78a6d8">${bookmarkCnt}</li>
+            		<ul class="left_box" id="regularMember" >
+		                <li><img src="${root}/img/group_2058.png" alt=""></li>
+		                <li class="regular regular1" style="display:block;"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+		                <li class="regular regular2" style="display:none"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
 		            </ul>
             	</c:otherwise>
+            	
             </c:choose>
-<!--             <div class="regular"><a id="regularMember" href="javascript:void(0)"> -->
-<%--        		<span><i class="fas fa-check"></i></span>단골<span>${bookmarkCnt}</span></a></div> --%>
+
+            
+            <ul class="right_box">
+                <li>${detailMap.shop_name}</li>
+                <li>${detailMap.area_name}</li>
+                <li><span>산지직거래</span><span>배달</span></li>
+            </ul>
 
         </div>
 
-        <div class="call">
-            <div class="call_left"><a href=""><span><i class="fas fa-phone"></i></span>전화문의</a></div>
-            <div class="call_right"><a href="${root}/front/shop/shop_review_register?shopIdx=${detailMap.shop_idx}"><span><i class="fas fa-edit"></i></span>후기작성</a></div>
+        <!--
+        <div class="call_box">
+            <div class="call call_left"><a href=""><span><img src="img/%EA%B7%B8%EB%A3%B9%201655.png" alt=""></span>전화문의</a></div>
+            <div class="call call_right"><a href=""><span><img src="img/%EA%B7%B8%EB%A3%B9%201659.png" alt=""></span>채팅문의</a></div>
+        </div>
+		-->
+        <div class="call_box">
+        	<c:choose>
+        		<c:when test="${not empty detailMap.phone}">
+        			<div class="call call_left"><a href="tel:${detailMap.phone}"><span></span>전화문의</a></div>
+        		</c:when>
+        		<c:otherwise>
+        			<div class="call call_left"><a onclick="alert('등록된 번호가 존재하지 않습니다.')"><span></span>전화문의</a></div>
+        		</c:otherwise>
+        	</c:choose>
+            
+            <div class="call call_right"><a href="javascript:void(0)"><span></span>채팅문의</a></div>
         </div>
 
+		<div class="tab_div" style="display:none;">
+			<div class="icon_left"><a href="${root}/front/shop/shop_promotion"><i class="fas fa-chevron-left"></i></a></div>
+			${detailMap.shop_name}
+		</div>
         <ul class="tab">
-            <li><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}">홈</a></li>
+            <li><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}">소개</a></li>
             <li><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}">소식</a></li>
             <li><a href="${root}/front/shop/shop_review2?shopIdx=${detailMap.shop_idx}">후기</a></li>
         </ul>
-        
-        <div class="layout2">
-	       <div class="top">
-	            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
-	            <h1 class="title">가게프로필명</h1>
-	        </div>
-	        <ul id="gnb">
-	            <li><a href="${root}/front/shop/shop_detail?shopIdx=${detailMap.shop_idx}">소개</a></li>
-	            <li><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}">소식</a></li>
-	            <li><a href="${root}/front/shop/shop_review2?shopIdx=${detailMap.shop_idx}">후기<span></span></a></li>
-	        </ul>
-        </div>
 
         <div class="box notice">
-            <p><span><i class="fas fa-bullhorn"></i></span>알림 없어용</p>
+            <p><span class="bell"><img src="${root}/img/group_2060.png"></span><span>컵주문시 받침대 서비스 이벤트중!</span></p>
         </div>
-
+		
+		
         <div class="box infomation">
             <h3 class="box_title">정보</h3>
-            <p class="icon"><i class="far fa-smile-wink"></i><i class="far fa-grin-stars"></i><i class="far fa-grin-stars"></i><i class="far fa-grin-stars"></i><i class="far fa-grin-stars"></i>${detailMap.introduce_shop}<a href="">더보기</a></p>
-            <p class="place"><span><i class="fas fa-map-marker-alt">${detailMap.address}</i></span></p>
-            <p class="time"><span><i class="far fa-clock"></i></span>${detailMap.start_date} - ${detailMap.end_date}<span>${detailMap.holiy }</span></p>
-            
+<%--		<p class="icon">${detailMap.introduce_shop}<a href="javascript:void(0)">더보기</a></p> --%>
+			<div class="icon">${detailMap.introduce_shop}</div><a id='intro_expend' href="javascript:void(0)">더보기</a>
+            <p class="place"><span><i class="fas fa-map-marker-alt"></i></span>${detailMap.address}</p>
+            <p class="time"><span><i class="far fa-clock"></i></span>${detailMap.start_date} - ${detailMap.end_date}</p>
+            <p class="site_address"><span><i class="fas fa-home"></i></span>${detailMap.homepage_url}</p>
+            <div class="map_box">
+                <h4 class="map_title">찾아가는 길</h4>
+                <div class="map" id="map"></div>
+                <p class="map_address">주소</p>
+            </div>
 
             <p class="ex">${detailMap.to_benefit}</p>
         </div>
 
-        <div class="box price">
-            <h3 class="box_title">가격</h3>
+        <div class="box price_box">
+            <h3 class="box_title">가격표</h3>
             <c:forEach items="${goodsList}" var="obj">
-	            <div class="price_top">
-	                <div class="sub_box_top">
-	                    <p>${obj.name}</p>
-	                    <p>${obj.price} 원</p>
-	                </div>
-	                <div class="sub_box_bottom">
-	                    <p>${obj.additional_info}</p>
-	                </div>
-	            </div>
-            </c:forEach>
-        </div>
-		<c:set var="newsLoop" value="false"/>
-        <div class="box news">
-            <h3 class="box_title">소식</h3>
-            <c:forEach items="${newsList}" var="obj" varStatus="status">
-            	<c:if test="${not newsLoop}">
-		            <div class="sub_box" style="margin-bottom: 20px;">
-		                <div class="pic">
-		                	<img src="${root}/upload/${obj.imageList[0]}" style="width: 100%;height: 100%;">
+            	<c:choose>
+            		<c:when test="${obj.best eq 1}">
+            			<div class="price_top">
+			                <div class="sub_box_top">
+			                    <p>${obj.name}<span class="best">BEST</span></p>
+			                    <p class="price">${obj.price}원</p>
+			                </div>
+			                <div class="sub_box_bottom">
+			                    <p>${obj.additional_info }</p>
+			                </div>
+			            </div>
+            		</c:when>
+            		<c:otherwise>
+            		<div class="price_bottom">
+		                <div class="sub_box_top">
+		                    <p>${obj.name}</p>
+		                    <p class="price">${obj.price}원</p>
 		                </div>
-		                <div class="info">
-		                    <p class="sub_title">${obj.title}</p>
-		                    <p>${obj.content}</p>
+		                <div class="sub_box_bottom">
+		                    <p>${obj.additional_info }</p>
 		                </div>
-		                <c:if test="${status.count == 5}">
-							<c:set var="newsLoop" value="true"/>
-						</c:if>	
 		            </div>
-		       </c:if>
-	        </c:forEach>
-            <div class="btn"><a href="${root}/front/shop/shop_news2?shopIdx=${shopIdx}">소식 더보기</a></div>
-        </div>
-		<c:set var="reviewLoop" value="false"/>
-        <div class="box review">
-            <h3 class="box_title">후기<span>${reviewCnt}</span></h3>
-            <c:forEach items="${reviewList}" var="obj" varStatus="status">
-            <c:if test="${not reviewLoop}">
-	            <div class="title_box">
-	                <div class="pic"></div>
-	                <div class="info">
-	                    <h4 class="info_title">${obj.nickName}</h4>
-	                    <p class="sub_title">${obj.area_name}<span>&#8226;</span>${obj.regdate }</p>
-	                    <a href="" class="bar"><i class="fas fa-ellipsis-v"></i></a>
-	                </div>
-	            </div>
-	            <div class="txt_box">
-	                <div class="info">
-	                    <p class="txt">${obj.review_content}<i class="far fa-smile-wink"></i><i class="far fa-smile-wink"></i></p>
-	                    <ul class="tag">
-	                        <c:forEach items="${obj.keywordList}" var="obj2">
-								<li><p>${obj2}</p></li>
-							</c:forEach>
-	                    </ul>
-	                </div>
-	                <ul class="recom">
-	                    <li><i class="far fa-thumbs-up"></i></li>
-	                    <li>도움이 돼요</li>
-	                    <li>${obj.like}</li>
-	                </ul>
-	            </div>
-	            <c:if test="${status.count == 5}">
-					<c:set var="reviewLoop" value="true"/>
-				</c:if>
-	        </c:if>
-	        </c:forEach>
-            <div class="btn"><a href="${root}/front/shop/shop_review2?shopIdx=${shopIdx}">소식 더보기</a></div>
+            		</c:otherwise>
+            	</c:choose>
+            </c:forEach>
         </div>
         
         <div class="box bottom_box">
@@ -225,25 +252,50 @@
 	<script>
 		$(function() {
 			
+			$(document).click(function(e){
+				if(!$(e.target).hasClass('.reportTriger')){
+					
+					$('.content').removeClass('reviewon');
+					$('.report_box').css('display','none');
+				}
+			})
+			
+			
+			
+			$('#intro_expend').click(function(){
+				
+				if($('.box.infomation div.icon').css('white-space') == 'normal'){
+					
+					$('.box.infomation div.icon').css('width','100px').css('white-space','nowrap');
+				}else{
+					$('.box.infomation div.icon').css('width','100%').css('white-space','normal');
+				}
+				
+			});
+			
 			$(window).scroll(function(){
 				var num = $(this).scrollTop();
-				console.log(num);
 				if(num > 420){
-					$(".layout2").css("display","block");
+					$(".tab").addClass('on');
+					$('.tab_div').css('display','block');
 				}else{
-					$(".layout2").css("display","none");
+					$(".tab").removeClass('on');
+					$('.tab_div').css('display','none');
 				}
 			});
 			
 			
-			$('#reportTriger').on('click',function(){ 
+			$('.reportTriger').on('click',function(e){ 
 				if($('.content').hasClass('reviewon')){
 					$('.content').removeClass('reviewon');
 					$('.report_box').css('display','none');
+					e.stopPropagation();
 				}else{
 					$('.content').addClass('reviewon');
 					$('.report_box').css('display','block');
+					e.stopPropagation();
 				}
+				
 			});
 			
 			$('#regularMember').on('click',function(){
@@ -264,6 +316,7 @@
 			};
 
 			var map = new kakao.maps.Map(container, options);
+			
 			
 		});
 		

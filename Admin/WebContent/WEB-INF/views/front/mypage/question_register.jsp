@@ -20,21 +20,26 @@
 
 	<!--58페이지 - #MY001-QA01-2  마이페이지_1:1문의_문의 작성하기-->
 	<form action="${root}/front/mypage/question_register_pro" method="post" enctype="multipart/form-data">
+	     <!--58페이지 - #MY001-QA01-2  마이페이지_1:1문의_문의 작성하기-->
 	    <section id="MY001-QA01-2" class="content">
 	        <div class="box top">
-	            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+	            <div class="icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
 	            <h1 class="title">1:1 문의 작성하기</h1>
+	            <div class="icon_right"><a href="${root}/front/myPage"><i class="fas fa-times"></i></a></div>
 	        </div>
-	        
-	            <div class="box box_1">
-	                <div class="pic">
-	                	<img src="${memberMap.profile_image}">
+	        <div class="box box_1">
+	            <div class="pic">
+	            	<img src="${memberMap.profile_image}">
+	            </div>
+	            <div class="info">
+	                <div class="sub_box">
+	                    <p>${memberMap.name}</p>
 	                </div>
-	                <div class="info">
-	                    <div class="sub_box"><p>${memberMap.name}</p></div>
-	                    <div class="sub_box"><p>${memberMap.area_name}</p></div>
+	                <div class="sub_box">
+	                    <p>${memberMap.area_name}</p>
 	                </div>
 	            </div>
+	        </div>
 	        <div class="inner">
 	            <div class="box box_2">
 	                <select name="questionCategoryId">
@@ -43,23 +48,22 @@
 	                    </c:forEach>
 	                </select>
 	            </div>
-	            <div class="box box_3">
-					<textarea name="questionContent" rows="" cols="" style="height:100%;width:100%"></textarea>
+	            <textarea name="questionContent" id="" cols="30" rows="10" placeholder="문의 내용을 입력해주세요." class="box box_3"></textarea>
+	            <div class="big_add">
+	                <div class="add_box">
+	                    <div class="pic"><a href="javascript:void(0)"><input multiple="multiple" type="file" 
+	                	name="questionImg" id="input_imgs" style="opacity: 0;position: absolute;left: 0;top: 20px;"><i class="fas fa-camera"></i></a></div>
+	                    <div class="txt">0/10</div>
+	                </div>
+	                <div class="add_box_bubble">
+	                    <p>사진을 첨부해주세요! <a href="javascript:void(0)"><i class="fas fa-times"></i></a></p>
+	                </div>
 	            </div>
-	
-	            <ul class="box box_4 imgs_wrap">
-	                <li><a style="position: relative;" href="javascript:void(0);"><input multiple="multiple" type="file" 
-	                name="questionImg" id="input_imgs" style="opacity: 0">
-	                <i style="position: absolute;top: 5px;left: 35px;"  class="fas fa-camera"></i>
-	                <span style="position: absolute;left: 32px;top: 16px;">0/6</span>
-	                </a></li>
-	                <li><a class="img-room" href="javascript:void(0);"><i class="fas fa-plus"></i></a></li>
-	                <li><a class="img-room" href="javascript:void(0);"><i class="fas fa-plus"></i></a></li>
-	                <li><a class="img-room" href="javascript:void(0);"><i class="fas fa-plus"></i></a></li>
-	                <li><a class="img-room" href="javascript:void(0);"><i class="fas fa-plus"></i></a></li>
-	            </ul>
+	            <div class="box imgs_wrap" style="margin-bottom: 20px;">
+	            	
+	            </div>
 	            <div class="box btn_box">
-	                <button>문의 등록하기</button>
+	                <a id="submit_tag">문의 등록하기</a>
 	            </div>
 	        </div>
 	    </section>
@@ -76,6 +80,11 @@
 	
 		$(function(){
 			$("#input_imgs").on("change",handleImgsFilesSelect);
+			
+			
+			$('#submit_tag').click(function(){
+				$('form')[0].submit();
+			});
 		});
 		
 		function handleImgsFilesSelect(e){
@@ -97,19 +106,19 @@
 				var reader = new FileReader();
 				reader.onload = function(e){
 					
-					var img_html = '<img src="' + e.target.result + '" style="width:100%;height:100%"/>';
+					var img_html = '<img src="' + e.target.result + '" style="width:18%;height:60px;border-radius:50%;margin-right:1%;"/>';
+					$('.imgs_wrap').append(img_html);
 					
-					$.each($('.img-room'),function(i,v){
-						console.log($(this).children('img').length);
-						if($(this).children('img').length < 1){
-							$(this).empty();
-							$(this).append(img_html);
-							return false;
-						}
-					});
+// 					$.each($('.img-room'),function(i,v){
+// 						if($(this).children('img').length < 1){
+// 							$(this).empty();
+// 							$(this).append(img_html);
+// 							return false;
+// 						}
+// 					});
 				}
 				
-				$('.imgs_wrap span').html((parseInt($(".imgs_wrap span").html().charAt(0)) + 1) + "/6");
+				$('.add_box .txt').html((parseInt($(".add_box .txt").html().charAt(0)) + 1) + "/10");
 				
 				reader.readAsDataURL(f);
 				

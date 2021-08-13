@@ -107,8 +107,8 @@ public class ShopDao {
 		return sqlSessionTemplate.selectList("com.roomio.carret.shop.getFrontReviewCategory");
 	}
 	
-	public int getFrontShopReviewCnt() {
-		return sqlSessionTemplate.selectOne("com.roomio.carret.shop.getFrontShopReviewCnt");
+	public int getFrontShopReviewCnt(int shopIdx) {
+		return sqlSessionTemplate.selectOne("com.roomio.carret.shop.getFrontShopReviewCnt",shopIdx);
 	}
 	
 	public Integer checkFrontShopMember(HashMap<Object,Object> map) {

@@ -163,7 +163,7 @@ public class ShopController {
 		
 		//지역정보
 		//나중에 받은 우편번호로 대체해주기 ★★
-		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("325");
 		model.addAttribute("areaList",areaList);
 
 		return "front/shop/shop_promotion";
@@ -193,10 +193,6 @@ public class ShopController {
 		// 가게 소식
 		List<HashMap<Object, Object>> newsList = shopService.getFrontShopNews(shopIdx);
 		model.addAttribute("newsList", newsList);
-
-		// 가게 후기
-		int reviewCnt = shopService.getFrontShopReviewCnt();
-		model.addAttribute("reviewCnt", reviewCnt);
 
 		HashMap<Object, Object> checkMap = new HashMap<Object, Object>();
 		checkMap.put("shopIdx", shopIdx);
@@ -302,6 +298,7 @@ public class ShopController {
 		HashMap<Object,Object> map = new HashMap<Object,Object>();
 		map.put("shopIdx",Integer.parseInt(shopIdx));
 		map.put("memberId",loginMemberBean.getMember_id());
+		map.put("sort",sort);
 
 		//후기 정보
 		List<HashMap<Object,Object>> list = mypageService.getReviewList(map);
@@ -319,8 +316,8 @@ public class ShopController {
 			model.addAttribute("checkNum", 2);
 		}
 
-		// 가게 후기
-		int reviewCnt = shopService.getFrontShopReviewCnt();
+		// 가게 후기 갯수
+		int reviewCnt = shopService.getFrontShopReviewCnt(Integer.parseInt(shopIdx));
 		model.addAttribute("reviewCnt", reviewCnt);
 
 		// 단골가게 회원 수
@@ -383,7 +380,7 @@ public class ShopController {
 
 		// 나중에는 맴버 객체 세션에 담아두고 꺼내서 사용하는것으로 수정 ..★★
 		map.put("shopIdx", Integer.parseInt(shopIdx));
-		map.put("memberId", 1);
+		map.put("memberId", loginMemberBean.getMember_id());
 		map.put("content", content);
 
 		if (file == null) {
@@ -542,7 +539,7 @@ public class ShopController {
 
 		//지역정보
 		//나중에 받은 우편번호로 대체해주기 ★★
-		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("01");
+		List<HashMap<Object,Object>> areaList = mypageService.getAreaList("325");
 		model.addAttribute("areaList",areaList);
 		
 		HashMap<Object, Object> map = new HashMap<Object, Object>();

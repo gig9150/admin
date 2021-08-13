@@ -247,8 +247,8 @@
 	
 	<select id="getFrontShopDetail" resultType="hashMap" parameterType="int" >
 	
-		select s.shop_idx,s.address,s.start_date,s.end_date,s.introduce_shop,s.notice_info,
-		s.to_benefit,s.shop_name,se.sector_content,s.holiday,s.main_image,d.area_name
+		select s.shop_idx,s.address,s.start_date,s.end_date,s.introduce_shop,s.notice_info,s.phone,
+		s.to_benefit,s.shop_name,se.sector_content,s.holiday,s.main_image,d.area_name,s.homepage_url
 		from shop s
 		inner join sector se
 		on s.sector_id = se.sector_id
@@ -423,10 +423,11 @@
 	</insert>
 	
 	<!-- 가게 후기 갯수 -->
-	<select id="getFrontShopReviewCnt" resultType="int">
+	<select id="getFrontShopReviewCnt" resultType="int" parameterType="int">
 	
 		select count(*)
 		from shop_review
+		where shop_idx = ${shopIdx}
 		
 	</select>
 	
@@ -628,7 +629,7 @@
 	<!-- 가게 소식 정보 얻어오기  -->
 	<select id="getNewsList" parameterType="hashMap" resultMap="getNewsMap">
 		
-		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
+		select sn.shop_news_id,sn.title,sn.content,date_format(sn.regdate,"%Y-%m-%d") as regdate,sn.view_count,snc.cate_content,sni.name,
 		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt,
 		(select snl.member_id from shop_news_like snl where snl.member_id = ${memberId} and snl.shop_news_id = sn.shop_news_id) AS member_id
 		from shop_news sn
@@ -643,7 +644,7 @@
 	<!-- 가게 소식 디테일 -->
 	<select id="getNewsDetailInfo" parameterType="hashMap" resultMap="getNewsMap">
 	
-		select sn.shop_news_id,sn.title,sn.content,sn.regdate,sn.view_count,snc.cate_content,sni.name,
+		select sn.shop_news_id,sn.title,sn.content,date_format(sn.regdate,"%Y-%m-%d") as regdate,sn.view_count,snc.cate_content,sni.name,
 		(select count(*) from shop_news_like snl where sn.shop_news_id = snl.shop_news_id) as likeCnt,
 		(select snl.member_id from shop_news_like snl where snl.member_id = ${memberId} and snl.shop_news_id = sn.shop_news_id) AS member_id
 		from shop_news sn

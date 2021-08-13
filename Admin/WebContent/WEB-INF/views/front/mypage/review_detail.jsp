@@ -27,62 +27,73 @@
 <title>Document</title>
 </head>
 <body>
-	<!--34페이지 - #BZ001-TB04-DT01 가게 프로필 tab - 후기 - 상세페이지 - 사장님댓글-->
-	<section id="BZ001-TB04-DT01" class="content">
-	     <div class="box title_box">
-	            <div class="icon icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
-	            <div class="icon icon_right"><a href="javascript:void(0)"><i class="fas fa-ellipsis-v"></i></a></div>
-	    </div>
-	    <div class="box box_1">
-	        <div class="pic"></div>
-	        <div class="info">
-	            <div class="sub_box"><p>${reMap.nickName}</p></div>
-	            <div class="sub_box"><p>${reMap.area_name}</p></div>
-	        </div>
-	        
-	    </div>
-	    <div class="box btn">
-	         
-	        <div class="ago"><p>18시간 전</p></div>
-	    </div>
-	    <div class="box box_2"><p>${reMap.content}</p></div>
-	    <ul class="key-ul">
-	    	<c:forEach items="${reMap.keyList }" var="obj2">
-	    		<li>${obj2}</li>
-	    	</c:forEach>
-	    </ul>
-	    
-	    <div class="box swiper-container">
-	        <div class="swiper-wrapper">
-	        	<c:forEach items="${reMap.imageList}" var="obj2">
-		            <div class="swiper-slide">
-		            	<img src="${root}/upload/${obj2}" style="width:100%;height:100%;">
-		            </div>
-	        	</c:forEach>
-	        </div>
-	    </div>
-	    
-	    <ul class="box thumb_box">
-	        <c:choose>
-				<c:when test="${not empty reMap.member_id}">
-					<li class="thumb-li" data-id="${reMap.shop_review_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a></li>
-				</c:when>
-				<c:otherwise>
-					<li class="thumb-li" data-id="${reMap.shop_review_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-down"></i></a></li>
-				</c:otherwise>
-			</c:choose>
-	        <li><p>좋아요</p></li>
-	        <li><p>${reMap.likeCnt}</p></li>
-	        <li class="slash"><p>/</p></li>
-	    
-	        <li><p>조회</p></li>
-	        <li><p>${reMap.view_count}</p></li>
-	    </ul>
-	    <ul class="comment">
-	        <li><p>사장님 댓글</p></li>
-	        <li><p>${reMap.reply}</p></li>
-	    </ul>
-	</section>
+
+ 	 <!--34페이지 - #BZ001-TB04-DT01 가게 프로필 tab - 후기 - 상세페이지 - 사장님댓글-->
+    <section id="BZ001-TB04-DT01" class="content">
+       <div class="box top">
+            <div class="icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
+            <h1 class="title">가게후기</h1>
+            <div class="icon_right"><a href="javascript:void(0)" class="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
+        </div>
+               <div class="content content3">
+           
+            <div class="box box_1">
+                <div class="box_1_left">
+                    <div class="pic" style="border-radius: 50%;">
+                    	<img src="${root}/upload/${reMap.profile_image}" style="width:100%;height:100%;border-radius: inherit;">
+                    </div>
+                    <div class="info">
+                        <div class="sub_box sub_box1">
+                            <p>${reMap.nickName}</p>
+                        </div>
+                        <div class="sub_box sub_box2">
+                            <p>${reMap.area_name}<span>&#8226;</span>${reMap.regdate}</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+           
+            <p class="box txt_box">${reMap.content}</p>
+             <ul class="box btn">
+                <c:forEach items="${reMap.keyList}" var = "obj2">
+	                <li><a href="javascript:void(0)">${obj2}</a></li>
+             	</c:forEach>
+            </ul>
+            <div class="box swiper-container">
+                <div class="swiper-wrapper">
+                	<c:forEach items="${reMap.imageList}" var="obj2">
+	                    <div class="swiper-slide">
+	                    	<img src="${root}/upload/${obj2}" style="width:100%;height:100%;">
+	                    </div>
+                	</c:forEach>
+                </div>
+            </div>
+            <ul class="box thumb_box">
+                <c:choose>
+					<c:when test="${not empty reMap.member_id}">
+						<li class="thumb-li" data-id="${reMap.shop_review_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a>좋아요<span>${reMap.likeCnt}</span></li>
+					</c:when>
+					<c:otherwise>
+						<li class="thumb-li" data-id="${reMap.shop_review_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-down"></i></a>좋아요<span>${reMap.likeCnt}</span></li>
+					</c:otherwise>
+				</c:choose>
+	               
+               <li><span>조회</span>${reMap.view_count}</li>
+            </ul>
+            <c:if test="${not empty reMap.reply}">
+	            <div class="comment">
+	                <div class="pic"><img src="${root}/img/group_2058.png" alt=""></div>
+	                <div class="info">
+	                    <h5 class="info_title">사장님 댓글</h5>
+	                    <p class="txt">${reMap.reply}</p>
+	                </div>
+	            </div>
+      		</c:if>
+        </div>
+        
+        
+    </section>
 	
 	<script src="${root}/vendor/jquery/jquery.min.js"></script>
 	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -91,13 +102,37 @@
 	<script>
 		$(function() {
 			
-			$('#reportTriger').on('click',function(){ 
+			$(document).click(function(e){
+				if(!$(e.target).hasClass('.reportTriger')){
+					
+					$('.content').removeClass('reviewon');
+					$('.report_box').css('display','none');
+					
+				}
+			})
+			
+			$(window).scroll(function(){
+				var num = $(this).scrollTop();
+				console.log(num);
+				if(num > 420){
+					$(".tab").addClass('on');
+					$('.tab_div').css('display','block');
+				}else{
+					$(".tab").removeClass('on');
+					$('.tab_div').css('display','none');
+				}
+			});
+			
+			
+			$('.reportTriger').on('click',function(e){ 
 				if($('.content').hasClass('reviewon')){
 					$('.content').removeClass('reviewon');
 					$('.report_box').css('display','none');
+					e.stopPropagation();
 				}else{
 					$('.content').addClass('reviewon');
 					$('.report_box').css('display','block');
+					e.stopPropagation();
 				}
 			});
 			
@@ -127,7 +162,7 @@
 						}
 					});
 					
-					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) + 1);
+					$(this).children('span').html(parseInt($(this).children('span').html()) + 1);
 					
 				}else{
 					
@@ -140,7 +175,7 @@
 						}
 					});
 					
-					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) - 1);
+					$(this).children('span').html(parseInt($(this).children('span').html()) - 1);
 					
 				}
 			});

@@ -89,19 +89,38 @@ $(function(){
     
     
 /////////////////////////////////////////////////카달로그 210625////////////////////////////////////////////////////
-         var swiper = new Swiper('#MN000 .swiper-container', {
-            
-            loop: true,
-                speed: 1000,
-             pagination: {
-                el: '#MN000 .swiper-pagination',
-              },
-           /*반응형*/
-         slidesPerView: 1,
-//         spaceBetween: 0,
-         spaceBetween: 20,
+         
+    var swiper = new Swiper('#MN000 .swiper-container', {
+
+                loop: true,
+                    speed: 1000,
+         nested: true,
+                 pagination: {
+                    el: '#MN000 .swiper-pagination',
+                  },
+       
+               /*반응형*/
+             slidesPerView: 1,
+    //         spaceBetween: 0,
+             spaceBetween: 20,
+        
+        }); 
     
-      });     
+    
+    
+    
+    
+    var swiper = new Swiper('#MN000 .box7_container', {
+
+                loop: true,
+                    speed: 1000,
+                 
+               /*반응형*/
+             slidesPerView: 4,
+    //         spaceBetween: 0,
+             spaceBetween: 10,
+        }); 
+    
     
     
 var swiper = new Swiper('#GNB001 .swiper-container', {
@@ -112,11 +131,29 @@ var swiper = new Swiper('#GNB001 .swiper-container', {
                 el: '#GNB001 .swiper-pagination',
               },
            /*반응형*/
-         slidesPerView: 1,
+         slidesPerView: 1.5,
 //         spaceBetween: 0,
          spaceBetween: 20,
     
       });     
+    
+    
+    
+      $('#BZ001-TB01 .regular1').on('click', function(e){
+        e.preventDefault();
+        $('#BZ001-TB01 .regular2') .show();
+        $(this).hide();
+        
+    });
+    
+    $('#BZ001-TB01 .regular2').on('click', function(e){
+        e.preventDefault();
+        $('#BZ001-TB01 .regular1') .show();
+        $(this).hide();
+        
+    });
+    
+    
     
     
     
@@ -128,9 +165,9 @@ var swiper = new Swiper('#GNB001 .swiper-container', {
                 el: '#BZ001-TB02 .swiper-pagination',
               },
            /*반응형*/
-         slidesPerView: 3,
+         slidesPerView: 4,
 //         spaceBetween: 0,
-         spaceBetween: 20,
+         spaceBetween: 10,
     
       });      
     
@@ -161,7 +198,7 @@ var swiper = new Swiper('#GNB001 .swiper-container', {
            /*반응형*/
          slidesPerView: 3,
 //         spaceBetween: 0,
-         spaceBetween: 10,
+         spaceBetween: 20,
     
       });   
     
@@ -189,27 +226,50 @@ var swiper = new Swiper('#GNB001 .swiper-container', {
                 el: '#BZ001-TB04-DT01-MAIN .swiper-pagination',
               },
            /*반응형*/
-         slidesPerView: 3,
+         slidesPerView: 4,
 //         spaceBetween: 0,
          spaceBetween: 10,
     
       }); 
     
     
-   
-//        $('#MY001-QA02 .txt').off('click'); 
-//        $('#MY001-QA02 .btn').off('click');
-
-       $('#MY001-QA02 .btn').on('click', function(e){
-        e.preventDefault();
-        
-        $('#MY001-QA02 .toggle_bottom').stop().slideUp(); 
-        $('.title_right').removeClass('on');
-//        $(this).parents('.title_box').stop(true,true).slideToggle();
-        $(this).parents('.title_right').stop(true,true).toggleClass('on');
-        });
+//    $('#BZ001-TB04-DT01-MAIN .con_right>p').on('click', function(e){
+//        e.preventDefault();
+//        
+//        var i = $(this).index();
+//        
+//        $('#BZ001-TB04-DT01-MAIN .con_right>p').removeClass().eq(i).addClass('on');
+//    });
+//    
+//    $('.con_first').trigger('click')
     
-    $('.btn1').trigger('click');
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

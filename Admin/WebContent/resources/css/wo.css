@@ -5,18 +5,19 @@
 	
 	/* 단골 */
 	section.on::after{ 
- 	    position: absolute; left: 0; top: 0; 
+ 	    position: absolute; left: 0; top: 0; z-index:1000;
  	    content:''; display: block; width: 100%; height: 100%;
  	    background-color: rgba(0, 0, 0, 0.5); 
  	}
  	
 	section .pop_up_box{
 		display:none;
+		z-index:1001;
 	}
 	
 	section.on{position: relative; width: 100%; height: 100%;}
  	section.on .pop_up_box{
-    display:block;position: absolute; left: 50%; top: 450px; transform: translate(-50%, -50%); z-index: 1;
+    display:block;z-index:1001 !important;position: absolute; left: 50%; top: 450px; transform: translate(-50%, -50%); z-index: 1;
     padding: 30px 20px; width: 80%; height: 150px; background-color: #fff; border-radius: 10px; text-align: center;box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)}
 	section.on .pop_up_box .ask{font-size: 18px; font-weight: 500}
 	
@@ -30,11 +31,11 @@
  	/* 신고하기 */ 
  	section.reviewon{position: relative; background-color: #fff; overflow: hidden;}
 	section.reviewon::after{
-	    position: absolute; left: 0; top: 0;
+	    position: absolute; left: 0; top: 0;z-index:1000;
 	    content:''; display: block; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5)}
 	section .report_box{
-	position: absolute; left: 0; bottom: 0; z-index: 1;
-	width:100%; height: 70px; background-color: #fff; box-shadow: 0 0 50px rgba(0, 0, 0, 0.6); 
+		position: absolute; left: 0; bottom: 0; z-index: 1001;
+		width:100%; height: 70px; background-color: #fff; box-shadow: 0 0 50px rgba(0, 0, 0, 0.6); 
 	}
 	section .report_box p{text-align: center; }
 	section .report_box p a{display: block; width: 100%; height: 100%; line-height: 70px; font-size: 18px; font-weight: bold; color: #e78436; }
@@ -43,10 +44,6 @@
 	
 		color:#78a6d8 !important;
 		
-	}
-	
-	#regularMember{
-		border : 1px solid #78a6d8;
 	}
 	
 	#withdraw .pop_up {display:none;}

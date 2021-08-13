@@ -25,7 +25,7 @@
 	<!--    60페이지 - #MY001-QA02-2 마이페이지_1:1문의_문의내역보기-->
     <section id="MY001-QA02-2" class="content">
          <div class="box top">
-            <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
+            <div class="icon_left"><a href="${root}/front/myPage"><i class="fas fa-chevron-left"></i></a></div>
             <h1 class="title">자주 묻는 질문</h1>
         </div>
         <div class="search_box">
@@ -34,16 +34,21 @@
                 <a href=""><i class="fas fa-search"></i></a>
             </div>
         </div>
-        <table border= "2" width="100%" height="210" align="center" bordercolor="#e1e1e1" style="border-collapse:collapse;";>
-        	<tr>
-        	<c:forEach items="${categoryList}" var="obj" varStatus="status">
-	            <td data-id="${obj.frequent_question_category_id}">${obj.content}</td>
-	            <c:if test="${status.count % 3 == 0}">
-	            	</tr>
-	            	<tr>
-	            </c:if>
-        	</c:forEach>
-        </table>
+<!--         <table border= "2" width="100%" height="210" align="center" bordercolor="#e1e1e1" style="border-collapse:collapse;";> -->
+<!--         	<tr> -->
+<%--         	<c:forEach items="${categoryList}" var="obj" varStatus="status"> --%>
+<%-- 	            <td data-id="${obj.frequent_question_category_id}" width:>${obj.content}</td> --%>
+<%-- 	            <c:if test="${status.count % 3 == 0}"> --%>
+<!-- 	            	</tr> -->
+<!-- 	            	<tr> -->
+<%-- 	            </c:if> --%>
+<%--         	</c:forEach> --%>
+<!--         </table> -->
+			<div style="display:flex;flex-wrap: wrap;">
+	        	<c:forEach items="${categoryList}" var="obj" varStatus="status">
+	           		<div class="cate_div" data-id="${obj.frequent_question_category_id}" style="flex-basis:33.3%;border: 0.1px solid black;text-align: center;line-height: 60px;font-size: 18px;">${obj.content}</div>
+	            </c:forEach>
+	        </div>
         <ul>
         </ul>
     </section>
@@ -52,7 +57,7 @@
 	<script src="${root}/js/main.js"></script>
 	<script>
 		$(function(){
-			$('#MY001-QA02-2 td').click(function(){
+			$('#MY001-QA02-2 .cate_div').click(function(){
 				let id = $(this).data('id');
 				$.ajax({
 					url:'${root}/front/mypage/getFreTitle/'+id,

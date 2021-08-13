@@ -28,7 +28,7 @@
         </div>
         
         <ul id="gnb">
-            <li><a href="${root}/front/home">홈</a></li>
+            <li><a href="${root}/front/home">추천</a></li>
             <li><a href="${root}/front/shop/shop_promotion">가게홍보</a></li>
             <li><a href="">산지직거래</a></li>
             <li><a href="">중고장터</a></li>

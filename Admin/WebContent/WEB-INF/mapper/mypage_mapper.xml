@@ -124,10 +124,13 @@
 	<!-- 나의 문의 내역 확인 -->
 	<select id="getFrontMemberQuestion" parameterType="int" resultType="hashMap">
 		
-		select q.question_content,qc.content,q.answer_status,date_format(q.regdate,"%Y-%m-%d") as regdate
+		select q.question_content,qc.content,q.answer_status,date_format(q.regdate,"%Y-%m-%d") as regdate,
+		qa.content as apply
 		from question q
 		inner join question_category qc
 		on q.question_category_id = qc.question_category_id 
+		left join question_answer qa
+		on q.question_id = qa.question_id
 		where q.member_id = ${memberId}
 		
 	</select>
@@ -403,25 +406,43 @@
 		<result column="likeCnt" property="likeCnt"/>
 		<result column="content" property="content"/>
 		<result column="member_id" property="member_id"/>
+		<result column="area_name" property="area_name"/>
 		<collection property="imageList" javaType="list" ofType="string">
 			<result column="name" property="name"/>
+		</collection>
+		<collection property="keyList" javaType="list" ofType="string">
+			<result column="keyword" property="keyword"/>
 		</collection>
 	</resultMap>
 	
 	<!-- 가게 후기 정보  -->
 	<select id="getReviewList" parameterType="hashMap" resultMap="getReviewMap">
 	
-		select m.name as nickName,
+		select m.name as nickName,rkc.content as keyword,d.area_name,
 		(select count(*) from shop_review r2 where r2.member_id = m.member_id) as reviewCnt,
-		r.shop_review_id,r.content,r.view_count,r.reply,r.regdate,ri.name,m.profile_image,
+		r.shop_review_id,r.content,r.view_count,r.reply,date_format(r.regdate,"%Y-%m-%d") as regdate,ri.name,m.profile_image,
 		(select count(*) from shop_review_like rl where r.shop_review_id = rl.shop_review_id) as likeCnt,
 		(select srl.member_id from shop_review_like srl where srl.member_id = ${memberId} and srl.shop_review_id = r.shop_review_id) AS member_id
 		from shop_review r
 		inner join member m
 		on r.member_id = m.member_id
+		inner join area_dong d
+		on m.id = d.id
 		left join shop_review_image ri 
 		on r.shop_review_id = ri.shop_review_id 
-		where r.shop_idx = ${shopIdx} 
+		left join review_keyword rk
+		on r.shop_review_id = rk.shop_review_id
+		left join review_keyword_category rkc
+		on rk.review_keyword_category_id = rkc.review_keyword_category_id
+		where r.shop_idx = ${shopIdx}
+		<choose>
+			<when test='sort.equals("latest")'>
+				order by regdate desc
+			</when>
+			<otherwise>
+				order by likeCnt desc
+			</otherwise>
+		</choose>
 		
 	</select> 
 	
@@ -463,11 +484,11 @@
 		on r.shop_review_id = ri.shop_review_id 
 		left join review_keyword rk
 		on r.shop_review_id = rk.shop_review_id
-		inner join review_keyword_category rkc
+		left join review_keyword_category rkc
 		on rk.review_keyword_category_id = rkc.review_keyword_category_id
 		where r.shop_review_id = ${shopReviewId}
 		
-	</select> 
+	</select>
 	
 	<!-- 가게 후기 답글 등록 -->
 	<update id="reviewReply" parameterType="hashMap">

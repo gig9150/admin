@@ -23,51 +23,74 @@
 </head>
 <body>
 	<!--    59페이지 - #MY001-QA02 마이페이지_1:1문의_문의내역보기-->
+     <!--    59페이지 - #MY001-QA02 마이페이지_1:1문의_문의내역보기-->
     <section id="MY001-QA02" class="content">
         <div class="top">
             <div class="icon_left"><a href=""><i class="fas fa-chevron-left"></i></a></div>
-            <h1 class="title">1:1 문의 작성하기</h1>
+            <h1 class="title">나의 문의내역 보기</h1>
         </div>
-	        <c:forEach items="${questionList}" var="obj">
-	        	<div class="box box1">
-	               <div class="toggle_top">
-	                    <div class="title_box">
-	                        <div class="title_left">
-	                             <h2>${obj.question_content}</h2>
-	                             <c:choose>
-	                             	<c:when test="${obj.answer_status eq 2}">
-		                             	<p class="answer">답변 전</p>
-	                             	</c:when>
-	                             	<c:otherwise>
-	                             		<p class="answer">답변 완료</p>
-	                             	</c:otherwise>
-	                             </c:choose>
-	                         </div>
-	                        <div class="title_right">
-	                            <a class="btn btn1" href="javascript:void(0)"><i class="fas fa-chevron-down"></i></a>
-	                        </div>
+        <c:forEach items="${questionList}" var="obj" varStatus="status">
+	        <div class="box box1">
+	            <div class="toggle_top">
+	                <div class="title_box">
+	                    <div class="title_left">
+	                        <h2>${obj.content}</h2>
+	                        <c:choose>
+	                        	<c:when test="${obj.answer_status eq 1}">
+	                        		<p class="answer">답변완료</p>
+	                        	</c:when>
+	                        	<c:otherwise>
+	                        		<p class="answer">답변 전</p>
+	                        	</c:otherwise>
+	                        </c:choose>
 	                    </div>
-	                    <div class="title_txt">
-	                        <p class="txt">${obj.content }</p>
+	                    <div class="title_right">
+	                        <a class="btn btn1" href="javascript:void(0)"><i class="fas fa-chevron-down"></i></a>
 	                    </div>
 	                </div>
-	                <div class="toggle_bottom">
-	                    <div class="txt_box">
-	                        <p>문의 내용이 전체 노출됨<br>문의 내용이 전체 노출됨<br>문의 내용이 전체 노출됨</p>
-	                    </div>
-	                    <div class="answer_box">
-	                        <p>답변 완료</p>
-	                    </div>
-	                    <div class="bottom_box">
-	                        <h2>A</h2>
-	                        <P>문의에 대한 답변이 노출됨<br>문의에 대한 답변이 노출됨<br>문의에 대한 답변이 노출됨</P>
-	                    </div>
+	                <div class="title_txt">
+	                    <p class="txt" style="width:80%;  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${obj.question_content}</p>
 	                </div>
 	            </div>
-	        </c:forEach>
-        </section>
+	            <div class="toggle_bottom">
+	                <div class="txt_box">
+	                    <p>${obj.question_content}</p>
+	                </div>
+	                <div class="answer_box">
+	               	
+	                </div>
+	                <div class="bottom_box">
+	                    <h2>A</h2>
+	                    <P>${obj.apply}</P>
+	                </div>
+	            </div>
+	        </div>
+        </c:forEach>
+        
+    </section>
 	<script src="${root}/vendor/jquery/jquery.min.js"></script>
 	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	<script src="${root}/js/main.js"></script>
+	
+	<script>
+	
+       	$(function(){
+       		$('.title_right .btn i').click(function(){
+       			console.log('ㅇㅋㅇㅋ');
+       			
+       			if($(this).hasClass('fa-chevron-down')){
+       				$(this).parent().parent().parent().next().css('display','none');
+       				$(this).parent().parent().parent().parent().next().css('display','block');
+       				$(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+       			}else{
+       				$(this).parent().parent().parent().next().css('display','block');
+       				$(this).parent().parent().parent().parent().next().css('display','none');
+       				$(this).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+       			}
+       		});
+       		
+       	});
+       
+	</script>	
 </body>
 </html>

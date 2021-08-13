@@ -30,7 +30,7 @@
 	<section id="GNB001-EX01" class="content">
 		<div class="top">
 			<div class="icon">
-				<a href=""><img src="./img/left.png" alt=""></a>
+				<a href="javascript:history.back();"><img src="${root}/img/left.png" alt=""></a>
 			</div>
 			<h1 class="profile">${exhiInfo.exhi_name}</h1>
 		</div>
@@ -49,47 +49,50 @@
 
 		<div class="inner">
 			<c:forEach items="${curationShopList}" var="obj">
-				<div class="sub_box">
-					<div class="pic">
-						<img style="width:100%;height:100%;" src="${root}/upload/${obj.main_image}">
+				
+					<div class="sub_box">
+						<a href="${root}/front/shop/shop_detail?shopIdx=${obj.shop_idx}">
+							<div class="pic">
+								<img style="width:100%;height:100%;" src="${root}/upload/${obj.main_image}">
+							</div>
+						</a>
+						<div class="info">
+							<ul class="sub_info sub_info_1">
+								<li>${obj.shop_name}</li>
+								<li>${obj.area_name}</li>
+								<fmt:parseNumber var="startDate_N" value="${obj.start_date}" integerOnly="true" />
+	                            <fmt:parseNumber var="endDate_N" value="${obj.end_date}" integerOnly="true" />
+	                           	<c:choose>
+	                           		<c:when test="${date_N > startDate_N and date_N < endDate_N and obj.holiday != day}">
+	                           			<li style="color: #fff; background-color: #78a6d8;">영업중</li>
+	                           		</c:when>
+	                           		<c:otherwise>
+	                           			<li style="color: #fff;background-color: #888">영업종료</li>
+	                           		</c:otherwise>
+	                           	</c:choose>
+							</ul>
+							<ul class="sub_info sub_info_2">
+								<li>${obj.sector}/</li>
+								<c:choose>
+									<c:when test="${obj.holiday eq null}">
+										<li>매일</li>
+									</c:when>
+									<c:otherwise>								
+										<li>${obj.holiday} 휴무</li>									
+									</c:otherwise>
+								</c:choose>
+								
+								<li>${fn:substring(startDate_N,0,2)}:${fn:substring(startDate_N,2,4)} ~ ${fn:substring(endDate_N,0,2)}:${fn:substring(endDate_N,2,4)}</li>
+							</ul>
+							<ul class="sub_info sub_info_3">
+								<li><i class="far fa-comment"></i></li>
+								<li>${obj.reviewCount }</li>
+								<br>
+								<li><i class="fas fa-heart"></i></li>
+								<li>${obj.bookmarkCount}</li>
+							</ul>
+						</div>
 					</div>
-					<div class="info">
-						<ul class="sub_info sub_info_1">
-							<li>${obj.shop_name}</li>
-							<li>${obj.area_name}</li>
-							<fmt:parseNumber var="startDate_N" value="${obj.start_date}" integerOnly="true" />
-                            <fmt:parseNumber var="endDate_N" value="${obj.end_date}" integerOnly="true" />
-                           	<c:choose>
-                           		<c:when test="${date_N > startDate_N and date_N < endDate_N and obj.holiday != day}">
-                           			<li style="color: #fff; background-color: #78a6d8;">영업중</li>
-                           		</c:when>
-                           		<c:otherwise>
-                           			<li style="color: #fff;background-color: #888">영업종료</li>
-                           		</c:otherwise>
-                           	</c:choose>
-						</ul>
-						<ul class="sub_info sub_info_2">
-							<li>${obj.sector}/</li>
-							<c:choose>
-								<c:when test="${obj.holiday eq null}">
-									<li>매일</li>
-								</c:when>
-								<c:otherwise>								
-									<li>${obj.holiday} 휴무</li>									
-								</c:otherwise>
-							</c:choose>
-							
-							<li>${fn:substring(startDate_N,0,2)}:${fn:substring(startDate_N,2,4)} ~ ${fn:substring(endDate_N,0,2)}:${fn:substring(endDate_N,2,4)}</li>
-						</ul>
-						<ul class="sub_info sub_info_3">
-							<li><i class="far fa-comment"></i></li>
-							<li>${obj.reviewCount }</li>
-							<br>
-							<li><i class="fas fa-heart"></i></li>
-							<li>${obj.bookmarkCount}</li>
-						</ul>
-					</div>
-				</div>
 			</c:forEach>
 		</div>
 		<div class="bottom_box">

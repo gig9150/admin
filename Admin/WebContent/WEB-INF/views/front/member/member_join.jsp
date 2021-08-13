@@ -23,10 +23,10 @@
 </head>
 <body>		
 
-    <section id="join" class="content">
+	<section id="join" class="content">
         <div class="top">
-            <div class="icon"><a href=""><img src="./img/left.png" alt=""></a></div>
-            <h1 class="profile">회원 가입</h1>
+	        <div class="icon"><a href=""><img src="./img/left.png" alt=""></a></div>
+	        <h1 class="profile">회원 가입</h1>
         </div>
 
 		<form action="${root}/front/member/member_join_pro" method="post" id="joinSubmit" enctype="multipart/form-data">
@@ -39,15 +39,15 @@
 	                    <label for="name">닉네임을 설정해주세요.</label>
 	                    <input type="text" name="name" id="name" placeholder="닉네임을 입력하세요">
 	                </fieldset>
-	
+	                
 	                <fieldset>
 	                    <label for="place">지역을 설정해주세요.</label>
-	                    <input type="text" value="순천시" id="place" disabled="disabled">
+	                    <input type="text" value="공주시" id="place" disabled="disabled">
 	                    <select name ="id" id="address">
 	                    	<c:forEach items="${list}" var="obj">
 	                    		<option value="${obj.id}">${obj.area_name}</option>
 	                    	</c:forEach>
-	                    	<c:forEach items="${list2}" var="obj">
+	                    	<c:forEach items="${list2}" var="obj"> 
 	                    		<option value="${obj.id}">${obj.area_name}</option>
 	                    	</c:forEach>
 	                    </select>
@@ -67,6 +67,51 @@
 	    </section>
 		    
     </section>
+
+<!--     <section id="join" class="content"> -->
+<!--         <div class="top"> -->
+<!--             <div class="icon"><a href=""><img src="./img/left.png" alt=""></a></div> -->
+<!--             <h1 class="profile">회원 가입</h1> -->
+<!--         </div> -->
+
+<%-- 		<form action="${root}/front/member/member_join_pro" method="post" id="joinSubmit" enctype="multipart/form-data"> --%>
+<!-- 	        <div class="inner"> -->
+<!-- 	            <div class="pic"> -->
+<!-- 	                <label for="file_box"><i class="fas fa-camera"></i></label> -->
+<!-- 	                <input type="file" id="file_box" name="uploadFile"> -->
+<!-- 	            </div> -->
+<!-- 	                <fieldset> -->
+<!-- 	                    <label for="name">닉네임을 설정해주세요.</label> -->
+<!-- 	                    <input type="text" name="name" id="name" placeholder="닉네임을 입력하세요"> -->
+<!-- 	                </fieldset> -->
+	
+<!-- 	                <fieldset> -->
+<!-- 	                    <label for="place">지역을 설정해주세요.</label> -->
+<!-- 	                    <input type="text" value="순천시" id="place" disabled="disabled"> -->
+<!-- 	                    <select name ="id" id="address"> -->
+<%-- 	                    	<c:forEach items="${list}" var="obj"> --%>
+<%-- 	                    		<option value="${obj.id}">${obj.area_name}</option> --%>
+<%-- 	                    	</c:forEach> --%>
+<%-- 	                    	<c:forEach items="${list2}" var="obj"> --%>
+<%-- 	                    		<option value="${obj.id}">${obj.area_name}</option> --%>
+<%-- 	                    	</c:forEach> --%>
+<!-- 	                    </select> -->
+<!-- 	                </fieldset> -->
+<!-- 	                <button type="submit">가입하기</button> -->
+<!--         	</div> -->
+<!--         </form> -->
+	        
+<!--         <section id="join_1" class="content" style="display:none;position: absolute;bottom: 30%;left: 6%;width: 79%;z-index:999"> -->
+<!-- 	        <p>현재 사용중인 닉네임입니다.<br>닉네임을 다시 설정해주세요</p> -->
+<!-- 	        <button>확인</button> -->
+<!-- 	    </section> -->
+	    
+<!-- 	    <section id="join_3" class="content" style="display:none;position: absolute;bottom: 30%;left: 6%;width: 79%;z-index:999"> -->
+<!-- 	        <p>가입정보를 모두 입력해주세요.</p> -->
+<!-- 	        <button>확인</button> -->
+<!-- 	    </section> -->
+		    
+<!--     </section> -->
 	
 	<script src="${root}/vendor/jquery/jquery.min.js"></script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

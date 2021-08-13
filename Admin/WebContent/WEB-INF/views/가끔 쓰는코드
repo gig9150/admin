@@ -22,7 +22,6 @@
 				e.preventDefault();
 		}
 	});
-	
 3.날짜 비교
 
 	<fmt:parseDate value="${obj.startDate}" var="strPlanDate" pattern="yyyy-MM-dd"/>
@@ -57,3 +56,7 @@
 6. 팝업창 종료 url
 
 	"account_manage/member_update"
+	
+7. mysql 날짜 포맷
+
+	date_format(r.regdate,"%Y-%m-%d")

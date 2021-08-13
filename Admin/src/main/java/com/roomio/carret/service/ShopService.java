@@ -108,8 +108,8 @@ public class ShopService {
 		return shopDao.getFrontShopNews(shopIdx);
 	}
 	
-	public int getFrontShopReviewCnt() {
-		return shopDao.getFrontShopReviewCnt();
+	public int getFrontShopReviewCnt(int shopIdx) {
+		return shopDao.getFrontShopReviewCnt(shopIdx);
 	}
 	
 	public HashMap<Object,Object> getFrontShopNewsDetail(int shopNewsId){
@@ -134,7 +134,7 @@ public class ShopService {
 		String file_name = System.currentTimeMillis() + "_" + upload_file.getOriginalFilename();
 		
 		try {
-			upload_file.transferTo(new File("C:\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\RoomioAdmin\\resources\\upload" + "/" + file_name));
+			upload_file.transferTo(new File("C:\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\Admin\\resources\\upload" + "/" + file_name));
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

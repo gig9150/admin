@@ -17,60 +17,73 @@
 <title>Document</title>
 </head>
 <body>
-<section id="BZ001-TB02-DT01" class="content">
-    <div class="box title_box">
-       <div class="icon icon_left"><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}"><i class="fas fa-chevron-left"></i></a></div>
-       <div class="icon icon_right"><a href="javascript:void(0)" id="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
-    </div>
-    <div class="box box_1">
-        <div class="pic"></div>
-        <div class="info">
-            <div class="sub_box"><p>${detailMap.shop_name }</p></div>
-            <div class="sub_box"><p>${detailMap.area_name}<span>/</span>${detailMap.sector_content}</p></div>
+<!--31페이지 #BZ001-TB02-DT01 가게 프로필 tab - 소식 - 상세페이지 - 쿠폰없는케이스-->
+
+    <section id="BZ001-TB02-DT01" class="content">
+        <div class="box top">
+            <div class="icon_left"><a href="${root}/front/shop/shop_news2?shopIdx=${detailMap.shop_idx}"><i class="fas fa-times"></i></a></div>
+            <h1 class="title">${detailMap.shop_name}</h1>
+            <div class="icon_right"><a href="javascript:void(0)" class="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
         </div>
-        <c:choose>
-	      	<c:when test="${checkNum eq 1}">
-		        <div class="right_btn"><a href="javascript:void(0)"
-		         id="regularMember">단 골 ${bookmarkCnt}</a></div>      	
-	      	</c:when>
-	      	<c:otherwise>
-	      		<div class="right_btn" style="background-color:#ffffff">
-	      		<a href="javascript:void(0)" id="regularMember" style="color:#78a6d8">단 골 ${bookmarkCnt}
-	      		</a></div>
-	      	</c:otherwise>
-	   </c:choose>
-    </div>
-    <div class="box btn">
-         <div class="event"><a href="">${map.cate_content}</a></div>
-        <div class="ago"><p>${map.regdate}</p></div>
-    </div>
-    <div class="box box_2"><p>${map.content}</p></div>
-    <div class="box swiper-container">
-        <div class="swiper-wrapper">
-        	<c:forEach items="${map.imageList}" var="obj">
-	            <div class="swiper-slide"><img src="${root}/upload/${obj}" style="width:100%;height:100%"></div>
-        	</c:forEach>
+        <div class="box box_1">
+           <div class="left_box">
+                <div class="pic">
+                </div>
+                <div class="info">
+                    <div class="sub_box">
+                        <p>${detailMap.shop_name}</p>
+                    </div>
+                    <div class="sub_box">
+                        <p>${detailMap.area_name}<span>/</span>${map.regdate}</p>
+                    </div>
+                    <div class="sub_box">
+                        <p>${map.cate_content}</p>
+                    </div>
+                </div>
+            </div>
+            <ul class="right_box">
+            	<c:choose>
+	                <c:when test="${checkNum eq 1}">
+	            		<ul class="left_box" id="regularMember" >
+			                <li class="regular regular1" style="display:none;"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+			                <li class="regular regular2" style="display:block"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+			            </ul>
+	            	</c:when>
+	            	<c:otherwise>
+	            		<ul class="left_box" id="regularMember" >
+			                <li class="regular regular1" style="display:block;"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+			                <li class="regular regular2" style="display:none"><a href="javascript:void(0);"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+			            </ul>
+	            	</c:otherwise>
+	        	</c:choose>
+            </ul>
         </div>
-    </div>
-    
-    <ul class="box thumb_box">
-        <c:choose>
-			<c:when test="${not empty map.member_id}">
-				<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a></li>
-			</c:when>
-			<c:otherwise>
-				<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-down"></i></a></li>
-			</c:otherwise>
-		</c:choose>
-        <li><p>좋아요</p></li>
-        <li><p>${map.likeCnt}</p></li>
-        <li class="slash"><p>/</p></li>
-    
-        <li><p>조회</p></li>
-        <li><p>${map.view_count}</p></li>
-    </ul>
-    
-    <div class="report_box" style="display:none">
+        
+        <div class="box box_2">
+            <strong>${map.title}</strong>
+            <p>${map.content}</p>
+        </div>
+        <div class="box swiper-container">
+            <div class="swiper-wrapper">
+            	<c:forEach items="${map.imageList}" var="obj">
+            		<div class="swiper-slide"><img src="${root}/upload/${obj}" style="width:100%;height:100%"></div>
+            	</c:forEach>
+            </div>
+        </div>
+
+        <ul class="box thumb_box">
+            <c:choose>
+				<c:when test="${not empty map.member_id}">
+					<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)" style="margin-right: 3px;"><i class="far fa-thumbs-up"></i></a>좋아요<span>${map.likeCnt}</span></li>
+				</c:when>
+				<c:otherwise>
+					<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)" style="margin-right: 3px;"><i class="far fa-thumbs-down"></i></a>좋아요<span>${map.likeCnt}</span></li>
+				</c:otherwise>
+			</c:choose>
+            <li><span>조회</span>${map.view_count}</li>
+        </ul>
+        
+        <div class="report_box" style="display:none">
         	<p class="report"><a class="reportA" href="${root}/front/shop/shop_report_category?status=shop&shopIdx=${detailMap.shop_idx}">신고하기</a></p>
         </div>
         
@@ -96,7 +109,8 @@
                </c:choose>
            </div>
        </div>
-</section>
+
+    </section>
 
 
 <script src="${root}/vendor/jquery/jquery.min.js"></script>
@@ -107,7 +121,7 @@
 		$(function() {
 			
 			
-			$('#reportTriger').on('click',function(){ 
+			$('.reportTriger').on('click',function(){ 
 				if($('.content').hasClass('reviewon')){
 					$('.content').removeClass('reviewon');
 					$('.report_box').css('display','none');
@@ -119,11 +133,15 @@
 			
 			$('#regularMember').on('click',function(){
 				if($('.content').hasClass('on')){
+					
 					$('.content').removeClass('on');
 					$('.pop_up_box').css('display','none');
+					
 				}else{
+					
 					$('.content').addClass('on');
 					$('.pop_up_box').css('display','block');
+					
 				}
 			});
 			
@@ -131,6 +149,7 @@
 			$('.thumb-li').click(function(){
 				
 				let shopNewsId = $(this).data('id');
+				
 				if($(this).find('i').hasClass('fa-thumbs-down')){
 					
 					$(this).find('i').removeClass('fa-thumbs-down').addClass('fa-thumbs-up');
@@ -141,7 +160,7 @@
 							console.log(data);
 						}
 					});
-					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) + 1);
+					$(this).children('span').html(parseInt($(this).children('span').html()) + 1);
 					
 				}else{
 					
@@ -153,7 +172,7 @@
 							console.log(data);
 						}
 					});
-					$(this).next().next().find('p').html(parseInt($(this).next().next().find('p').html()) - 1);
+					$(this).children('span').html(parseInt($(this).children('span').html()) - 1);
 					
 				}
 			});

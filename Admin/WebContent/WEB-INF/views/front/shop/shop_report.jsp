@@ -57,7 +57,8 @@
             </div>
             <div class="small_box btn"><button style="width: 100%;
 											    height: 100%;
-											    background: #78a6d8;border: none;color: #ffffff;">카달로그 서비스팀에게 보내기</button></div>
+											    background: #78a6d8;border: none;color: #ffffff;font-size: 14px;
+    font-weight: bold;">카달로그 서비스팀에게 보내기</button></div>
         </div>
         <div class="box bottom_box">
             <div class="box">

@@ -18,79 +18,100 @@
 
 </head>
 <body>
+<!--31페이지 #BZ001-TB02-DT01 가게 프로필 tab - 소식 - 상세페이지 - 쿠폰없는케이스-->
 
-	<!--31페이지 #BZ001-TB02-DT01 가게 프로필 tab - 소식 - 상세페이지 - 쿠폰없는케이스-->
+    <section id="BZ001-TB02-DT01" class="content">
+        <div class="box top">
+            <div class="icon_left"><a href="${root}/front/mypage/shop?shopIdx=${shopMap.shop_idx}"><i class="fas fa-times"></i></a></div>
+            <h1 class="title">${shopMap.shop_name}</h1>
+            <div class="icon_right"><a href="javascript:void(0)" class="reportTriger"><i class="fas fa-ellipsis-v"></i></a></div>
+        </div>
+        <div class="box box_1">
+           <div class="left_box">
+                <div class="pic">
+                </div>
+                <div class="info">
+                    <div class="sub_box">
+                        <p>${shopMap.shop_name}</p>
+                    </div>
+                    <div class="sub_box">
+                        <p>${shopMap.area_name}<span>/</span>${map.regdate}</p>
+                    </div>
+                    <div class="sub_box">
+                        <p>${map.cate_content}</p>
+                    </div>
+                </div>
+            </div>
+            <ul class="right_box">
+                <li class="regular regular1"><a href="${root}/front/mypage/shop_bookmark?shopIdx=${shopMap.shop_idx}"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+                <li class="regular regular2"><a href="${root}/front/mypage/shop_bookmark?shopIdx=${shopMap.shop_idx}"><i class="fas fa-plus"></i><span>단골</span>${bookmarkCnt}</a></li>
+            </ul>
+        </div>
+        
+        <div class="box box_2">
+            <strong>${map.title}</strong>
+            <p>${map.content}</p>
+        </div>
+        <div class="box swiper-container">
+            <div class="swiper-wrapper">
+            	<c:forEach items="${map.imageList}" var="obj">
+            		<div class="swiper-slide"><img src="${root}/upload/${obj}" style="width:100%;height:100%"></div>
+            	</c:forEach>
+            </div>
+        </div>
 
-	<section id="BZ001-TB02-DT01" class="content">
-	    <div class="box title_box">
-	            <div class="icon icon_left"><a href="javascript:history.back();"><i class="fas fa-chevron-left"></i></a></div>
-	            <div class="icon icon_right"><a href=""><i class="fas fa-ellipsis-v"></i></a></div>
-	    </div>
-	    <div class="box box_1">
-	        <div class="pic">
-	        	<img src="${root}/uplaod/${shopMap.main_image}">
-	        </div>
-	        <div class="info">
-	            <div class="sub_box"><p>${shopMap.shop_name}</p></div>
-	            <div class="sub_box"><p>${shopMap.area_name}<span>/</span>${map.regdate}</p></div>
-	        </div>
-	    </div>
-	    <div class="box btn">
-	         <div class="event"><a href="javascript:void(0)">${map.cate_content}</a></div>
-	        <div class="ago"><p>방금전</p></div>
-	    </div>
-	    <div class="box box_2"><p>소식글 상세 내용</p></div>
-	    <div class="box swiper-container">
-	        <div class="swiper-wrapper">
-	        	<c:forEach items="${map.imageList}" var="obj2">
-		            <div class="swiper-slide">
-		            	<img src="${root}/upload/${obj2}" style="width:100%;height:100%;">
-		            </div>
-	        	</c:forEach>
-	        </div>
-	    </div>
-	    
-	    <ul class="box thumb_box">
-	        <c:choose>
+        <ul class="box thumb_box">
+            <c:choose>
 				<c:when test="${not empty map.member_id}">
-					<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-up"></i></a></li>
+					<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)" style="margin-right: 3px;"><i class="far fa-thumbs-up"></i></a>좋아요<span>${map.likeCnt}</span></li>
 				</c:when>
 				<c:otherwise>
-					<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)"><i class="far fa-thumbs-down"></i></a></li>
+					<li class="thumb-li" data-id="${map.shop_news_id}"><a href="javascript:void(0)" style="margin-right: 3px;"><i class="far fa-thumbs-down"></i></a>좋아요<span>${map.likeCnt}</span></li>
 				</c:otherwise>
 			</c:choose>
-	        <li><p>좋아요</p></li>
-	        <li><p class="like-p">${map.likeCnt}</p></li>
-	        <li class="slash"><p>/</p></li>
-	    
-	        <li><p>조회</p></li>
-	        <li><p>${map.view_count}</p></li>
-	    </ul>
-	    
-	</section>
+            <li><span>조회</span>${map.view_count}</li>
+        </ul>
+        
+    </section>
 
-    
-   	<script src="${root}/vendor/jquery/jquery.min.js"></script>
-   	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-	<script src="${root}/js/main.js"></script>
-	
-	
-	<script>
-	
-		$(function(){
+
+<script src="${root}/vendor/jquery/jquery.min.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="${root}/js/main.js"></script>
+
+<script>
+		$(function() {
 			
-			//수정 삭제 숨기기 
-			$('.menu').click(function(){
-				$('.none-box').toggle();
+			
+			$('.reportTriger').on('click',function(){ 
+				if($('.content').hasClass('reviewon')){
+					$('.content').removeClass('reviewon');
+					$('.report_box').css('display','none');
+				}else{
+					$('.content').addClass('reviewon');
+					$('.report_box').css('display','block');
+				}
+			});
+			
+			$('#regularMember').on('click',function(){
+				if($('.content').hasClass('on')){
+					
+					$('.content').removeClass('on');
+					$('.pop_up_box').css('display','none');
+					
+				}else{
+					
+					$('.content').addClass('on');
+					$('.pop_up_box').css('display','block');
+					
+				}
 			});
 			
 			//좋아요
 			$('.thumb-li').click(function(){
+				
 				let shopNewsId = $(this).data('id');
+				
 				if($(this).find('i').hasClass('fa-thumbs-down')){
 					
 					$(this).find('i').removeClass('fa-thumbs-down').addClass('fa-thumbs-up');
@@ -101,7 +122,7 @@
 							console.log(data);
 						}
 					});
-					$('.like-p').html(parseInt($('.like-p').html()) + 1);
+					$(this).children('span').html(parseInt($(this).children('span').html()) + 1);
 					
 				}else{
 					
@@ -113,13 +134,13 @@
 							console.log(data);
 						}
 					});
-					$('.like-p').html(parseInt($('.like-p').html()) - 1);
+					$(this).children('span').html(parseInt($(this).children('span').html()) - 1);
 					
 				}
 			});
 			
 		});
-	
+		
 	</script>
 
 </body>

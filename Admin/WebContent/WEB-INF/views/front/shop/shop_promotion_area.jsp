@@ -22,12 +22,35 @@
 <style>
 	#GNB001-JY01-2{position: relative;}
 	#GNB001-JY01-2.areaSelect::after{position: absolute; left: 0; top: 0; content:''; display: block; width: 100%; height: 100%; }	
+	
+	.top_left{
+		padding: 0 10px;
+		display: flex;
+	    flex-direction: row;
+	    align-items: center;
+	}
+	
+ 	.top_left_img{ 
+ 		float: left; 
+     	width: 12%; 
+ 	} 
+	
+	.top_left_img img{ 
+		display: block; 
+   		width: 100%; 
+	
+ 	} 
+ 	
+ 	
 </style>
 </head>
 <body>
 <section id="GNB001-JY01-2" class="content">
      <div class="top">
             <div class="top_left">
+            	<a class="top_left_img">
+            		<img src="${root}/img/group_1434.png">
+            	</a>
                 <input type="text" placeholder="검색어를 입력해주세요">
                 <a href=""><i class="fas fa-search"></i></a>
             </div>
@@ -59,7 +82,7 @@
            <div class="inner">
            	<c:forEach items="${shopList}" var="obj">
 	            <div class="sub_box">
-	                <div class="pic">
+	                <div class="pic" onclick="location.href='${root}/front/shop/shop_detail?shopIdx=${obj.shop_idx}'">
 	                	<img style="width:100%;height:100%;" src="${root}/upload/${obj.main_image}">
 	                </div>
 	                <div class="info">
@@ -152,8 +175,6 @@
             let documentHeight = $(document).height();
             
             if( scrollTop + windowHeight == documentHeight ){
-            	
-            	
             	
             	$.ajax({
             		url:'${root}/front/shop/shopPromotionArea/'+page+'/'+area,

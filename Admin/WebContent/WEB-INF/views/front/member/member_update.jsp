@@ -16,40 +16,42 @@
 </head>    
 <body>
 
-	<!--54페이지 #MY001-PI01 마이페이지-회원정보수정-->
-	<section id="MY001-PI01" class="content">
-    	<div class="top">
-            <div class="icon"><a href="javascript:void(0)"></a></div>
-            <h1 class="profile">회원 가입</h1>
+	 <!--54페이지 #MY001-PI01 마이페이지-회원정보수정-->
+    <section id="MY001-PI01" class="content">
+        <div class="top">
+            <div class="icon"><a href="javascript:history.back();"><img src="${root}/img/left.png" alt=""></a></div>
+            <h1 class="profile">회원 정보 수정</h1>
         </div>
- 	<form action="${root}/front/member/member_update_pro" method="Post" id="memberInfoUpdate" enctype="multipart/form-data">
-        <div class="inner">
-            <div class="pic">
-                <label for="file_box"><i class="fas fa-camera"></i></label>
-                <input type="file" id="file_box" name="uploadFile">
-            </div>
-                <fieldset>
-                    <label for="updateName">닉네임을 설정해주세요.</label>
-                    <input type="text" id="updateName" name="name" placeholder="닉네임을 입력하세요">
-                </fieldset>
+		<form action="${root}/front/member/member_update_pro" method="Post" id="memberInfoUpdate" enctype="multipart/form-data">
+	        <div class="inner">
+	            <div class="pic">
+	                <label for="file_box"><i class="fas fa-camera"></i></label>
+	                <input type="file" id="file_box" name="uploadFile">
+	                <a class="pic_cancel" href="javascript:void(0)"><i class="fas fa-times"></i></a>
+	            </div>
+	                <fieldset>
+	                    <label for="updateName">닉네임을 설정해주세요.</label>
+	                    <input type="text" id="updateName" name="name" placeholder="닉네임을 입력하세요">
+	                </fieldset>
+	
+	                <fieldset>
+	                    <label for="place">지역을 설정해주세요.</label>
+	                    <select name="place" id="place">
+	                        <option value="">공주시</option>
+	                    </select>
+	                    <div class="search_box">
+	                        <input type="text" class="search_input" placeholder="군/구" id="updateArea" readonly="readonly">
+	                        <span class="search"><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span>
+	                        <input type="hidden" name="id" id="updateAreaHid">
+	                    </div>
+	                </fieldset>
 
-                <fieldset>
-                    <label for="place">지역을 설정해주세요.</label>
-                    <select>
-                        <option>강북구</option>
-                    </select>
-                    <div class="search_box">
-                        <input type="text" class="search_input" placeholder="군/구" id="updateArea" readonly="readonly">
-                        <span class="search"><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span>
-                        <input type="hidden" name="id" id="updateAreaHid">
-                    </div>    
-                </fieldset>
-                
-                <button>프로필 수정하기</button>
-			</div>
-        </form>
-
-       <div class="inner2">
+	                <button>프로필 수정하기</button>
+	            </form>
+	        </div>
+		</form>
+		
+		<div class="inner2">
             <p>현재 사용중인 닉네임입니다.<br>닉네임을 다시 설정해주세요</p>
             <button>확인</button>
         </div>
@@ -77,10 +79,7 @@
 	            </c:forEach>
 	        </ul>
 	    </div>
-		
-    
-	</section>
-	
+    </section>
 
     <script src="${root}/vendor/jquery/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -100,6 +99,12 @@
 	     
 		$(function(){
 			
+			// 이미지 등록 취소 
+			$('.pic_cancel').click(function(){
+				$(this).parent().find('img').remove();
+				$('#file_box').val('');
+			});
+			
 			$('.search').click(function(){
 				$('#MY001-PI01').addClass('on4');
 			});
@@ -112,14 +117,6 @@
 			});
 				
 			
-			
-			//클릭시 등록된 파일 삭제
-			$('.pic').on('click',function(){
-				$(this).find('img').remove();
-				console.log($('#file_box').val());
-				$('#file_box').val('');
-			})
-			
 			//파일 수정시 미리보기 
 		    $("#file_box").on('change', function(){
 		        readInputFile(this);
@@ -129,10 +126,17 @@
 			
 			$('#memberInfoUpdate').submit(function(e){
 				
+				
 				// 중복 닉네임 확인
 				const updateName = $('#updateName').val();
 				
-
+				if(updateName == '' && $('#updateArea').val() == ''){
+					
+					alert('수정하실 정보를 입력해주세요.');
+					e.preventDefault();
+					
+				}
+				
 				$.ajax({
 					url:'${root}/front/member/GetMemberName/'+updateName,
 					type:'get',

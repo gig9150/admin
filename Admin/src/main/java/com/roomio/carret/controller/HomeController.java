@@ -60,10 +60,10 @@ public class HomeController {
 //			return "redirect:/manager/login";			
 //		}
 		
-//		return "redirect:/front/shop/shop_promotion";
+		return "redirect:/front/shop/shop_promotion";
 //		
 //
-		return "front/member/member_join_before";
+//		return "front/member/member_join_before";
 		
 	}
 	

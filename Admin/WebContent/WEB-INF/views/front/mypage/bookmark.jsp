@@ -55,9 +55,8 @@
                             <li>${fn:substring(startDate_N,0,2)}:${fn:substring(startDate_N,2,4)} ~ ${fn:substring(endDate_N,0,2)}:${fn:substring(endDate_N,2,4)}</li>
 	                    </ul>
 	                    <ul class="sub_info sub_info_2-1">
-	                    <!-- 9월 개발 -->
-<!-- 	                        <li><p>산지직거래</p></li> -->
-<!-- 	                        <li><p>배달</p></li> -->
+	                        <li><p>산지직거래</p></li>
+	                        <li><p>배달</p></li>
 	                    </ul>
 	                    <ul class="sub_info sub_info_3">
 	                        <li><i class="far fa-comment"></i></li>
